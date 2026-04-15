@@ -1,5 +1,13 @@
 import { Link } from "react-router";
-import { Facebook, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Youtube,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
+import ddsLogo from "../assets/dds_logo.png";
 
 export default function Footer() {
   return (
@@ -9,22 +17,43 @@ export default function Footer() {
           {/* About */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#8C0343] to-[#F29F05] rounded-lg flex items-center justify-center">
+              {/*<div className="w-10 h-10 bg-gradient-to-br from-[#8C0343] to-[#F29F05] rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">DDS</span>
-              </div>
+              </div>*/}
+              <img
+                src={ddsLogo}
+                alt="Logo de l'association Dons Du Son"
+                className="w-12 h-12 rounded-lg"
+              />
               <div className="font-bold text-white">Dons Du Son</div>
             </div>
             <p className="text-sm mb-4">
-              Association dédiée à l'accompagnement des artistes et à la diffusion de la culture musicale en Île-de-France.
+              Association dédiée à l'accompagnement des artistes et à la
+              diffusion de la culture musicale en Île-de-France.
             </p>
             <div className="flex gap-3">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors"
+              >
                 <Facebook className="w-4 h-4" />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors"
+              >
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors">
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors"
+              >
                 <Youtube className="w-4 h-4" />
               </a>
             </div>
@@ -34,10 +63,38 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Navigation</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/association" className="hover:text-[#F29F05] transition-colors">L'Association</Link></li>
-              <li><Link to="/projets" className="hover:text-[#F29F05] transition-colors">Projets</Link></li>
-              <li><Link to="/evenements" className="hover:text-[#F29F05] transition-colors">Événements</Link></li>
-              <li><Link to="/location" className="hover:text-[#F29F05] transition-colors">Location</Link></li>
+              <li>
+                <Link
+                  to="/association"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
+                  L'Association
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/projets"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
+                  Projets
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/evenements"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
+                  Événements
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/location"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
+                  Location
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -45,10 +102,38 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">S'engager</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/rejoindre" className="hover:text-[#F29F05] transition-colors">Devenir bénévole</Link></li>
-              <li><Link to="/rejoindre" className="hover:text-[#F29F05] transition-colors">Adhérer</Link></li>
-              <li><Link to="/soutenir" className="hover:text-[#F29F05] transition-colors">Faire un don</Link></li>
-              <li><Link to="/contact" className="hover:text-[#F29F05] transition-colors">Nous contacter</Link></li>
+              <li>
+                <Link
+                  to="/rejoindre"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
+                  Devenir bénévole
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/rejoindre"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
+                  Adhérer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/soutenir"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
+                  Faire un don
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
+                  Nous contacter
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -58,7 +143,10 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#F29F05]" />
-                <a href="mailto:contact@donsduson.fr" className="hover:text-[#F29F05] transition-colors">
+                <a
+                  href="mailto:contact@donsduson.fr"
+                  className="hover:text-[#F29F05] transition-colors"
+                >
                   contact@donsduson.fr
                 </a>
               </li>
@@ -75,7 +163,9 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-sm text-center">
-          <p>&copy; {new Date().getFullYear()} Dons Du Son. Tous droits réservés.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Dons Du Son. Tous droits réservés.
+          </p>
         </div>
       </div>
     </footer>

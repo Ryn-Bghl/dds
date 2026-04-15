@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import ddslLogo from "../assets/dds_logo.png";
+import ddsLogo from "../assets/dds_logo.png";
 
 const navLinks = [
   { path: "/", label: "Accueil" },
@@ -29,7 +29,7 @@ export default function Header() {
               <span className="text-white text-xl font-bold">DDS</span>
             </div> */}
             <img
-              src={ddslLogo}
+              src={ddsLogo}
               alt="Logo de l'association Dons Du Son"
               className="w-12 h-12 rounded-lg"
             />
