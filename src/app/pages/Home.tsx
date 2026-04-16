@@ -16,7 +16,7 @@ export default function Home() {
   const stats = [
     { value: 150, label: "Artistes accompagnés", suffix: "+" },
     { value: 45, label: "Projets réalisés", suffix: "+" },
-    { value: 8, label: "Années d'expérience", suffix: "" },
+    { value: 4, label: "Années d'expérience", suffix: "" },
     { value: 200, label: "Événements organisés", suffix: "+" },
   ];
 
