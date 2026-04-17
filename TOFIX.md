@@ -1,59 +1,39 @@
-acceuil
-utiliser des photos a dds
-dés la premiere page le user doit savoir ce que dds fait
+# 📋 Roadmap & Corrections - Dons Du Son
 
-l'association 
+## 🏠 Accueil (Home)
+- [ ] **Identité visuelle** : Remplacer les images génériques par des photos réelles de l'association.
+- [ ] **Proposition de valeur** : Clarifier le message dès le premier écran pour que l'utilisateur comprenne instantanément l'activité de DDS.
 
-inition non mais formation interne pour les membre, logistique, 
+## 🤝 L'Association
+- [ ] **Clarification missions** : Préciser que nous ne faisons pas d'initiation, mais de la formation interne pour les membres (logistique, gestion, etc.).
 
-événements
-aide a la communication 
-gestion
+## 🎭 Événements & Services
+- [ ] **Structuration des services** :
+    1. Événementiel
+    2. Accompagnement
+    3. Prestation de matériel
+- [ ] **Aide à la gestion** : Mettre en avant le soutien à la communication et à l'organisation.
+- [ ] **Archives** : Ajouter des détails concrets et des informations réelles sur les événements passés.
 
-# 1 evenementiel
-# 2 accompagnement
-# 3 prestation de materiel
+## 📁 Projets
+- [ ] **Nettoyage filtres** : Supprimer "Formations" des types/tags.
+- [ ] **Nouveaux filtres** : Ajouter des catégories précises (Concert, Expo, Atelier).
+- [ ] **Production Vidéo** : Retrouver le nom exact via "Le Cypher".
+- [ ] **Mise en avant** : Valoriser les propositions de projets en cours.
 
-projets
-- enlever formations dans les type/tags/filtre
-- plus filtre concert expo atelier
+## 📦 Location de Matériel
+- [ ] **Système de Devis** : Préciser l'envoi par mail avec la mention : *"Vous recevrez un devis sous 72 heures"*.
+- [ ] **Packs de Location** : Créer des offres combinées (Matériel + Prestation technique).
+- [ ] **Transparence logistique** : Indiquer les frais de déplacement et les modalités de récupération/remise du matériel.
+- [ ] **Boutique** : Possibilité de rajouter des filtres et une section vente de consommables.
 
-onglet production video a traver le cypher retrouver le nom exacte
-mettre en anvant les proposition de projet
+## 🙋 Rejoindre & Soutenir
+- [ ] **Bénévolat** : Détailler concrètement les missions confiées aux bénévoles.
+- [ ] **Sécurité financière** : Mentionner explicitement qu'aucun transfert d'argent ne s'effectue via le site (Soutenir/Rejoindre).
 
-événements
-vrai information 
-details pour les archives
-
-location 
-envoie de devis par mail
-"vous alez recevoir un devis sous 72heur"
-
-crée des pack de location (materiel + prestation)
-
-indiquer que l'on peut avoir des frais de déplacement & logistique (recupération et remise)
-
-possibilité de rajouter des filtre et vente de
-
-rejoindre
-
-ajouter a quoi vas consister le bénévola
-
-aucun transfert d'argent via le site
-
-soutenir
-
-contact
-
-pas numéro de téléphone
-
-adress siege social
-zone d'intervention => France
-
-zone de prédilection ile france 
-rone alpe
-toxitanie
-
-rajouter des question fréquente
-
-crée une liste et voire
+## 📞 Contact & Infos Pratiques
+- [ ] **Coordonnées** : Supprimer le numéro de téléphone (contact mail uniquement).
+- [ ] **Siège Social** : Afficher l'adresse officielle.
+- [ ] **Zone d'intervention** : Préciser que nous intervenons dans toute la France.
+- [ ] **Zones de prédilection** : Mettre en avant l'Île-de-France, Rhône-Alpes et l'Occitanie.
+- [ ] **FAQ** : Créer une liste de questions fréquemment posées.
