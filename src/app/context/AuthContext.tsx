@@ -45,13 +45,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const saved = localStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
+        // Decode from Base64 to prevent casual reading
+        const decoded = atob(saved);
+        const parsed = JSON.parse(decoded);
+
         // SECURITY CHECK: Verify the signature
         const expectedSignature = createSignature(parsed.username);
         if (parsed.signature === expectedSignature) {
           setUser(parsed);
         } else {
-          console.error("ALERTE SÉCURITÉ : Session falsifiée détectée.");
           localStorage.removeItem(SESSION_KEY);
         }
       } catch (e) {
@@ -73,7 +75,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const newUser: UserProfile = { username, role: "admin", signature };
 
       setUser(newUser);
-      localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
+
+      // Encode to Base64 before saving
+      const encoded = btoa(JSON.stringify(newUser));
+      localStorage.setItem(SESSION_KEY, encoded);
     } else {
       throw new Error("Identifiant ou code incorrect.");
     }
