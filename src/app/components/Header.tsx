@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import ddsLogo from "../assets/dds_logo.png";
+import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
   { path: "/", label: "Accueil" },
@@ -18,6 +19,7 @@ const navLinks = [
 export default function Header() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-[#0D0D0D] border-b border-gray-800">
@@ -25,9 +27,6 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            {/* <div className="w-12 h-12 bg-gradient-to-br from-[#8C0343] to-[#F29F05] rounded-lg flex items-center justify-center">
-              <span className="text-white text-xl font-bold">DDS</span>
-            </div> */}
             <img
               src={ddsLogo}
               alt="Logo de l'association Dons Du Son"
@@ -56,21 +55,50 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+
+            {isAuthenticated && (
+              <div className="ml-4 flex items-center gap-2 border-l border-gray-700 pl-4">
+                <div className="flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full text-xs text-gray-300">
+                  <User className="w-3 h-3 text-[#F29F05]" />
+                  <span>Admin</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={logout}
+                  className="text-gray-400 hover:text-red-400 hover:bg-red-900/10"
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden text-white hover:bg-gray-800"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
+          <div className="flex items-center gap-2">
+            {isAuthenticated && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={logout}
+                className="lg:hidden text-gray-400"
+              >
+                <LogOut className="w-5 h-5" />
+              </Button>
             )}
-          </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="lg:hidden text-white hover:bg-gray-800"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
