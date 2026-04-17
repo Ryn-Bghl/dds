@@ -15,7 +15,10 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Production Configuration
 const SESSION_KEY = "dds_admin_session";
+const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -36,10 +39,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = async (username: string, code: string) => {
-    // Only 'admin_dds' (or whatever you want) can login
+    if (!ADMIN_USERNAME) {
+      console.error("CRITICAL: VITE_ADMIN_USERNAME is missing in .env");
+      throw new Error("Configuration du serveur incomplète.");
+    }
+
     const isValid = verifyTOTP(code);
 
-    if (isValid && username === "admin_dds") {
+    if (isValid && username.trim() === ADMIN_USERNAME) {
       const newUser: UserProfile = { username, role: "admin" };
       setUser(newUser);
       localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));

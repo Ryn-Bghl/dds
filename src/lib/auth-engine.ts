@@ -1,13 +1,18 @@
 import * as OTPAuth from "otpauth";
 
-// This secret stays in your .env file and is NOT displayed on the UI
-const TOTP_SECRET =
-  import.meta.env.VITE_TOTP_SECRET || "DDS_DEFAULT_SECRET_DO_NOT_USE_IN_PROD";
+// For production: The secret MUST be in the .env file.
+// No fallback is provided to ensure security.
+const TOTP_SECRET = import.meta.env.VITE_TOTP_SECRET;
 
 /**
  * Verifies a 6-digit TOTP code against the secret in .env.
  */
 export function verifyTOTP(token: string): boolean {
+  if (!TOTP_SECRET) {
+    console.error("CRITICAL: VITE_TOTP_SECRET is missing in .env");
+    return false;
+  }
+
   try {
     const totp = new OTPAuth.TOTP({
       issuer: "Dons Du Son",
