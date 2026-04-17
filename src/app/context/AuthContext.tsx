@@ -49,6 +49,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Detect if this is a fresh navigation (not a reload)
+    const navigationEntries = performance.getEntriesByType(
+      "navigation",
+    ) as PerformanceNavigationTiming[];
+    const isReload =
+      navigationEntries.length > 0 && navigationEntries[0].type === "reload";
+
     const saved = sessionStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
@@ -60,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           sessionStorage.removeItem(SESSION_KEY);
           setUser(null);
         } else {
-          // 2. Verify the signature is still valid
+          // 2. Verify the signature
           const expectedSignature = createSignature(
             parsed.username,
             parsed.expiresAt,
