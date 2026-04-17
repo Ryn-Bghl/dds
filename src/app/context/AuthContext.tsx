@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { deriveSecret, verifyTOTP } from "../../lib/auth-engine";
+import { verifyTOTP } from "../../lib/auth-engine";
 
 interface UserProfile {
   username: string;
@@ -10,14 +10,11 @@ interface AuthContextType {
   user: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  initLogin: (username: string) => Promise<string>;
-  verifyLogin: (username: string, code: string) => Promise<void>;
+  login: (username: string, code: string) => Promise<void>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// In a real stateless system, this would be a JWT in a cookie
 const SESSION_KEY = "dds_admin_session";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -27,7 +24,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for saved session
     const saved = localStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
@@ -39,21 +35,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(false);
   }, []);
 
-  const initLogin = async (username: string): Promise<string> => {
-    // Calculate the secret for this user
-    return deriveSecret(username);
-  };
+  const login = async (username: string, code: string) => {
+    // Only 'admin_dds' (or whatever you want) can login
+    const isValid = verifyTOTP(code);
 
-  const verifyLogin = async (username: string, code: string) => {
-    const secret = deriveSecret(username);
-    const isValid = verifyTOTP(code, secret);
-
-    if (isValid) {
+    if (isValid && username === "admin_dds") {
       const newUser: UserProfile = { username, role: "admin" };
       setUser(newUser);
       localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
     } else {
-      throw new Error("ACCÈS REFUSÉ : CODE INCORRECT");
+      throw new Error("Identifiant ou code incorrect.");
     }
   };
 
@@ -68,8 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         user,
         isAuthenticated: !!user,
         isLoading,
-        initLogin,
-        verifyLogin,
+        login,
         logout,
       }}
     >
