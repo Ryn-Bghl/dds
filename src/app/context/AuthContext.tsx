@@ -4,7 +4,9 @@ import { verifyTOTP } from "../../lib/auth-engine";
 interface UserProfile {
   username: string;
   role: "admin" | "user";
-  signature?: string;
+  expiresAt: number; // Expiration timestamp
+  sessionId: string; // Random string to make each login unique
+  signature: string; // Cryptographic signature
 }
 
 interface AuthContextType {
@@ -20,13 +22,18 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const SESSION_KEY = "dds_admin_session";
 const ADMIN_USERNAME = import.meta.env.VITE_AUTH_ADMIN_ID;
 const AUTH_SALT = import.meta.env.VITE_AUTH_SALT;
+const SESSION_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
 
 /**
- * Creates a simple non-reversible hash to sign the session.
- * This prevents users from manually editing localStorage to become admin.
+ * Creates a signature that includes the expiration and sessionId.
+ * This makes the localStorage string different every single time you log in.
  */
-function createSignature(username: string): string {
-  const str = `${username}-${AUTH_SALT}`;
+function createSignature(
+  username: string,
+  expiresAt: number,
+  sessionId: string,
+): string {
+  const str = `${username}-${expiresAt}-${sessionId}-${AUTH_SALT}`;
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = (hash << 5) - hash + str.charCodeAt(i);
@@ -45,16 +52,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const saved = localStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
-        // Decode from Base64 to prevent casual reading
         const decoded = atob(saved);
-        const parsed = JSON.parse(decoded);
+        const parsed: UserProfile = JSON.parse(decoded);
 
-        // SECURITY CHECK: Verify the signature
-        const expectedSignature = createSignature(parsed.username);
-        if (parsed.signature === expectedSignature) {
-          setUser(parsed);
-        } else {
+        // 1. Check if the session has expired
+        if (Date.now() > parsed.expiresAt) {
           localStorage.removeItem(SESSION_KEY);
+          setUser(null);
+        } else {
+          // 2. Verify the signature is still valid
+          const expectedSignature = createSignature(
+            parsed.username,
+            parsed.expiresAt,
+            parsed.sessionId,
+          );
+          if (parsed.signature === expectedSignature) {
+            setUser(parsed);
+          } else {
+            localStorage.removeItem(SESSION_KEY);
+            setUser(null);
+          }
         }
       } catch (e) {
         localStorage.removeItem(SESSION_KEY);
@@ -71,12 +88,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const isValid = verifyTOTP(code);
 
     if (isValid && username.trim() === ADMIN_USERNAME) {
-      const signature = createSignature(username);
-      const newUser: UserProfile = { username, role: "admin", signature };
+      const expiresAt = Date.now() + SESSION_DURATION;
+      const sessionId = Math.random().toString(36).substring(2);
+      const signature = createSignature(username, expiresAt, sessionId);
+
+      const newUser: UserProfile = {
+        username,
+        role: "admin",
+        expiresAt,
+        sessionId,
+        signature,
+      };
 
       setUser(newUser);
-
-      // Encode to Base64 before saving
       const encoded = btoa(JSON.stringify(newUser));
       localStorage.setItem(SESSION_KEY, encoded);
     } else {
