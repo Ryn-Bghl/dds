@@ -4,6 +4,7 @@ import { verifyTOTP } from "../../lib/auth-engine";
 interface UserProfile {
   username: string;
   role: "admin" | "user";
+  signature?: string;
 }
 
 interface AuthContextType {
@@ -16,9 +17,23 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Production Configuration
 const SESSION_KEY = "dds_admin_session";
-const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME;
+const ADMIN_USERNAME = import.meta.env.VITE_AUTH_ADMIN_ID;
+const AUTH_SALT = import.meta.env.VITE_AUTH_SALT;
+
+/**
+ * Creates a simple non-reversible hash to sign the session.
+ * This prevents users from manually editing localStorage to become admin.
+ */
+function createSignature(username: string): string {
+  const str = `${username}-${AUTH_SALT}`;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return hash.toString(36);
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -30,7 +45,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const saved = localStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
-        setUser(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        // SECURITY CHECK: Verify the signature
+        const expectedSignature = createSignature(parsed.username);
+        if (parsed.signature === expectedSignature) {
+          setUser(parsed);
+        } else {
+          console.error("ALERTE SÉCURITÉ : Session falsifiée détectée.");
+          localStorage.removeItem(SESSION_KEY);
+        }
       } catch (e) {
         localStorage.removeItem(SESSION_KEY);
       }
@@ -39,15 +62,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = async (username: string, code: string) => {
-    if (!ADMIN_USERNAME) {
-      console.error("CRITICAL: VITE_ADMIN_USERNAME is missing in .env");
+    if (!ADMIN_USERNAME || !AUTH_SALT) {
       throw new Error("Configuration du serveur incomplète.");
     }
 
     const isValid = verifyTOTP(code);
 
     if (isValid && username.trim() === ADMIN_USERNAME) {
-      const newUser: UserProfile = { username, role: "admin" };
+      const signature = createSignature(username);
+      const newUser: UserProfile = { username, role: "admin", signature };
+
       setUser(newUser);
       localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
     } else {
@@ -62,13 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        logout,
-      }}
+      value={{ user, isAuthenticated: !!user, isLoading, login, logout }}
     >
       {children}
     </AuthContext.Provider>

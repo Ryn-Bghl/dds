@@ -2,7 +2,7 @@ import * as OTPAuth from "otpauth";
 
 // For production: The secret MUST be in the .env file.
 // No fallback is provided to ensure security.
-const TOTP_SECRET = import.meta.env.VITE_TOTP_SECRET;
+const TOTP_SECRET = import.meta.env.VITE_AUTH_CONFIG_KEY;
 
 /**
  * Verifies a 6-digit TOTP code against the secret in .env.
