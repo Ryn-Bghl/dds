@@ -26,7 +26,7 @@ const SESSION_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
 
 /**
  * Creates a signature that includes the expiration and sessionId.
- * This makes the localStorage string different every single time you log in.
+ * This makes the sessionStorage string different every single time you log in.
  */
 function createSignature(
   username: string,
@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem(SESSION_KEY);
+    const saved = sessionStorage.getItem(SESSION_KEY);
     if (saved) {
       try {
         const decoded = atob(saved);
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         // 1. Check if the session has expired
         if (Date.now() > parsed.expiresAt) {
-          localStorage.removeItem(SESSION_KEY);
+          sessionStorage.removeItem(SESSION_KEY);
           setUser(null);
         } else {
           // 2. Verify the signature is still valid
@@ -69,12 +69,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           if (parsed.signature === expectedSignature) {
             setUser(parsed);
           } else {
-            localStorage.removeItem(SESSION_KEY);
+            sessionStorage.removeItem(SESSION_KEY);
             setUser(null);
           }
         }
       } catch (e) {
-        localStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_KEY);
       }
     }
     setIsLoading(false);
@@ -102,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setUser(newUser);
       const encoded = btoa(JSON.stringify(newUser));
-      localStorage.setItem(SESSION_KEY, encoded);
+      sessionStorage.setItem(SESSION_KEY, encoded);
     } else {
       throw new Error("Identifiant ou code incorrect.");
     }
@@ -110,7 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY);
   };
 
   return (
