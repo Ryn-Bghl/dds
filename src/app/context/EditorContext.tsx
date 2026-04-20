@@ -40,7 +40,12 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
     let current: any = newContent;
 
     for (let i = 0; i < keys.length - 1; i++) {
-      current[keys[i]] = { ...current[keys[i]] };
+      // Preserve arrays using spread syntax, copy objects
+      if (Array.isArray(current[keys[i]])) {
+        current[keys[i]] = [...current[keys[i]]];
+      } else {
+        current[keys[i]] = { ...current[keys[i]] };
+      }
       current = current[keys[i]];
     }
 
