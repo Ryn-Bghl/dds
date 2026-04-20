@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { SiteContent, loadContent, saveContent } from "../../lib/content-store";
+import {
+  SiteContent,
+  loadContent,
+  saveContent,
+  initialContent,
+} from "../../lib/content-store";
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 
@@ -11,6 +16,7 @@ interface EditorContextType {
   saveChanges: () => void;
   discardChanges: () => void;
   hasUnsavedChanges: boolean;
+  isLoading: boolean;
 }
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
@@ -20,8 +26,26 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { user } = useAuth();
   const [isEditMode, setIsEditMode] = useState(false);
-  const [content, setContent] = useState<SiteContent>(loadContent());
+  const [content, setContent] = useState<SiteContent>(initialContent);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load content on mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const loadedContent = await loadContent();
+        setContent(loadedContent);
+      } catch (e) {
+        console.error("Failed to load content", e);
+        setContent(initialContent);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   // Disable edit mode if user logs out
   useEffect(() => {
@@ -54,17 +78,30 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
     setHasUnsavedChanges(true);
   };
 
-  const saveChanges = () => {
-    saveContent(content);
-    setHasUnsavedChanges(false);
-    toast.success("Modifications enregistrées avec succès !");
+  const saveChanges = async () => {
+    try {
+      await saveContent(content);
+      setHasUnsavedChanges(false);
+      toast.success("Modifications enregistrées avec succès !");
+    } catch (e) {
+      toast.error("Erreur lors de la sauvegarde");
+      console.error("Failed to save changes", e);
+    }
   };
 
   const discardChanges = () => {
     if (window.confirm("Annuler toutes les modifications non enregistrées ?")) {
-      setContent(loadContent());
-      setHasUnsavedChanges(false);
-      toast.info("Modifications annulées");
+      const reloadData = async () => {
+        try {
+          const loadedContent = await loadContent();
+          setContent(loadedContent);
+          setHasUnsavedChanges(false);
+          toast.info("Modifications annulées");
+        } catch (e) {
+          console.error("Failed to reload content", e);
+        }
+      };
+      reloadData();
     }
   };
 
@@ -78,6 +115,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
         saveChanges,
         discardChanges,
         hasUnsavedChanges,
+        isLoading,
       }}
     >
       {children}

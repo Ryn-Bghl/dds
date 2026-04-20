@@ -445,48 +445,41 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
   return repaired;
 }
 
-export function loadContent(): SiteContent {
-  const stored = localStorage.getItem("dds_content");
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored);
-
-      // Merge with initial content, preserving structure
-      let merged: SiteContent = {
-        ...initialContent,
-        home: { ...initialContent.home, ...(parsed.home || {}) },
-        association: {
-          ...initialContent.association,
-          ...(parsed.association || {}),
-        },
-        contact: { ...initialContent.contact, ...(parsed.contact || {}) },
-        join: { ...initialContent.join, ...(parsed.join || {}) },
-        support: { ...initialContent.support, ...(parsed.support || {}) },
-        settings: { ...initialContent.settings, ...(parsed.settings || {}) },
-        projects: Array.isArray(parsed.projects)
-          ? parsed.projects
-          : initialContent.projects,
-        events: Array.isArray(parsed.events)
-          ? parsed.events
-          : initialContent.events,
-        rentalRequests: Array.isArray(parsed.rentalRequests)
-          ? parsed.rentalRequests
-          : initialContent.rentalRequests,
-      };
-
-      // Validate and repair any corrupted data
-      merged = validateAndRepairContent(merged);
-
-      return merged;
-    } catch (e) {
-      console.error("Failed to parse stored content, using initial content", e);
-      localStorage.removeItem("dds_content");
+export async function loadContent(): Promise<SiteContent> {
+  try {
+    // Try to load from public/data.json (file-based storage)
+    const response = await fetch("/data.json");
+    if (!response.ok) {
+      console.warn("Failed to fetch data.json, using initial content");
       return initialContent;
     }
+    const data = await response.json();
+
+    // Validate and repair any corrupted data
+    const validated = validateAndRepairContent(data);
+    return validated;
+  } catch (e) {
+    console.error(
+      "Failed to load content from data.json, using initial content",
+      e,
+    );
+    return initialContent;
   }
-  return initialContent;
 }
 
-export function saveContent(content: SiteContent) {
-  localStorage.setItem("dds_content", JSON.stringify(content));
+export async function saveContent(content: SiteContent) {
+  try {
+    // Try to save to backend API (only works in development)
+    const response = await fetch("/api/save-content", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(content),
+    });
+
+    if (!response.ok) {
+      console.warn("Failed to save content to server");
+    }
+  } catch (e) {
+    console.error("Failed to save content via API", e);
+  }
 }

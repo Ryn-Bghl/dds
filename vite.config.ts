@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import apiServerPlugin from "./vite-api-plugin.js";
 
 function figmaAssetResolver() {
   return {
@@ -17,6 +18,7 @@ function figmaAssetResolver() {
 
 export default defineConfig({
   plugins: [
+    apiServerPlugin(),
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
@@ -30,6 +32,15 @@ export default defineConfig({
     alias: {
       // Alias @ to the src directory
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+      },
     },
   },
 
