@@ -53,6 +53,7 @@ export const Editable: React.FC<EditableProps> = ({
           "relative border-2 border-[#F29F05] p-2 rounded-md bg-black/50 z-50",
           className,
         )}
+        onClick={(e) => e.stopPropagation()}
       >
         {label && (
           <label className="text-xs text-[#F29F05] mb-1 block">{label}</label>
