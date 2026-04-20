@@ -394,47 +394,94 @@ export const initialContent: SiteContent = {
   },
 };
 
+function isValidArray(value: any): boolean {
+  return Array.isArray(value) && value.length > 0;
+}
+
+function validateAndRepairContent(content: SiteContent): SiteContent {
+  // Ensure all critical array fields are actually arrays
+  const repaired = { ...content };
+
+  // Validate home page
+  if (!repaired.home) {
+    repaired.home = initialContent.home;
+  } else {
+    if (!Array.isArray(repaired.home.stats)) {
+      console.warn("Repairing corrupted home.stats");
+      repaired.home.stats = initialContent.home.stats;
+    }
+    if (!Array.isArray(repaired.home.services)) {
+      console.warn("Repairing corrupted home.services");
+      repaired.home.services = initialContent.home.services;
+    }
+  }
+
+  // Validate association page
+  if (!repaired.association) {
+    repaired.association = initialContent.association;
+  } else {
+    if (!Array.isArray(repaired.association.values)) {
+      console.warn("Repairing corrupted association.values");
+      repaired.association.values = initialContent.association.values;
+    }
+  }
+
+  // Validate top-level arrays
+  if (!Array.isArray(repaired.projects)) {
+    console.warn("Repairing corrupted projects array");
+    repaired.projects = initialContent.projects;
+  }
+
+  if (!Array.isArray(repaired.events)) {
+    console.warn("Repairing corrupted events array");
+    repaired.events = initialContent.events;
+  }
+
+  if (!Array.isArray(repaired.rentalRequests)) {
+    console.warn("Repairing corrupted rentalRequests array");
+    repaired.rentalRequests = initialContent.rentalRequests;
+  }
+
+  return repaired;
+}
+
 export function loadContent(): SiteContent {
   const stored = localStorage.getItem("dds_content");
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
-      // Deep merge with settings and new page keys
-      const merged = {
+
+      // Merge with initial content, preserving structure
+      let merged: SiteContent = {
         ...initialContent,
-        ...parsed,
-        settings: { ...initialContent.settings, ...(parsed.settings || {}) },
+        home: { ...initialContent.home, ...(parsed.home || {}) },
+        association: {
+          ...initialContent.association,
+          ...(parsed.association || {}),
+        },
+        contact: { ...initialContent.contact, ...(parsed.contact || {}) },
         join: { ...initialContent.join, ...(parsed.join || {}) },
         support: { ...initialContent.support, ...(parsed.support || {}) },
+        settings: { ...initialContent.settings, ...(parsed.settings || {}) },
+        projects: Array.isArray(parsed.projects)
+          ? parsed.projects
+          : initialContent.projects,
+        events: Array.isArray(parsed.events)
+          ? parsed.events
+          : initialContent.events,
+        rentalRequests: Array.isArray(parsed.rentalRequests)
+          ? parsed.rentalRequests
+          : initialContent.rentalRequests,
       };
 
-      // Validate and fix corrupted array data
-      if (merged.home) {
-        if (!Array.isArray(merged.home.stats)) {
-          merged.home.stats = initialContent.home.stats;
-        }
-        if (!Array.isArray(merged.home.services)) {
-          merged.home.services = initialContent.home.services;
-        }
-      }
-      if (merged.association) {
-        if (!Array.isArray(merged.association.values)) {
-          merged.association.values = initialContent.association.values;
-        }
-      }
-      if (!Array.isArray(merged.projects)) {
-        merged.projects = initialContent.projects;
-      }
-      if (!Array.isArray(merged.events)) {
-        merged.events = initialContent.events;
-      }
-      if (!Array.isArray(merged.rentalRequests)) {
-        merged.rentalRequests = initialContent.rentalRequests;
-      }
+      // Validate and repair any corrupted data
+      merged = validateAndRepairContent(merged);
 
       return merged;
     } catch (e) {
-      console.error("Failed to parse stored content", e);
+      console.error("Failed to parse stored content, using initial content", e);
+      localStorage.removeItem("dds_content");
+      return initialContent;
     }
   }
   return initialContent;
