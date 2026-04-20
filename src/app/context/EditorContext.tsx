@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { SiteContent, loadContent, saveContent } from '../lib/content-store';
-import { toast } from 'sonner';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { SiteContent, loadContent, saveContent } from "../../lib/content-store";
+import { toast } from "sonner";
 
 interface EditorContextType {
   isEditMode: boolean;
@@ -13,7 +13,9 @@ interface EditorContextType {
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
-export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [content, setContent] = useState<SiteContent>(loadContent());
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -23,7 +25,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const updateContent = (path: string, value: any) => {
-    const keys = path.split('.');
+    const keys = path.split(".");
     const newContent = { ...content };
     let current: any = newContent;
 
@@ -62,7 +64,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 export const useEditor = () => {
   const context = useContext(EditorContext);
   if (context === undefined) {
-    throw new Error('useEditor must be used within an EditorProvider');
+    throw new Error("useEditor must be used within an EditorProvider");
   }
   return context;
 };
