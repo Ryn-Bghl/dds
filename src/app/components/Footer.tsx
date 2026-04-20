@@ -8,8 +8,12 @@ import {
   Phone,
 } from "lucide-react";
 import ddsLogo from "../assets/dds_logo.png";
+import { useEditor } from "../context/EditorContext";
 
 export default function Footer() {
+  const { content } = useEditor();
+  const { settings } = content;
+
   return (
     <footer className="bg-[#0D0D0D] text-gray-300 border-t border-gray-800">
       <div className="container mx-auto px-4 py-12">
@@ -17,23 +21,19 @@ export default function Footer() {
           {/* About */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              {/*<div className="w-10 h-10 bg-gradient-to-br from-[#8C0343] to-[#F29F05] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">DDS</span>
-              </div>*/}
               <img
                 src={ddsLogo}
-                alt="Logo de l'association Dons Du Son"
+                alt={`Logo de l'association ${settings.siteIdentity.title}`}
                 className="w-12 h-12 rounded-lg"
               />
-              <div className="font-bold text-white">Dons Du Son</div>
+              <div className="font-bold text-white">
+                {settings.siteIdentity.title}
+              </div>
             </div>
-            <p className="text-sm mb-4">
-              Association dédiée à l'accompagnement des artistes et à la
-              diffusion de la culture musicale en Île-de-France.
-            </p>
+            <p className="text-sm mb-4">{settings.siteIdentity.footerText}</p>
             <div className="flex gap-3">
               <a
-                href="https://facebook.com"
+                href={settings.contact.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors"
@@ -41,7 +41,7 @@ export default function Footer() {
                 <Facebook className="w-4 h-4" />
               </a>
               <a
-                href="https://instagram.com"
+                href={settings.contact.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors"
@@ -49,7 +49,7 @@ export default function Footer() {
                 <Instagram className="w-4 h-4" />
               </a>
               <a
-                href="https://youtube.com"
+                href={settings.contact.youtube}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-[#8C0343] transition-colors"
@@ -144,28 +144,23 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#F29F05]" />
                 <a
-                  href="mailto:contact@donsduson.fr"
+                  href={`mailto:${settings.contact.email}`}
                   className="hover:text-[#F29F05] transition-colors"
                 >
-                  contact@donsduson.fr
+                  {settings.contact.email}
                 </a>
               </li>
-              <li className="flex items-start gap-2">
-                <Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#F29F05]" />
-                <span>01 23 45 67 89</span>
-              </li>
+              {/* Phone removed from footer too as per roadmap */}
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#F29F05]" />
-                <span>Paris, Île-de-France</span>
+                <span>{settings.contact.address}</span>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-sm text-center">
-          <p>
-            &copy; {new Date().getFullYear()} Dons Du Son. Tous droits réservés.
-          </p>
+          <p>{settings.siteIdentity.copyright}</p>
         </div>
       </div>
     </footer>

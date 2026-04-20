@@ -95,6 +95,29 @@ export interface RentalRequest {
   createdAt: string;
 }
 
+export interface GlobalSettings {
+  siteIdentity: {
+    title: string;
+    description: string;
+    footerText: string;
+    copyright: string;
+  };
+  contact: {
+    email: string;
+    address: string;
+    facebook: string;
+    instagram: string;
+    youtube: string;
+  };
+  rental: {
+    replyDelay: string;
+    defaultDeposit: string;
+  };
+  advanced: {
+    maintenanceMode: boolean;
+  };
+}
+
 export interface SiteContent {
   home: HomePageContent;
   association: AssociationPageContent;
@@ -102,6 +125,7 @@ export interface SiteContent {
   projects: Project[];
   events: Event[];
   rentalRequests: RentalRequest[];
+  settings: GlobalSettings;
 }
 
 export const initialContent: SiteContent = {
@@ -276,6 +300,30 @@ export const initialContent: SiteContent = {
       createdAt: "2026-04-01",
     },
   ],
+  settings: {
+    siteIdentity: {
+      title: "Dons Du Son",
+      description:
+        "Association culturelle pour l'accompagnement des artistes et la diffusion de la musique",
+      footerText:
+        "Association culturelle engagée pour la démocratisation de l'accès aux équipements techniques et l'accompagnement des artistes émergents.",
+      copyright: "© 2026 Dons Du Son. Tous droits réservés.",
+    },
+    contact: {
+      email: "contact@donsduson.fr",
+      address: "123 rue de la Musique, 75018 Paris",
+      facebook: "https://facebook.com/donsduson",
+      instagram: "https://instagram.com/donsduson",
+      youtube: "https://youtube.com/donsduson",
+    },
+    rental: {
+      replyDelay: "Vous recevrez un devis sous 72 heures",
+      defaultDeposit: "30%",
+    },
+    advanced: {
+      maintenanceMode: false,
+    },
+  },
 };
 
 export function loadContent(): SiteContent {
@@ -283,7 +331,12 @@ export function loadContent(): SiteContent {
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
-      return { ...initialContent, ...parsed };
+      // Deep merge to ensure new settings keys exist even if older version in storage
+      return {
+        ...initialContent,
+        ...parsed,
+        settings: { ...initialContent.settings, ...(parsed.settings || {}) },
+      };
     } catch (e) {
       console.error("Failed to parse stored content", e);
     }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import ddsLogo from "../assets/dds_logo.png";
 import { useAuth } from "../context/AuthContext";
+import { useEditor } from "../context/EditorContext";
 
 const navLinks = [
   { path: "/", label: "Accueil" },
@@ -19,7 +20,9 @@ const navLinks = [
 export default function Header() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
+  const { content } = useEditor();
+  const { settings } = content;
 
   return (
     <header className="sticky top-0 z-50 bg-[#0D0D0D] border-b border-gray-800">
@@ -29,13 +32,15 @@ export default function Header() {
           <Link to="/" className="flex items-center gap-3">
             <img
               src={ddsLogo}
-              alt="Logo de l'association Dons Du Son"
+              alt={`Logo de l'association ${settings.siteIdentity.title}`}
               className="w-12 h-12 rounded-lg"
             />
             <div className="hidden sm:block">
-              <div className="font-bold text-xl text-white">Dons Du Son</div>
+              <div className="font-bold text-xl text-white">
+                {settings.siteIdentity.title}
+              </div>
               <div className="text-xs text-gray-400">
-                Association culturelle
+                {settings.siteIdentity.description.substring(0, 30)}...
               </div>
             </div>
           </Link>

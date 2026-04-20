@@ -17,6 +17,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProjects from "./pages/admin/AdminProjects";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminRentals from "./pages/admin/AdminRentals";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 export const router = createBrowserRouter([
   {
@@ -46,7 +47,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "settings",
-        element: <div className="text-white">Paramètres (À venir)</div>,
+        Component: AdminSettings,
       },
     ],
   },
