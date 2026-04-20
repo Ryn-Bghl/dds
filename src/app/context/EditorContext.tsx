@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { SiteContent, loadContent, saveContent } from "../../lib/content-store";
-import { toast } from "sonner";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { SiteContent, loadContent, saveContent } from '../../lib/content-store';
+import { toast } from 'sonner';
+import { useAuth } from './AuthContext';
 
 interface EditorContextType {
   isEditMode: boolean;
@@ -8,24 +9,31 @@ interface EditorContextType {
   content: SiteContent;
   updateContent: (path: string, value: any) => void;
   saveChanges: () => void;
+  discardChanges: () => void;
   hasUnsavedChanges: boolean;
 }
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
-export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
   const [isEditMode, setIsEditMode] = useState(false);
   const [content, setContent] = useState<SiteContent>(loadContent());
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Disable edit mode if user logs out
+  useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      setIsEditMode(false);
+    }
+  }, [user]);
 
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);
   };
 
   const updateContent = (path: string, value: any) => {
-    const keys = path.split(".");
+    const keys = path.split('.');
     const newContent = { ...content };
     let current: any = newContent;
 
@@ -45,6 +53,14 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
     toast.success("Modifications enregistrées avec succès !");
   };
 
+  const discardChanges = () => {
+    if (window.confirm("Annuler toutes les modifications non enregistrées ?")) {
+      setContent(loadContent());
+      setHasUnsavedChanges(false);
+      toast.info("Modifications annulées");
+    }
+  };
+
   return (
     <EditorContext.Provider
       value={{
@@ -53,11 +69,14 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
         content,
         updateContent,
         saveChanges,
+        discardChanges,
         hasUnsavedChanges,
       }}
     >
       {children}
     </EditorContext.Provider>
+  );
+};
   );
 };
 

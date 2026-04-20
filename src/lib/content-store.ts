@@ -55,6 +55,36 @@ export interface ContactPageContent {
   };
 }
 
+export interface JoinPageContent {
+  header: {
+    title: string;
+    description: string;
+  };
+  volunteering: {
+    title: string;
+    content: string;
+  };
+  membership: {
+    title: string;
+    content: string;
+  };
+}
+
+export interface SupportPageContent {
+  header: {
+    title: string;
+    description: string;
+  };
+  donations: {
+    title: string;
+    content: string;
+  };
+  partnership: {
+    title: string;
+    content: string;
+  };
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -98,6 +128,7 @@ export interface RentalRequest {
 export interface GlobalSettings {
   siteIdentity: {
     title: string;
+    subtitle: string;
     description: string;
     footerText: string;
     copyright: string;
@@ -122,6 +153,8 @@ export interface SiteContent {
   home: HomePageContent;
   association: AssociationPageContent;
   contact: ContactPageContent;
+  join: JoinPageContent;
+  support: SupportPageContent;
   projects: Project[];
   events: Event[];
   rentalRequests: RentalRequest[];
@@ -218,6 +251,40 @@ export const initialContent: SiteContent = {
       },
     },
   },
+  join: {
+    header: {
+      title: "Rejoindre l'aventure",
+      description:
+        "Devenez acteur du développement culturel de votre territoire",
+    },
+    volunteering: {
+      title: "Bénévolat",
+      content:
+        "Nous recherchons régulièrement des bénévoles pour nous aider sur nos événements : accueil public, logistique, technique, communication. C'est une excellente occasion de découvrir les coulisses du spectacle vivant.",
+    },
+    membership: {
+      title: "Adhésion",
+      content:
+        "Adhérer à Dons Du Son, c'est soutenir nos actions et bénéficier de tarifs préférentiels sur la location de matériel et les formations. L'adhésion annuelle est de 20€.",
+    },
+  },
+  support: {
+    header: {
+      title: "Nous soutenir",
+      description:
+        "Aidez-nous à rendre la culture accessible au plus grand nombre",
+    },
+    donations: {
+      title: "Dons",
+      content:
+        "Vos dons nous permettent de renouveler notre parc de matériel et de proposer des ateliers gratuits pour les jeunes talents. En tant qu'association d'intérêt général, vos dons sont défiscalisables.",
+    },
+    partnership: {
+      title: "Partenariats",
+      content:
+        "Vous êtes une entreprise ou une institution culturelle ? Devenons partenaires pour créer des événements uniques et soutenir la scène émergente ensemble.",
+    },
+  },
   projects: [
     {
       id: "festival-2024",
@@ -303,6 +370,7 @@ export const initialContent: SiteContent = {
   settings: {
     siteIdentity: {
       title: "Dons Du Son",
+      subtitle: "Association culturelle",
       description:
         "Association culturelle pour l'accompagnement des artistes et la diffusion de la musique",
       footerText:
@@ -331,11 +399,13 @@ export function loadContent(): SiteContent {
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
-      // Deep merge to ensure new settings keys exist even if older version in storage
+      // Deep merge with settings and new page keys
       return {
         ...initialContent,
         ...parsed,
         settings: { ...initialContent.settings, ...(parsed.settings || {}) },
+        join: { ...initialContent.join, ...(parsed.join || {}) },
+        support: { ...initialContent.support, ...(parsed.support || {}) },
       };
     } catch (e) {
       console.error("Failed to parse stored content", e);

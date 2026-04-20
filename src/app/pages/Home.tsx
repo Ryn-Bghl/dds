@@ -15,7 +15,7 @@ import { useEditor } from "../context/EditorContext";
 import { Editable } from "../components/Editable";
 
 export default function Home() {
-  const { content } = useEditor();
+  const { content, isEditMode } = useEditor();
   const { home, projects } = content;
 
   // Map icon names to components
@@ -85,16 +85,18 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="mt-8 flex justify-center">
-            <Editable
-              path="home.hero.backgroundImage"
-              label="URL de l'image de fond (Unsplash)"
-            >
-              <span className="text-xs text-white/40 hover:text-white/80 transition-colors">
-                Changer l'image de fond
-              </span>
-            </Editable>
-          </div>
+          {isEditMode && (
+            <div className="mt-8 flex justify-center">
+              <Editable
+                path="home.hero.backgroundImage"
+                label="URL de l'image de fond (Unsplash)"
+              >
+                <span className="text-xs text-white/40 hover:text-white/80 transition-colors bg-black/20 px-3 py-1 rounded-full">
+                  Changer l'image de fond
+                </span>
+              </Editable>
+            </div>
+          )}
         </div>
       </section>
 
@@ -130,7 +132,12 @@ export default function Home() {
             {home.stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-5xl md:text-6xl mb-2 font-bold">
-                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                  <Editable
+                    path={`home.stats.${index}.value`}
+                    label="Valeur Numérique"
+                  >
+                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                  </Editable>
                 </div>
                 <Editable
                   path={`home.stats.${index}.label`}

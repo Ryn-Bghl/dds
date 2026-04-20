@@ -40,7 +40,7 @@ export default function Header() {
                 {settings.siteIdentity.title}
               </div>
               <div className="text-xs text-gray-400">
-                {settings.siteIdentity.description.substring(0, 30)}...
+                {settings.siteIdentity.subtitle}
               </div>
             </div>
           </Link>
@@ -63,10 +63,13 @@ export default function Header() {
 
             {isAuthenticated && (
               <div className="ml-4 flex items-center gap-2 border-l border-gray-700 pl-4">
-                <div className="flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full text-xs text-gray-300">
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full text-xs text-gray-300 hover:bg-gray-700 transition-colors"
+                >
                   <User className="w-3 h-3 text-[#F29F05]" />
                   <span>Admin</span>
-                </div>
+                </Link>
                 <Button
                   variant="ghost"
                   size="sm"

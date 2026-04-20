@@ -10,14 +10,20 @@ import {
   Edit3,
   Save,
   Globe,
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Switch } from "../ui/switch";
 
 export default function AdminBar() {
   const { logout, user } = useAuth();
-  const { isEditMode, toggleEditMode, hasUnsavedChanges, saveChanges } =
-    useEditor();
+  const {
+    isEditMode,
+    toggleEditMode,
+    hasUnsavedChanges,
+    saveChanges,
+    discardChanges,
+  } = useEditor();
 
   if (user?.role !== "admin") return null;
 
@@ -49,14 +55,25 @@ export default function AdminBar() {
             />
           </div>
           {hasUnsavedChanges && (
-            <Button
-              size="sm"
-              onClick={saveChanges}
-              className="bg-[#F29F05] text-black hover:bg-[#D96704] h-7 px-3 animate-pulse"
-            >
-              <Save className="w-3.5 h-3.5 mr-1.5" />
-              Enregistrer
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                onClick={discardChanges}
+                variant="ghost"
+                className="text-white hover:bg-white/10 h-7 px-3"
+              >
+                <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+                Annuler
+              </Button>
+              <Button
+                size="sm"
+                onClick={saveChanges}
+                className="bg-[#F29F05] text-black hover:bg-[#D96704] h-7 px-3 animate-pulse"
+              >
+                <Save className="w-3.5 h-3.5 mr-1.5" />
+                Enregistrer
+              </Button>
+            </div>
           )}
           <Link
             to="/"

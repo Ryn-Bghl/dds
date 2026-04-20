@@ -24,9 +24,17 @@ export default function Events() {
   const { content } = useEditor();
   const events = content.events || [];
   const [activeTab, setActiveTab] = useState("agenda");
+  const [selectedCategory, setSelectedCategory] = useState("Tous");
 
-  const upcomingEvents = events.filter((e) => !e.isPast);
-  const pastEvents = events.filter((e) => e.isPast);
+  const categories = ["Tous", ...new Set(events.map((e) => e.category))];
+
+  const filteredEvents =
+    selectedCategory === "Tous"
+      ? events
+      : events.filter((e) => e.category === selectedCategory);
+
+  const upcomingEvents = filteredEvents.filter((e) => !e.isPast);
+  const pastEvents = filteredEvents.filter((e) => e.isPast);
 
   return (
     <div className="flex flex-col">
@@ -38,6 +46,28 @@ export default function Events() {
             Concerts, formations, ateliers : rejoignez-nous lors de nos
             prochains événements
           </p>
+        </div>
+      </section>
+
+      {/* Categories / Filters */}
+      <section className="py-8 bg-card border-b border-border sticky top-20 z-40">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap gap-3 justify-center">
+            {categories.map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? "default" : "outline"}
+                onClick={() => setSelectedCategory(category)}
+                className={
+                  selectedCategory === category
+                    ? "bg-[#8C0343] hover:bg-[#771236]"
+                    : ""
+                }
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -58,7 +88,7 @@ export default function Events() {
             <TabsContent value="agenda" className="space-y-8">
               {upcomingEvents.length === 0 ? (
                 <p className="text-center text-muted-foreground py-12">
-                  Aucun événement à venir pour le moment.
+                  Aucun événement à venir pour le moment dans cette catégorie.
                 </p>
               ) : (
                 upcomingEvents.map((event) => (
@@ -164,7 +194,7 @@ export default function Events() {
             <TabsContent value="archives">
               {pastEvents.length === 0 ? (
                 <p className="text-center text-muted-foreground py-12">
-                  Aucune archive disponible.
+                  Aucune archive disponible dans cette catégorie.
                 </p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
