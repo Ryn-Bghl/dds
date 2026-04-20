@@ -22,7 +22,7 @@ const formatDate = (dateString: string) => {
 
 export default function Events() {
   const { content } = useEditor();
-  const events = content.events || [];
+  const events = Array.isArray(content.events) ? content.events : [];
   const [activeTab, setActiveTab] = useState("agenda");
   const [selectedCategory, setSelectedCategory] = useState("Tous");
 

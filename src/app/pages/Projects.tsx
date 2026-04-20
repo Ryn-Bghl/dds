@@ -6,7 +6,7 @@ import { useEditor } from "../context/EditorContext";
 
 export default function Projects() {
   const { content } = useEditor();
-  const projects = content.projects;
+  const projects = Array.isArray(content.projects) ? content.projects : [];
   const [selectedCategory, setSelectedCategory] = useState("Tous");
 
   const categories = ["Tous", ...new Set(projects.map((p) => p.category))];

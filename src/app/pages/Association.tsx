@@ -139,38 +139,40 @@ export default function Association() {
             Nos Valeurs
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {association.values.map((value, index) => {
-              const Icon = iconMap[value.iconName] || Target;
-              return (
-                <Card
-                  key={index}
-                  className="text-center hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-card"
-                >
-                  <CardContent className="p-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#8C0343]/20 to-[#D96704]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon className="w-8 h-8 text-[#F29F05]" />
-                    </div>
-                    <Editable
-                      path={`association.values.${index}.title`}
-                      label="Titre Valeur"
-                    >
-                      <h3 className="text-2xl mb-3 text-foreground font-semibold">
-                        {value.title}
-                      </h3>
-                    </Editable>
-                    <Editable
-                      path={`association.values.${index}.description`}
-                      type="textarea"
-                      label="Description Valeur"
-                    >
-                      <p className="text-muted-foreground">
-                        {value.description}
-                      </p>
-                    </Editable>
-                  </CardContent>
-                </Card>
-              );
-            })}
+            {(Array.isArray(association.values) ? association.values : []).map(
+              (value, index) => {
+                const Icon = iconMap[value.iconName] || Target;
+                return (
+                  <Card
+                    key={index}
+                    className="text-center hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-card"
+                  >
+                    <CardContent className="p-8">
+                      <div className="w-16 h-16 bg-gradient-to-br from-[#8C0343]/20 to-[#D96704]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Icon className="w-8 h-8 text-[#F29F05]" />
+                      </div>
+                      <Editable
+                        path={`association.values.${index}.title`}
+                        label="Titre Valeur"
+                      >
+                        <h3 className="text-2xl mb-3 text-foreground font-semibold">
+                          {value.title}
+                        </h3>
+                      </Editable>
+                      <Editable
+                        path={`association.values.${index}.description`}
+                        type="textarea"
+                        label="Description Valeur"
+                      >
+                        <p className="text-muted-foreground">
+                          {value.description}
+                        </p>
+                      </Editable>
+                    </CardContent>
+                  </Card>
+                );
+              },
+            )}
           </div>
         </div>
       </section>
