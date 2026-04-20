@@ -16,7 +16,7 @@ import { Editable } from "../components/Editable";
 
 export default function Home() {
   const { content } = useEditor();
-  const { home } = content;
+  const { home, projects } = content;
 
   // Map icon names to components
   const iconMap: Record<string, any> = {
@@ -26,29 +26,7 @@ export default function Home() {
     Wrench,
   };
 
-  const latestProjects = [
-    {
-      id: "festival-2024",
-      title: "Festival Émergence 2024",
-      image:
-        "https://images.unsplash.com/photo-1669459881627-06c2a4948e33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwc3RhZ2UlMjBsaWdodHMlMjBwZXJmb3JtYW5jZXxlbnwxfHx8fDE3NzQ1MDc2OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      category: "Diffusion",
-    },
-    {
-      id: "atelier-prod",
-      title: "Atelier Production Musicale",
-      image:
-        "https://images.unsplash.com/photo-1696522732406-065ef560da8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMHdvcmtzaG9wJTIwdGVhY2hpbmd8ZW58MXx8fHwxNzc0NjIwMTcxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      category: "Formation",
-    },
-    {
-      id: "concert-solidaire",
-      title: "Concert Solidaire",
-      image:
-        "https://images.unsplash.com/photo-1561264819-1ccc1c6e0ae9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsaXZlJTIwbXVzaWMlMjBiYW5kJTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzc0NjIwMTcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      category: "Événement",
-    },
-  ];
+  const latestProjects = projects.slice(0, 3);
 
   return (
     <div className="flex flex-col">

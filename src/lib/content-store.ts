@@ -55,10 +55,53 @@ export interface ContactPageContent {
   };
 }
 
+export interface Project {
+  id: string;
+  title: string;
+  category: string;
+  image: string;
+  description: string;
+  date: string;
+  location: string;
+  stats: { label: string; value: string }[];
+  content: { subtitle: string; text: string }[];
+  testimonial?: { text: string; author: string };
+}
+
+export interface Event {
+  id: number;
+  title: string;
+  date: string;
+  time?: string;
+  location: string;
+  category: string;
+  description: string;
+  price?: string;
+  ticketUrl?: string;
+  image: string;
+  attendees?: number;
+  isPast: boolean;
+}
+
+export interface RentalRequest {
+  id: string;
+  customerName: string;
+  email: string;
+  phone: string;
+  eventDate: string;
+  status: "En attente" | "Validé" | "Refusé";
+  totalPrice: number;
+  items: { name: string; quantity: number; price: number }[];
+  createdAt: string;
+}
+
 export interface SiteContent {
   home: HomePageContent;
   association: AssociationPageContent;
   contact: ContactPageContent;
+  projects: Project[];
+  events: Event[];
+  rentalRequests: RentalRequest[];
 }
 
 export const initialContent: SiteContent = {
@@ -151,13 +194,96 @@ export const initialContent: SiteContent = {
       },
     },
   },
+  projects: [
+    {
+      id: "festival-2024",
+      title: "Festival Émergence 2024",
+      category: "Diffusion",
+      image:
+        "https://images.unsplash.com/photo-1669459881627-06c2a4948e33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwc3RhZ2UlMjBsaWdodHMlMjBwZXJmb3JtYW5jZXxlbnwxfHx8fDE3NzQ1MDc2OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      description:
+        "Le Festival Émergence est notre événement phare annuel, dédié à la découverte de nouveaux talents musicaux.",
+      date: "15-17 Juin 2024",
+      location: "Parc de la Villette, Paris",
+      stats: [
+        { label: "Artistes", value: "15" },
+        { label: "Spectateurs", value: "3 500" },
+        { label: "Jours", value: "3" },
+      ],
+      content: [
+        {
+          subtitle: "Objectifs du projet",
+          text: "Offrir une plateforme de visibilité aux artistes émergents.",
+        },
+        {
+          subtitle: "Organisation",
+          text: "L'événement s'est déroulé sur 3 jours avec 2 scènes principales.",
+        },
+      ],
+      testimonial: { text: "Une expérience inoubliable.", author: "Léa" },
+    },
+    {
+      id: "atelier-prod",
+      title: "Atelier Production Musicale",
+      category: "Formation",
+      image:
+        "https://images.unsplash.com/photo-1696522732406-065ef560da8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMHdvcmtzaG9wJTIwdGVhY2hpbmd8ZW58MXx8fHwxNzc0NjIwMTcxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      description:
+        "Formation intensive de 5 jours dédiée à la production musicale en home studio.",
+      date: "4-8 Mars 2024",
+      location: "Studio Dons Du Son, Paris 18e",
+      stats: [{ label: "Participants", value: "12" }],
+      content: [{ subtitle: "Programme", text: "CAO, mixage et mastering." }],
+    },
+  ],
+  events: [
+    {
+      id: 1,
+      title: "Showcase Tremplin Hip-Hop",
+      date: "2026-04-15",
+      time: "20h00",
+      location: "La Bellevilloise, Paris 20e",
+      category: "Concert",
+      description: "Finale du tremplin avec 5 rappeurs sélectionnés",
+      price: "Gratuit sur réservation",
+      image:
+        "https://images.unsplash.com/photo-1561264819-1ccc1c6e0ae9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsaXZlJTIwbXVzaWMlMjBiYW5kJTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzc0NjIwMTcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      isPast: false,
+    },
+    {
+      id: 2,
+      title: "Festival Émergence 2024",
+      date: "2024-06-15",
+      location: "Parc de la Villette",
+      category: "Festival",
+      description: "Édition passée du festival",
+      image:
+        "https://images.unsplash.com/photo-1669459881627-06c2a4948e33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwc3RhZ2UlMjBsaWdodHMlMjBwZXJmb3JtYW5jZXxlbnwxfHx8fDE3NzQ1MDc2OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      isPast: true,
+      attendees: 3500,
+    },
+  ],
+  rentalRequests: [
+    {
+      id: "req-1",
+      customerName: "Jean Dupont",
+      email: "jean@example.com",
+      phone: "06 12 34 56 78",
+      eventDate: "2026-05-20",
+      status: "En attente",
+      totalPrice: 155,
+      items: [{ name: "Enceinte JBL PRX815", quantity: 2, price: 80 }],
+      createdAt: "2026-04-01",
+    },
+  ],
 };
 
 export function loadContent(): SiteContent {
   const stored = localStorage.getItem("dds_content");
   if (stored) {
     try {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      return { ...initialContent, ...parsed };
     } catch (e) {
       console.error("Failed to parse stored content", e);
     }

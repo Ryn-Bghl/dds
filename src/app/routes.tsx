@@ -14,6 +14,9 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminProjects from "./pages/admin/AdminProjects";
+import AdminEvents from "./pages/admin/AdminEvents";
+import AdminRentals from "./pages/admin/AdminRentals";
 
 export const router = createBrowserRouter([
   {
@@ -31,21 +34,15 @@ export const router = createBrowserRouter([
       { index: true, Component: AdminDashboard },
       {
         path: "projects",
-        element: (
-          <div className="text-white">Gestion des Projets (À venir)</div>
-        ),
+        Component: AdminProjects,
       },
       {
         path: "events",
-        element: (
-          <div className="text-white">Gestion des Événements (À venir)</div>
-        ),
+        Component: AdminEvents,
       },
       {
         path: "rental",
-        element: (
-          <div className="text-white">Gestion des Locations (À venir)</div>
-        ),
+        Component: AdminRentals,
       },
       {
         path: "settings",
