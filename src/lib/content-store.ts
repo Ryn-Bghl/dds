@@ -400,13 +400,39 @@ export function loadContent(): SiteContent {
     try {
       const parsed = JSON.parse(stored);
       // Deep merge with settings and new page keys
-      return {
+      const merged = {
         ...initialContent,
         ...parsed,
         settings: { ...initialContent.settings, ...(parsed.settings || {}) },
         join: { ...initialContent.join, ...(parsed.join || {}) },
         support: { ...initialContent.support, ...(parsed.support || {}) },
       };
+
+      // Validate and fix corrupted array data
+      if (merged.home) {
+        if (!Array.isArray(merged.home.stats)) {
+          merged.home.stats = initialContent.home.stats;
+        }
+        if (!Array.isArray(merged.home.services)) {
+          merged.home.services = initialContent.home.services;
+        }
+      }
+      if (merged.association) {
+        if (!Array.isArray(merged.association.values)) {
+          merged.association.values = initialContent.association.values;
+        }
+      }
+      if (!Array.isArray(merged.projects)) {
+        merged.projects = initialContent.projects;
+      }
+      if (!Array.isArray(merged.events)) {
+        merged.events = initialContent.events;
+      }
+      if (!Array.isArray(merged.rentalRequests)) {
+        merged.rentalRequests = initialContent.rentalRequests;
+      }
+
+      return merged;
     } catch (e) {
       console.error("Failed to parse stored content", e);
     }
