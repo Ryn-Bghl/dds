@@ -129,24 +129,29 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl text-center mb-12 font-bold">Notre Impact</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {home.stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-5xl md:text-6xl mb-2 font-bold">
+            {(Array.isArray(home.stats) ? home.stats : []).map(
+              (stat, index) => (
+                <div key={index} className="text-center">
+                  <div className="text-5xl md:text-6xl mb-2 font-bold">
+                    <Editable
+                      path={`home.stats.${index}.value`}
+                      label="Valeur Numérique"
+                    >
+                      <AnimatedCounter
+                        value={stat.value}
+                        suffix={stat.suffix}
+                      />
+                    </Editable>
+                  </div>
                   <Editable
-                    path={`home.stats.${index}.value`}
-                    label="Valeur Numérique"
+                    path={`home.stats.${index}.label`}
+                    label={`Label Stat ${index + 1}`}
                   >
-                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                    <div className="text-lg opacity-90">{stat.label}</div>
                   </Editable>
                 </div>
-                <Editable
-                  path={`home.stats.${index}.label`}
-                  label={`Label Stat ${index + 1}`}
-                >
-                  <div className="text-lg opacity-90">{stat.label}</div>
-                </Editable>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -161,36 +166,38 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {home.services.map((service, index) => {
-              const Icon = iconMap[service.iconName] || Music;
-              return (
-                <Card
-                  key={index}
-                  className="bg-[#1a1a1a] border-gray-800 hover:border-[#8C0343] hover:shadow-lg transition-all"
-                >
-                  <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#8C0343]/20 to-[#F29F05]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon className="w-8 h-8 text-[#F29F05]" />
-                    </div>
-                    <Editable
-                      path={`home.services.${index}.title`}
-                      label="Titre Service"
-                    >
-                      <h3 className="text-xl mb-2 text-white font-semibold">
-                        {service.title}
-                      </h3>
-                    </Editable>
-                    <Editable
-                      path={`home.services.${index}.description`}
-                      type="textarea"
-                      label="Description Service"
-                    >
-                      <p className="text-gray-400">{service.description}</p>
-                    </Editable>
-                  </CardContent>
-                </Card>
-              );
-            })}
+            {(Array.isArray(home.services) ? home.services : []).map(
+              (service, index) => {
+                const Icon = iconMap[service.iconName] || Music;
+                return (
+                  <Card
+                    key={index}
+                    className="bg-[#1a1a1a] border-gray-800 hover:border-[#8C0343] hover:shadow-lg transition-all"
+                  >
+                    <CardContent className="p-6 text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-[#8C0343]/20 to-[#F29F05]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Icon className="w-8 h-8 text-[#F29F05]" />
+                      </div>
+                      <Editable
+                        path={`home.services.${index}.title`}
+                        label="Titre Service"
+                      >
+                        <h3 className="text-xl mb-2 text-white font-semibold">
+                          {service.title}
+                        </h3>
+                      </Editable>
+                      <Editable
+                        path={`home.services.${index}.description`}
+                        type="textarea"
+                        label="Description Service"
+                      >
+                        <p className="text-gray-400">{service.description}</p>
+                      </Editable>
+                    </CardContent>
+                  </Card>
+                );
+              },
+            )}
           </div>
           <div className="text-center">
             <Button
