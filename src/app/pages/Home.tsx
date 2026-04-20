@@ -11,37 +11,20 @@ import {
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import AnimatedCounter from "../components/AnimatedCounter";
+import { useEditor } from "../context/EditorContext";
+import { Editable } from "../components/Editable";
 
 export default function Home() {
-  const stats = [
-    { value: 150, label: "Artistes accompagnés", suffix: "+" },
-    { value: 45, label: "Projets réalisés", suffix: "+" },
-    { value: 4, label: "Années d'expérience", suffix: "" },
-    { value: 200, label: "Événements organisés", suffix: "+" },
-  ];
+  const { content } = useEditor();
+  const { home } = content;
 
-  const services = [
-    {
-      icon: Music,
-      title: "Sonorisation",
-      description: "Enceintes, consoles, micros pour tous types d'événements",
-    },
-    {
-      icon: Lightbulb,
-      title: "Éclairage",
-      description: "Projecteurs, lyres, jeux de lumière pour vos spectacles",
-    },
-    {
-      icon: Radio,
-      title: "DJ & Mix",
-      description: "Platines, contrôleurs, casques pour vos sets",
-    },
-    {
-      icon: Wrench,
-      title: "Backline",
-      description: "Instruments et retours scène pour groupes live",
-    },
-  ];
+  // Map icon names to components
+  const iconMap: Record<string, any> = {
+    Music,
+    Lightbulb,
+    Radio,
+    Wrench,
+  };
 
   const latestProjects = [
     {
@@ -74,21 +57,29 @@ export default function Home() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1700166269606-b5ea327d0540?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb3VuZCUyMG1peGluZyUyMGNvbnNvbGUlMjBzdHVkaW98ZW58MXx8fHwxNzc0NTMyNTE2fDA&ixlib=rb-4.1.0&q=80&w=1080')",
+            backgroundImage: `url('${home.hero.backgroundImage}')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#8C0343]/90 via-[#771236]/80 to-[#D96704]/70" />
         </div>
 
         <div className="relative container mx-auto px-4 text-center text-white z-10">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6 max-w-4xl mx-auto">
-            Donnons du son à vos projets artistiques
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-gray-100">
-            Association culturelle engagée pour l'accompagnement des artistes et
-            la diffusion de la musique
-          </p>
+          <Editable path="home.hero.title" label="Titre Principal">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6 max-w-4xl mx-auto font-bold">
+              {home.hero.title}
+            </h1>
+          </Editable>
+
+          <Editable
+            path="home.hero.description"
+            type="textarea"
+            label="Description"
+          >
+            <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-gray-100">
+              {home.hero.description}
+            </p>
+          </Editable>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               asChild
@@ -96,7 +87,10 @@ export default function Home() {
               className="bg-[#F29F05] text-black hover:bg-[#D96704]"
             >
               <Link to="/association">
-                Découvrir l'association <ArrowRight className="ml-2 w-5 h-5" />
+                <Editable path="home.hero.ctaPrimary">
+                  {home.hero.ctaPrimary}
+                </Editable>{" "}
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
             <Button
@@ -105,8 +99,23 @@ export default function Home() {
               variant="outline"
               className="border-white text-white hover:bg-white/10"
             >
-              <Link to="/location">Location de matériel</Link>
+              <Link to="/location">
+                <Editable path="home.hero.ctaSecondary">
+                  {home.hero.ctaSecondary}
+                </Editable>
+              </Link>
             </Button>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <Editable
+              path="home.hero.backgroundImage"
+              label="URL de l'image de fond (Unsplash)"
+            >
+              <span className="text-xs text-white/40 hover:text-white/80 transition-colors">
+                Changer l'image de fond
+              </span>
+            </Editable>
           </div>
         </div>
       </section>
@@ -115,21 +124,21 @@ export default function Home() {
       <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl mb-6 text-white">Notre Manifeste</h2>
+            <Editable path="home.manifesto.title" label="Titre Manifeste">
+              <h2 className="text-4xl mb-6 text-white">
+                {home.manifesto.title}
+              </h2>
+            </Editable>
             <div className="prose prose-lg mx-auto text-gray-300">
-              <p className="text-xl leading-relaxed">
-                <strong className="text-[#F29F05]">Dons Du Son</strong> est née
-                d'une conviction : la culture doit être accessible à tous.
-                Depuis 2022, nous œuvrons pour démocratiser l'accès aux
-                équipements techniques professionnels et accompagner les
-                artistes émergents dans leurs projets musicaux.
-              </p>
-              <p className="text-xl leading-relaxed mt-4">
-                Notre mission :{" "}
-                <em className="text-[#F29F05]">former, équiper et connecter</em>{" "}
-                les talents de demain, tout en créant des ponts entre les
-                acteurs culturels du territoire.
-              </p>
+              <Editable
+                path="home.manifesto.content"
+                type="textarea"
+                label="Contenu du Manifeste"
+              >
+                <div className="whitespace-pre-wrap text-xl leading-relaxed">
+                  {home.manifesto.content}
+                </div>
+              </Editable>
             </div>
           </div>
         </div>
@@ -138,14 +147,19 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-20 bg-gradient-to-br from-[#8C0343] via-[#771236] to-[#D96704] text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl text-center mb-12">Notre Impact</h2>
+          <h2 className="text-4xl text-center mb-12 font-bold">Notre Impact</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
+            {home.stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-5xl md:text-6xl mb-2">
+                <div className="text-5xl md:text-6xl mb-2 font-bold">
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-lg opacity-90">{stat.label}</div>
+                <Editable
+                  path={`home.stats.${index}.label`}
+                  label={`Label Stat ${index + 1}`}
+                >
+                  <div className="text-lg opacity-90">{stat.label}</div>
+                </Editable>
               </div>
             ))}
           </div>
@@ -156,26 +170,42 @@ export default function Home() {
       <section className="py-20 bg-[#0D0D0D]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl mb-4 text-white">Nos Services</h2>
+            <h2 className="text-4xl mb-4 text-white font-bold">Nos Services</h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               Location de matériel professionnel pour tous vos événements
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {services.map((service, index) => (
-              <Card
-                key={index}
-                className="bg-[#1a1a1a] border-gray-800 hover:border-[#8C0343] hover:shadow-lg transition-all"
-              >
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#8C0343]/20 to-[#F29F05]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <service.icon className="w-8 h-8 text-[#F29F05]" />
-                  </div>
-                  <h3 className="text-xl mb-2 text-white">{service.title}</h3>
-                  <p className="text-gray-400">{service.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {home.services.map((service, index) => {
+              const Icon = iconMap[service.iconName] || Music;
+              return (
+                <Card
+                  key={index}
+                  className="bg-[#1a1a1a] border-gray-800 hover:border-[#8C0343] hover:shadow-lg transition-all"
+                >
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#8C0343]/20 to-[#F29F05]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Icon className="w-8 h-8 text-[#F29F05]" />
+                    </div>
+                    <Editable
+                      path={`home.services.${index}.title`}
+                      label="Titre Service"
+                    >
+                      <h3 className="text-xl mb-2 text-white font-semibold">
+                        {service.title}
+                      </h3>
+                    </Editable>
+                    <Editable
+                      path={`home.services.${index}.description`}
+                      type="textarea"
+                      label="Description Service"
+                    >
+                      <p className="text-gray-400">{service.description}</p>
+                    </Editable>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
           <div className="text-center">
             <Button
@@ -195,7 +225,9 @@ export default function Home() {
       <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl mb-4 text-white">Dernières Réalisations</h2>
+            <h2 className="text-4xl mb-4 text-white font-bold">
+              Dernières Réalisations
+            </h2>
             <p className="text-xl text-gray-400">
               Découvrez nos projets récents
             </p>
@@ -216,7 +248,9 @@ export default function Home() {
                   <span className="text-[#F29F05] text-sm mb-2">
                     {project.category}
                   </span>
-                  <h3 className="text-white text-2xl">{project.title}</h3>
+                  <h3 className="text-white text-2xl font-bold">
+                    {project.title}
+                  </h3>
                 </div>
               </Link>
             ))}
@@ -240,7 +274,7 @@ export default function Home() {
       <section className="py-20 bg-gradient-to-br from-[#771236] to-[#0D0D0D] text-white">
         <div className="container mx-auto px-4 text-center">
           <Users className="w-16 h-16 mx-auto mb-6 text-[#F29F05]" />
-          <h2 className="text-4xl mb-6">Rejoignez l'aventure</h2>
+          <h2 className="text-4xl mb-6 font-bold">Rejoignez l'aventure</h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
             Devenez bénévole, adhérent ou soutenez nos actions pour contribuer
             au développement de la scène musicale locale

@@ -3,6 +3,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "../../components/ui/card";
 import {
   Music,
@@ -13,9 +14,18 @@ import {
   PlusCircle,
   FileEdit,
   Trash2,
+  Edit3,
+  Globe,
+  Save,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { useEditor } from "../../context/EditorContext";
+import { Link } from "react-router";
+
 export default function AdminDashboard() {
+  const { isEditMode, toggleEditMode, hasUnsavedChanges, saveChanges } =
+    useEditor();
+
   const stats = [
     {
       label: "Projets Actifs",
@@ -61,12 +71,79 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Tableau de Bord</h1>
-        <p className="text-gray-400">
-          Bienvenue dans l'interface de gestion de Dons Du Son.
-        </p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2 font-bold">
+            Tableau de Bord
+          </h1>
+          <p className="text-gray-400">
+            Bienvenue dans l'interface de gestion de Dons Du Son.
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <Button
+            onClick={toggleEditMode}
+            className={
+              isEditMode
+                ? "bg-[#F29F05] text-black hover:bg-[#D96704]"
+                : "bg-gray-800 text-white hover:bg-gray-700"
+            }
+          >
+            <Edit3 className="w-4 h-4 mr-2" />
+            {isEditMode ? "Mode Édition Actif" : "Activer l'Édition Directe"}
+          </Button>
+          {hasUnsavedChanges && (
+            <Button
+              onClick={saveChanges}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Enregistrer les modifications
+            </Button>
+          )}
+        </div>
       </div>
+
+      {/* Editor Info Card */}
+      <Card className="bg-gradient-to-r from-[#8C0343]/20 to-[#D96704]/20 border-gray-700">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-[#F29F05] rounded-lg">
+              <Globe className="w-5 h-5 text-black" />
+            </div>
+            <div>
+              <CardTitle className="text-white">Édition en Direct</CardTitle>
+              <CardDescription className="text-gray-300">
+                Vous pouvez maintenant modifier le contenu du site directement
+                sur les pages.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-400 mb-4">
+            Activez le mode édition, naviguez sur le site, et cliquez sur
+            n'importe quel texte pour le modifier. N'oubliez pas d'enregistrer
+            vos modifications avant de quitter.
+          </p>
+          <div className="flex gap-4">
+            <Button
+              asChild
+              variant="outline"
+              className="border-gray-600 text-gray-300 hover:bg-gray-800"
+            >
+              <Link to="/">Aller sur l'Accueil</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="border-gray-600 text-gray-300 hover:bg-gray-800"
+            >
+              <Link to="/association">Aller sur l'Association</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -79,7 +156,9 @@ export default function AdminDashboard() {
               <stat.icon className={`w-4 h-4 ${stat.color}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stat.value}</div>
+              <div className="text-2xl font-bold text-white font-bold">
+                {stat.value}
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -89,7 +168,9 @@ export default function AdminDashboard() {
         {/* Quick Management */}
         <Card className="lg:col-span-2 bg-[#1a1a1a] border-gray-800">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-white">Gestion des Contenus</CardTitle>
+            <CardTitle className="text-white font-bold">
+              Gestion des Contenus
+            </CardTitle>
             <Button size="sm" className="bg-[#8C0343] hover:bg-[#771236]">
               <PlusCircle className="w-4 h-4 mr-2" /> Nouveau
             </Button>
@@ -132,7 +213,7 @@ export default function AdminDashboard() {
         {/* Quick Links */}
         <Card className="bg-[#1a1a1a] border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white">Raccourcis</CardTitle>
+            <CardTitle className="text-white font-bold">Raccourcis</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
             <Button

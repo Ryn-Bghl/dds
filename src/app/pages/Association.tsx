@@ -7,8 +7,19 @@ import {
   Heart,
 } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
+import { useEditor } from "../context/EditorContext";
+import { Editable } from "../components/Editable";
 
 export default function Association() {
+  const { content } = useEditor();
+  const { association } = content;
+
+  const iconMap: Record<string, any> = {
+    Target,
+    Users,
+    Heart,
+  };
+
   const interventionAreas = [
     {
       icon: GraduationCap,
@@ -75,34 +86,25 @@ export default function Association() {
     },
   ];
 
-  const values = [
-    {
-      icon: Target,
-      title: "Accessibilité",
-      description: "Rendre la culture accessible à tous, sans distinction",
-    },
-    {
-      icon: Users,
-      title: "Solidarité",
-      description: "Créer du lien entre artistes et acteurs culturels",
-    },
-    {
-      icon: Heart,
-      title: "Engagement",
-      description: "S'investir pour le développement culturel local",
-    },
-  ];
-
   return (
     <div className="flex flex-col">
       {/* Header */}
       <section className="relative py-20 bg-gradient-to-br from-[#8C0343] via-[#771236] to-[#D96704] text-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl mb-6">L'Association</h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-100">
-            Une équipe passionnée au service de la création musicale et de
-            l'accompagnement artistique
-          </p>
+          <Editable path="association.header.title" label="Titre Page">
+            <h1 className="text-5xl md:text-6xl mb-6 font-bold">
+              {association.header.title}
+            </h1>
+          </Editable>
+          <Editable
+            path="association.header.description"
+            type="textarea"
+            label="Description Page"
+          >
+            <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-100">
+              {association.header.description}
+            </p>
+          </Editable>
         </div>
       </section>
 
@@ -110,29 +112,21 @@ export default function Association() {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl mb-8 text-center text-foreground">
-              Notre Histoire
-            </h2>
+            <Editable path="association.history.title" label="Titre Histoire">
+              <h2 className="text-4xl mb-8 text-center text-foreground font-bold">
+                {association.history.title}
+              </h2>
+            </Editable>
             <div className="prose prose-lg mx-auto text-muted-foreground">
-              <p className="text-lg leading-relaxed mb-4">
-                Fondée en 2022,{" "}
-                <strong className="text-foreground">Dons Du Son</strong> est née
-                de la rencontre entre des professionnels du secteur audio et des
-                passionnés de musique, tous animés par la volonté de
-                démocratiser l'accès aux moyens de production musicale.
-              </p>
-              <p className="text-lg leading-relaxed mb-4">
-                Face au constat que de nombreux artistes émergents manquent de
-                moyens techniques et financiers pour concrétiser leurs projets,
-                nous avons décidé de créer une structure associative permettant
-                de mutualiser les ressources et les compétences.
-              </p>
-              <p className="text-lg leading-relaxed mb-4">
-                Aujourd'hui, nous sommes une équipe de 15 bénévoles actifs et
-                comptons plus de 200 adhérents. Notre association est reconnue
-                d'intérêt général et œuvre quotidiennement pour le développement
-                de la scène musicale en Île-de-France.
-              </p>
+              <Editable
+                path="association.history.content"
+                type="textarea"
+                label="Contenu Histoire"
+              >
+                <div className="whitespace-pre-wrap text-lg leading-relaxed mb-4">
+                  {association.history.content}
+                </div>
+              </Editable>
             </div>
           </div>
         </div>
@@ -141,26 +135,42 @@ export default function Association() {
       {/* Values */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl mb-12 text-center text-foreground">
+          <h2 className="text-4xl mb-12 text-center text-foreground font-bold">
             Nos Valeurs
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {values.map((value, index) => (
-              <Card
-                key={index}
-                className="text-center hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-card"
-              >
-                <CardContent className="p-8">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#8C0343]/20 to-[#D96704]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <value.icon className="w-8 h-8 text-[#F29F05]" />
-                  </div>
-                  <h3 className="text-2xl mb-3 text-foreground">
-                    {value.title}
-                  </h3>
-                  <p className="text-muted-foreground">{value.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {association.values.map((value, index) => {
+              const Icon = iconMap[value.iconName] || Target;
+              return (
+                <Card
+                  key={index}
+                  className="text-center hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-card"
+                >
+                  <CardContent className="p-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#8C0343]/20 to-[#D96704]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Icon className="w-8 h-8 text-[#F29F05]" />
+                    </div>
+                    <Editable
+                      path={`association.values.${index}.title`}
+                      label="Titre Valeur"
+                    >
+                      <h3 className="text-2xl mb-3 text-foreground font-semibold">
+                        {value.title}
+                      </h3>
+                    </Editable>
+                    <Editable
+                      path={`association.values.${index}.description`}
+                      type="textarea"
+                      label="Description Valeur"
+                    >
+                      <p className="text-muted-foreground">
+                        {value.description}
+                      </p>
+                    </Editable>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -168,7 +178,7 @@ export default function Association() {
       {/* Intervention Areas */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl mb-4 text-center text-foreground">
+          <h2 className="text-4xl mb-4 text-center text-foreground font-bold">
             Nos Axes d'Intervention
           </h2>
           <p className="text-xl text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
@@ -185,11 +195,11 @@ export default function Association() {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
                     <div className="bg-gradient-to-br from-[#8C0343] to-[#771236] p-8 text-white flex flex-col justify-center">
                       <area.icon className="w-12 h-12 mb-4" />
-                      <h3 className="text-3xl mb-3">{area.title}</h3>
+                      <h3 className="text-3xl mb-3 font-bold">{area.title}</h3>
                       <p className="text-gray-100">{area.description}</p>
                     </div>
                     <div className="lg:col-span-2 p-8">
-                      <h4 className="text-xl mb-4 text-foreground">
+                      <h4 className="text-xl mb-4 text-foreground font-semibold">
                         Actions concrètes :
                       </h4>
                       <ul className="space-y-3">
@@ -214,7 +224,7 @@ export default function Association() {
       {/* Team */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl mb-4 text-center text-foreground">
+          <h2 className="text-4xl mb-4 text-center text-foreground font-bold">
             Notre Équipe
           </h2>
           <p className="text-xl text-muted-foreground text-center mb-12">
@@ -235,17 +245,17 @@ export default function Association() {
                     />
                   </div>
                   <div className="p-4 text-center">
-                    <h3 className="text-xl mb-1 text-foreground">
+                    <h3 className="text-xl mb-1 text-foreground font-semibold">
                       {member.name}
                     </h3>
-                    <p className="text-[#F29F05]">{member.role}</p>
+                    <p className="text-[#F29F05] font-medium">{member.role}</p>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
           <div className="text-center mt-12">
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground italic">
               + 15 bénévoles actifs qui contribuent régulièrement aux actions de
               l'association
             </p>

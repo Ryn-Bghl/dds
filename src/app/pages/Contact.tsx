@@ -1,13 +1,26 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Send } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Instagram,
+  Youtube,
+  Send,
+} from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { toast } from "sonner";
+import { useEditor } from "../context/EditorContext";
+import { Editable } from "../components/Editable";
 
 export default function Contact() {
+  const { content } = useEditor();
+  const { contact } = content;
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,7 +30,9 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.");
+    toast.success(
+      "Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.",
+    );
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
@@ -26,10 +41,20 @@ export default function Contact() {
       {/* Header */}
       <section className="py-20 bg-gradient-to-br from-[#8C0343] via-[#771236] to-[#D96704] text-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl mb-6">Contact</h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-100">
-            Une question ? Un projet ? N'hésitez pas à nous contacter
-          </p>
+          <Editable path="contact.header.title" label="Titre Page">
+            <h1 className="text-5xl md:text-6xl mb-6 font-bold">
+              {contact.header.title}
+            </h1>
+          </Editable>
+          <Editable
+            path="contact.header.description"
+            type="textarea"
+            label="Description Page"
+          >
+            <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-100">
+              {contact.header.description}
+            </p>
+          </Editable>
         </div>
       </section>
 
@@ -44,53 +69,61 @@ export default function Contact() {
                   <div className="w-12 h-12 bg-gradient-to-br from-[#8C0343]/20 to-[#D96704]/20 rounded-full flex items-center justify-center mb-4">
                     <Mail className="w-6 h-6 text-[#F29F05]" />
                   </div>
-                  <h3 className="text-lg mb-2 text-foreground">Email</h3>
-                  <a href="mailto:contact@donsduson.fr" className="text-[#F29F05] hover:underline">
-                    contact@donsduson.fr
-                  </a>
-                  <p className="text-sm text-muted-foreground mt-2">
+                  <h3 className="text-lg mb-2 text-foreground font-semibold">
+                    Email
+                  </h3>
+                  <Editable path="contact.info.email" label="Email de contact">
+                    <a
+                      href={`mailto:${contact.info.email}`}
+                      className="text-[#F29F05] hover:underline font-medium"
+                    >
+                      {contact.info.email}
+                    </a>
+                  </Editable>
+                  <p className="text-sm text-muted-foreground mt-2 italic">
                     Nous répondons sous 24-48h
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-card">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#8C0343]/20 to-[#D96704]/20 rounded-full flex items-center justify-center mb-4">
-                    <Phone className="w-6 h-6 text-[#F29F05]" />
-                  </div>
-                  <h3 className="text-lg mb-2 text-foreground">Téléphone</h3>
-                  <a href="tel:+33123456789" className="text-[#F29F05] hover:underline">
-                    01 23 45 67 89
-                  </a>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Lun-Ven : 10h-18h
-                  </p>
-                </CardContent>
-              </Card>
+              {/* Note: Phone removed per TOFIX.md instructions */}
 
               <Card className="hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-card">
                 <CardContent className="p-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-[#8C0343]/20 to-[#D96704]/20 rounded-full flex items-center justify-center mb-4">
                     <MapPin className="w-6 h-6 text-[#F29F05]" />
                   </div>
-                  <h3 className="text-lg mb-2 text-foreground">Adresse</h3>
-                  <p className="text-muted-foreground">
-                    123 rue de la Musique<br />
-                    75018 Paris
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Zone d'intervention : Île-de-France
-                  </p>
+                  <h3 className="text-lg mb-2 text-foreground font-semibold">
+                    Siège Social
+                  </h3>
+                  <Editable
+                    path="contact.info.address"
+                    type="textarea"
+                    label="Adresse"
+                  >
+                    <p className="text-muted-foreground whitespace-pre-wrap">
+                      {contact.info.address}
+                    </p>
+                  </Editable>
+                  <Editable
+                    path="contact.info.zone"
+                    label="Zone d'intervention"
+                  >
+                    <p className="text-sm text-muted-foreground mt-2 font-medium">
+                      {contact.info.zone}
+                    </p>
+                  </Editable>
                 </CardContent>
               </Card>
 
               <Card className="hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-card">
                 <CardContent className="p-6">
-                  <h3 className="text-lg mb-4 text-foreground">Réseaux sociaux</h3>
+                  <h3 className="text-lg mb-4 text-foreground font-semibold">
+                    Réseaux sociaux
+                  </h3>
                   <div className="flex gap-3">
                     <a
-                      href="https://facebook.com"
+                      href={contact.info.socials.facebook}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 bg-[#8C0343] text-white rounded-full flex items-center justify-center hover:bg-[#771236] transition-colors"
@@ -98,7 +131,7 @@ export default function Contact() {
                       <Facebook className="w-5 h-5" />
                     </a>
                     <a
-                      href="https://instagram.com"
+                      href={contact.info.socials.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 bg-[#8C0343] text-white rounded-full flex items-center justify-center hover:bg-[#771236] transition-colors"
@@ -106,7 +139,7 @@ export default function Contact() {
                       <Instagram className="w-5 h-5" />
                     </a>
                     <a
-                      href="https://youtube.com"
+                      href={contact.info.socials.youtube}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 bg-[#8C0343] text-white rounded-full flex items-center justify-center hover:bg-[#771236] transition-colors"
@@ -114,62 +147,108 @@ export default function Contact() {
                       <Youtube className="w-5 h-5" />
                     </a>
                   </div>
+                  <div className="mt-4 space-y-2">
+                    <Editable
+                      path="contact.info.socials.facebook"
+                      label="Lien Facebook"
+                    >
+                      <span className="text-[10px] text-muted-foreground opacity-50 hover:opacity-100 block truncate">
+                        FB: {contact.info.socials.facebook}
+                      </span>
+                    </Editable>
+                    <Editable
+                      path="contact.info.socials.instagram"
+                      label="Lien Instagram"
+                    >
+                      <span className="text-[10px] text-muted-foreground opacity-50 hover:opacity-100 block truncate">
+                        IG: {contact.info.socials.instagram}
+                      </span>
+                    </Editable>
+                    <Editable
+                      path="contact.info.socials.youtube"
+                      label="Lien Youtube"
+                    >
+                      <span className="text-[10px] text-muted-foreground opacity-50 hover:opacity-100 block truncate">
+                        YT: {contact.info.socials.youtube}
+                      </span>
+                    </Editable>
+                  </div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <Card className="border-border bg-card">
+              <Card className="border-border bg-card shadow-xl">
                 <CardContent className="p-8">
-                  <h2 className="text-3xl mb-2 text-foreground">Formulaire de contact</h2>
+                  <h2 className="text-3xl mb-2 text-foreground font-bold">
+                    Formulaire de contact
+                  </h2>
                   <p className="text-muted-foreground mb-8">
                     Remplissez ce formulaire et nous vous répondrons rapidement
                   </p>
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                      <Label htmlFor="name">Nom complet *</Label>
-                      <Input
-                        id="name"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="Jean Dupont"
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Nom complet *</Label>
+                        <Input
+                          id="name"
+                          required
+                          value={formData.name}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
+                          placeholder="Jean Dupont"
+                          className="bg-background border-border"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email *</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          required
+                          value={formData.email}
+                          onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                          }
+                          placeholder="jean.dupont@example.com"
+                          className="bg-background border-border"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor="email">Email *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="jean.dupont@example.com"
-                      />
-                    </div>
-                    <div>
+                    <div className="space-y-2">
                       <Label htmlFor="subject">Sujet *</Label>
                       <Input
                         id="subject"
                         required
                         value={formData.subject}
-                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, subject: e.target.value })
+                        }
                         placeholder="Location de matériel, adhésion, etc."
+                        className="bg-background border-border"
                       />
                     </div>
-                    <div>
+                    <div className="space-y-2">
                       <Label htmlFor="message">Message *</Label>
                       <Textarea
                         id="message"
                         required
                         value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, message: e.target.value })
+                        }
                         placeholder="Votre message..."
                         rows={8}
+                        className="bg-background border-border"
                       />
                     </div>
-                    <Button type="submit" className="w-full bg-[#8C0343] hover:bg-[#771236]" size="lg">
+                    <Button
+                      type="submit"
+                      className="w-full bg-[#8C0343] hover:bg-[#771236] text-white font-bold"
+                      size="lg"
+                    >
                       <Send className="mr-2 w-5 h-5" />
                       Envoyer le message
                     </Button>
@@ -184,29 +263,39 @@ export default function Contact() {
       {/* Map */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl text-center mb-4 text-foreground">Zone d'intervention</h2>
+          <h2 className="text-3xl text-center mb-4 text-foreground font-bold">
+            Zone d'intervention
+          </h2>
           <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-            Nous intervenons principalement en Île-de-France : Paris et toute la région parisienne
+            Nous intervenons principalement en Île-de-France : Paris et toute la
+            région parisienne
           </p>
-          
+
           {/* Map Placeholder */}
           <div className="max-w-5xl mx-auto">
             <div
-              className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-lg"
+              className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-2xl"
               style={{
-                backgroundImage: "url('https://images.unsplash.com/photo-1580422500257-ab85fb8e20ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMGZyYW5jZSUyMGNpdHlzY2FwZXxlbnwxfHx8fDE3NzQ2MjAxNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080')",
+                backgroundImage:
+                  "url('https://images.unsplash.com/photo-1580422500257-ab85fb8e20ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMGZyYW5jZSUyMGNpdHlzY2FwZXxlbnwxfHx8fDE3NzQ2MjAxNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
             >
               <div className="absolute inset-0 bg-[#8C0343]/30 flex items-center justify-center">
-                <div className="bg-card border border-border p-6 rounded-xl shadow-xl text-center max-w-sm">
-                  <MapPin className="w-12 h-12 text-[#F29F05] mx-auto mb-3" />
-                  <h3 className="text-xl mb-2 text-foreground">Paris & Île-de-France</h3>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    Une carte interactive serait intégrée ici pour visualiser notre zone d'intervention
+                <div className="bg-card/90 backdrop-blur-sm border border-border p-8 rounded-2xl shadow-2xl text-center max-w-sm">
+                  <MapPin className="w-12 h-12 text-[#F29F05] mx-auto mb-4" />
+                  <h3 className="text-2xl mb-2 text-foreground font-bold font-bold">
+                    Paris & Île-de-France
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                    Nous nous déplaçons dans toute l'Île-de-France pour
+                    sonoriser vos événements et accompagner vos projets.
                   </p>
-                  <Button size="sm" className="bg-[#8C0343] hover:bg-[#771236]">
+                  <Button
+                    size="lg"
+                    className="bg-[#8C0343] hover:bg-[#771236] text-white font-semibold"
+                  >
                     Voir sur Google Maps
                   </Button>
                 </div>
@@ -219,21 +308,40 @@ export default function Contact() {
       {/* FAQ Quick Links */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl mb-4 text-foreground">Questions fréquentes</h2>
+          <h2 className="text-3xl mb-4 text-foreground font-bold">
+            Questions fréquentes
+          </h2>
           <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Vous avez une question ? Consultez nos pages dédiées ou contactez-nous directement
+            Vous avez une question ? Consultez nos pages dédiées ou
+            contactez-nous directement
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="outline" size="lg">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-border hover:bg-card"
+            >
               Location de matériel
             </Button>
-            <Button variant="outline" size="lg">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-border hover:bg-card"
+            >
               Devenir bénévole
             </Button>
-            <Button variant="outline" size="lg">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-border hover:bg-card"
+            >
               Adhésion
             </Button>
-            <Button variant="outline" size="lg">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-border hover:bg-card"
+            >
               Faire un don
             </Button>
           </div>
