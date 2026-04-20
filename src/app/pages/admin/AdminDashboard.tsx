@@ -6,240 +6,290 @@ import {
   CardDescription,
 } from "../../components/ui/card";
 import {
-  Music,
+  Home,
+  Building2,
   Calendar,
-  Users,
+  Music,
   Package,
-  ArrowUpRight,
-  PlusCircle,
-  FileEdit,
-  Trash2,
+  Settings,
   Edit3,
-  Globe,
   Save,
+  AlertCircle,
+  CheckCircle2,
+  Lightbulb,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { useEditor } from "../../context/EditorContext";
 import { Link } from "react-router";
 
 export default function AdminDashboard() {
-  const { isEditMode, toggleEditMode, hasUnsavedChanges, saveChanges } =
-    useEditor();
+  const {
+    isEditMode,
+    toggleEditMode,
+    hasUnsavedChanges,
+    saveChanges,
+    isLoading,
+  } = useEditor();
 
-  const stats = [
+  const pages = [
     {
-      label: "Projets Actifs",
-      value: "12",
+      icon: Home,
+      title: "Accueil",
+      description: "Titre, description, stats, services",
+      href: "/",
+      color: "bg-blue-500/10 text-blue-400",
+    },
+    {
+      icon: Building2,
+      title: "Association",
+      description: "Histoire, valeurs, informations",
+      href: "/association",
+      color: "bg-purple-500/10 text-purple-400",
+    },
+    {
       icon: Music,
-      color: "text-blue-500",
+      title: "Projets & Réalisations",
+      description: "Nos projets passés et actuels",
+      href: "/projets",
+      color: "bg-pink-500/10 text-pink-400",
     },
     {
-      label: "Événements à venir",
-      value: "5",
       icon: Calendar,
-      color: "text-green-500",
+      title: "Événements",
+      description: "Calendrier et manifestations",
+      href: "/events",
+      color: "bg-green-500/10 text-green-400",
     },
     {
-      label: "Demandes Location",
-      value: "8",
       icon: Package,
-      color: "text-purple-500",
+      title: "Location de Matériel",
+      description: "Catalogue et demandes",
+      href: "/location",
+      color: "bg-orange-500/10 text-orange-400",
     },
     {
-      label: "Nouveaux Bénévoles",
-      value: "3",
-      icon: Users,
-      color: "text-orange-500",
+      icon: Settings,
+      title: "Paramètres",
+      description: "Infos générales et configuration",
+      href: "/admin/settings",
+      color: "bg-gray-500/10 text-gray-400",
     },
   ];
 
-  const recentActions = [
-    {
-      id: 1,
-      title: "Festival Émergence 2024",
-      type: "Projet",
-      date: "Il y a 2h",
-    },
-    {
-      id: 2,
-      title: "Pack Sonorisation S",
-      type: "Location",
-      date: "Il y a 5h",
-    },
-    { id: 3, title: "Concert Solidaire", type: "Événement", date: "Hier" },
-  ];
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin mb-4">
+            <div className="w-8 h-8 border-4 border-[#F29F05] border-t-transparent rounded-full"></div>
+          </div>
+          <p className="text-gray-400">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2 font-bold">
-            Tableau de Bord
-          </h1>
-          <p className="text-gray-400">
-            Bienvenue dans l'interface de gestion de Dons Du Son.
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Button
-            onClick={toggleEditMode}
-            className={
-              isEditMode
-                ? "bg-[#F29F05] text-black hover:bg-[#D96704]"
-                : "bg-gray-800 text-white hover:bg-gray-700"
-            }
-          >
-            <Edit3 className="w-4 h-4 mr-2" />
-            {isEditMode ? "Mode Édition Actif" : "Activer l'Édition Directe"}
-          </Button>
-          {hasUnsavedChanges && (
-            <Button
-              onClick={saveChanges}
-              className="bg-green-600 hover:bg-green-700 text-white"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Enregistrer les modifications
-            </Button>
-          )}
-        </div>
+      {/* Header */}
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold text-white">Tableau de Bord</h1>
+        <p className="text-lg text-gray-400">
+          Bienvenue! Vous êtes ici pour modifier le site facilement.
+        </p>
       </div>
 
-      {/* Editor Info Card */}
-      <Card className="bg-gradient-to-r from-[#8C0343]/20 to-[#D96704]/20 border-gray-700">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#F29F05] rounded-lg">
-              <Globe className="w-5 h-5 text-black" />
-            </div>
-            <div>
-              <CardTitle className="text-white">Édition en Direct</CardTitle>
-              <CardDescription className="text-gray-300">
-                Vous pouvez maintenant modifier le contenu du site directement
-                sur les pages.
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-400 mb-4">
-            Activez le mode édition, naviguez sur le site, et cliquez sur
-            n'importe quel texte pour le modifier. N'oubliez pas d'enregistrer
-            vos modifications avant de quitter.
-          </p>
-          <div className="flex gap-4">
-            <Button
-              asChild
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800"
-            >
-              <Link to="/">Aller sur l'Accueil</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800"
-            >
-              <Link to="/association">Aller sur l'Association</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
-          <Card key={i} className="bg-[#1a1a1a] border-gray-800">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">
-                {stat.label}
-              </CardTitle>
-              <stat.icon className={`w-4 h-4 ${stat.color}`} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white font-bold">
-                {stat.value}
+      {/* Mode Édition Card */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2 bg-gradient-to-br from-[#8C0343]/30 to-[#D96704]/20 border-[#F29F05]/50">
+          <CardHeader>
+            <div className="flex items-start justify-between">
+              <div>
+                <CardTitle className="text-white text-2xl">
+                  🎨 Mode Édition
+                </CardTitle>
+                <CardDescription className="text-gray-300 mt-2 text-base">
+                  Activez le mode édition pour modifier le contenu du site
+                </CardDescription>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Quick Management */}
-        <Card className="lg:col-span-2 bg-[#1a1a1a] border-gray-800">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-white font-bold">
-              Gestion des Contenus
-            </CardTitle>
-            <Button size="sm" className="bg-[#8C0343] hover:bg-[#771236]">
-              <PlusCircle className="w-4 h-4 mr-2" /> Nouveau
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActions.map((action) => (
-                <div
-                  key={action.id}
-                  className="flex items-center justify-between p-4 rounded-lg bg-[#262626] border border-gray-800 group hover:border-gray-700 transition-colors"
-                >
-                  <div>
-                    <div className="font-medium text-white">{action.title}</div>
-                    <div className="text-sm text-gray-500">
-                      {action.type} • {action.date}
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-gray-400 hover:text-white"
-                    >
-                      <FileEdit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-gray-400 hover:text-red-500"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+              <div
+                className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                  isEditMode
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-gray-500/20 text-gray-400"
+                }`}
+              >
+                {isEditMode ? "✓ Activé" : "○ Désactivé"}
+              </div>
             </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="bg-black/40 rounded-lg p-4 border border-gray-700">
+              <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+                <Lightbulb className="w-5 h-5 text-[#F29F05]" />
+                Comment ça fonctionne:
+              </h3>
+              <ol className="space-y-2 text-gray-300 text-sm">
+                <li>
+                  <span className="bg-[#8C0343] text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs mr-2">
+                    1
+                  </span>
+                  Activez le mode édition ci-dessous
+                </li>
+                <li>
+                  <span className="bg-[#8C0343] text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs mr-2">
+                    2
+                  </span>
+                  Allez sur la page que vous voulez modifier
+                </li>
+                <li>
+                  <span className="bg-[#8C0343] text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs mr-2">
+                    3
+                  </span>
+                  Survolez un texte → cliquez sur le crayon ✏️
+                </li>
+                <li>
+                  <span className="bg-[#8C0343] text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs mr-2">
+                    4
+                  </span>
+                  Modifiez et cliquez la coche verte ✓
+                </li>
+                <li>
+                  <span className="bg-[#8C0343] text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs mr-2">
+                    5
+                  </span>
+                  Cliquez "Enregistrer" quand vous avez fini
+                </li>
+              </ol>
+            </div>
+
+            <Button
+              onClick={toggleEditMode}
+              className={`w-full py-6 text-lg font-semibold transition-all ${
+                isEditMode
+                  ? "bg-red-600 hover:bg-red-700 text-white"
+                  : "bg-[#F29F05] hover:bg-[#D96704] text-black"
+              }`}
+            >
+              <Edit3 className="w-5 h-5 mr-3" />
+              {isEditMode
+                ? "Désactiver le Mode Édition"
+                : "Activer le Mode Édition"}
+            </Button>
           </CardContent>
         </Card>
 
-        {/* Quick Links */}
+        {/* Quick Status */}
         <Card className="bg-[#1a1a1a] border-gray-800">
           <CardHeader>
-            <CardTitle className="text-white font-bold">Raccourcis</CardTitle>
+            <CardTitle className="text-white flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-[#F29F05]" />
+              État
+            </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-4">
-            <Button
-              variant="outline"
-              className="justify-start text-gray-300 border-gray-800 hover:bg-gray-800"
-            >
-              <Music className="w-4 h-4 mr-2" /> Éditer les Projets
-              <ArrowUpRight className="w-3 h-3 ml-auto opacity-50" />
-            </Button>
-            <Button
-              variant="outline"
-              className="justify-start text-gray-300 border-gray-800 hover:bg-gray-800"
-            >
-              <Calendar className="w-4 h-4 mr-2" /> Gérer le Calendrier
-              <ArrowUpRight className="w-3 h-3 ml-auto opacity-50" />
-            </Button>
-            <Button
-              variant="outline"
-              className="justify-start text-gray-300 border-gray-800 hover:bg-gray-800"
-            >
-              <Package className="w-4 h-4 mr-2" /> Catalogue Location
-              <ArrowUpRight className="w-3 h-3 ml-auto opacity-50" />
-            </Button>
+          <CardContent className="space-y-4">
+            <div>
+              <p className="text-gray-400 text-sm">Mode Édition</p>
+              <p className="text-white font-semibold mt-1">
+                {isEditMode ? "✓ Actif" : "○ Inactif"}
+              </p>
+            </div>
+            {hasUnsavedChanges && (
+              <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3">
+                <p className="text-yellow-200 text-sm font-semibold">
+                  ⚠️ Modifications non enregistrées
+                </p>
+                <p className="text-yellow-100 text-xs mt-1">
+                  N'oubliez pas de cliquer "Enregistrer"
+                </p>
+              </div>
+            )}
+            {hasUnsavedChanges && (
+              <Button
+                onClick={saveChanges}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Enregistrer maintenant
+              </Button>
+            )}
           </CardContent>
         </Card>
       </div>
+
+      {/* Pages à Éditer */}
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-4">
+          📄 Pages à modifier
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {pages.map((page) => {
+            const Icon = page.icon;
+            return (
+              <Link key={page.href} to={page.href}>
+                <Card className="bg-[#1a1a1a] border-gray-800 hover:border-[#F29F05] transition-all cursor-pointer h-full hover:shadow-lg hover:shadow-[#8C0343]/20">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className={`p-3 rounded-lg ${page.color}`}>
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <span className="text-xs text-gray-500">→</span>
+                    </div>
+                    <CardTitle className="text-white mt-4">
+                      {page.title}
+                    </CardTitle>
+                    <CardDescription className="text-gray-400">
+                      {page.description}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Tips Card */}
+      <Card className="bg-[#1a1a1a] border-gray-800">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-green-400" />
+            Conseils utiles
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-3 text-gray-300">
+            <li className="flex gap-3">
+              <span className="text-[#F29F05] font-bold">✓</span>
+              <span>
+                <strong>Enregistrez régulièrement</strong> - Ne fermez pas le
+                navigateur sans cliquer "Enregistrer"
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#F29F05] font-bold">✓</span>
+              <span>
+                <strong>Testez vos modifications</strong> - Allez voir comment
+                ça s'affiche sur la page après édition
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#F29F05] font-bold">✓</span>
+              <span>
+                <strong>Utilisez le crayon ✏️</strong> - Survolez simplement le
+                texte pour voir le crayon
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#F29F05] font-bold">✓</span>
+              <span>
+                <strong>Besoin d'aide?</strong> - Consultez le guide
+                d'utilisation en bas du site
+              </span>
+            </li>
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
 }
