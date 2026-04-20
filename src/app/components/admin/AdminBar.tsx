@@ -70,7 +70,7 @@ export default function AdminBar() {
 
       <div className="flex items-center gap-4">
         <span className="text-white/80 hidden lg:inline">
-          Connecté : <strong className="text-white">{user.email}</strong>
+          Connecté : <strong className="text-white">{user.username}</strong>
         </span>
         <Button
           variant="ghost"
