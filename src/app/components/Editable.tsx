@@ -47,13 +47,20 @@ export const Editable: React.FC<EditableProps> = ({
   };
 
   if (isEditing) {
+    const blockEvent = (e: React.MouseEvent | React.FormEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
     return (
       <div
         className={cn(
           "relative border-2 border-[#F29F05] p-2 rounded-md bg-black/50 z-50",
           className,
         )}
-        onClick={(e) => e.stopPropagation()}
+        onClick={blockEvent}
+        onMouseDown={blockEvent}
+        onMouseUp={blockEvent}
       >
         {label && (
           <label className="text-xs text-[#F29F05] mb-1 block">{label}</label>
@@ -63,19 +70,26 @@ export const Editable: React.FC<EditableProps> = ({
             value={tempValue}
             onChange={(e) => setTempValue(e.target.value)}
             className="bg-[#1a1a1a] text-white border-gray-700 min-h-[100px]"
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
           />
         ) : (
           <Input
             value={tempValue}
             onChange={(e) => setTempValue(e.target.value)}
             className="bg-[#1a1a1a] text-white border-gray-700"
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
           />
         )}
         <div className="flex gap-2 mt-2 justify-end">
           <Button
             size="sm"
             variant="ghost"
-            onClick={handleCancel}
+            onClick={(e) => {
+              blockEvent(e);
+              handleCancel();
+            }}
             className="text-gray-400 hover:text-white"
           >
             <X className="w-4 h-4" />
@@ -83,7 +97,10 @@ export const Editable: React.FC<EditableProps> = ({
           <Button
             size="sm"
             className="bg-[#F29F05] text-black hover:bg-[#D96704]"
-            onClick={handleSave}
+            onClick={(e) => {
+              blockEvent(e);
+              handleSave();
+            }}
           >
             <Check className="w-4 h-4" />
           </Button>
@@ -92,16 +109,23 @@ export const Editable: React.FC<EditableProps> = ({
     );
   }
 
+  const handleStartEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsEditing(true);
+  };
+
   return (
     <div
       className={cn(
         "relative group cursor-pointer border-2 border-transparent hover:border-[#F29F05]/50 rounded-md transition-all",
         className,
       )}
-      onClick={(e) => {
+      onClick={handleStartEdit}
+      onMouseDown={handleStartEdit}
+      onMouseUp={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        setIsEditing(true);
       }}
     >
       {" "}
