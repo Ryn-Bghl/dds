@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { SiteContent, loadContent, saveContent } from '../../lib/content-store';
-import { toast } from 'sonner';
-import { useAuth } from './AuthContext';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { SiteContent, loadContent, saveContent } from "../../lib/content-store";
+import { toast } from "sonner";
+import { useAuth } from "./AuthContext";
 
 interface EditorContextType {
   isEditMode: boolean;
@@ -15,7 +15,9 @@ interface EditorContextType {
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
-export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { user } = useAuth();
   const [isEditMode, setIsEditMode] = useState(false);
   const [content, setContent] = useState<SiteContent>(loadContent());
@@ -23,7 +25,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Disable edit mode if user logs out
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
+    if (!user || user.role !== "admin") {
       setIsEditMode(false);
     }
   }, [user]);
@@ -33,7 +35,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const updateContent = (path: string, value: any) => {
-    const keys = path.split('.');
+    const keys = path.split(".");
     const newContent = { ...content };
     let current: any = newContent;
 
@@ -75,8 +77,6 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     >
       {children}
     </EditorContext.Provider>
-  );
-};
   );
 };
 
