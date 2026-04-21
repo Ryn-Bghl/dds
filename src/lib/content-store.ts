@@ -380,6 +380,31 @@ export const initialContent: SiteContent = {
       createdAt: "2026-04-01",
     },
   ],
+  settings: {
+    siteIdentity: {
+      title: "Dons Du Son",
+      subtitle: "Association culturelle",
+      description:
+        "Association culturelle pour l'accompagnement des artistes et la diffusion de la musique",
+      footerText:
+        "Association culturelle engagée pour la démocratisation de l'accès aux équipements techniques et l'accompagnement des artistes émergents.",
+      copyright: "© 2026 Dons Du Son. Tous droits réservés.",
+    },
+    contact: {
+      email: "contact@donsduson.fr",
+      address: "123 rue de la Musique, 75018 Paris",
+      facebook: "https://facebook.com/donsduson",
+      instagram: "https://instagram.com/donsduson",
+      youtube: "https://youtube.com/donsduson",
+    },
+    rental: {
+      replyDelay: "Vous recevrez un devis sous 72 heures",
+      defaultDeposit: "30%",
+    },
+    advanced: {
+      maintenanceMode: false,
+    },
+  },
   inventory: [
     {
       id: "son-1",
@@ -468,6 +493,11 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
   if (!Array.isArray(repaired.inventory)) {
     console.warn("Repairing corrupted inventory array");
     repaired.inventory = initialContent.inventory;
+  }
+
+  if (!repaired.settings) {
+    console.warn("Repairing corrupted settings object");
+    repaired.settings = initialContent.settings;
   }
 
   return repaired;
