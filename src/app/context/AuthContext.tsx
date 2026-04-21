@@ -118,6 +118,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = () => {
     setUser(null);
     sessionStorage.removeItem(SESSION_KEY);
+    // Redirect to home page
+    window.location.href = "/";
   };
 
   return (
