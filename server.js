@@ -22,6 +22,24 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Get content endpoint
+  if (req.method === "GET" && req.url === "/api/get-content") {
+    try {
+      if (fs.existsSync(DATA_FILE)) {
+        const data = fs.readFileSync(DATA_FILE, "utf8");
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(data);
+      } else {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Data file not found" }));
+      }
+    } catch (err) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
   // Save content endpoint
   if (req.method === "POST" && req.url === "/api/save-content") {
     let body = "";

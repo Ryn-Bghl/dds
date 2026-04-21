@@ -447,20 +447,24 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
 
 export async function loadContent(): Promise<SiteContent> {
   try {
-    // Try to load from public/data.json (file-based storage)
-    const response = await fetch("/data.json");
-    if (!response.ok) {
-      console.warn("Failed to fetch data.json, using initial content");
+    // 1. Try to load from API (Live data)
+    const apiResponse = await fetch("/api/get-content");
+    if (apiResponse.ok) {
+      const data = await apiResponse.json();
+      return validateAndRepairContent(data);
+    }
+
+    // 2. Fallback to static data.json if API is not available
+    console.warn("API not available or failed, falling back to static data.json");
+    const staticResponse = await fetch("/data.json");
+    if (!staticResponse.ok) {
       return initialContent;
     }
-    const data = await response.json();
-
-    // Validate and repair any corrupted data
-    const validated = validateAndRepairContent(data);
-    return validated;
+    const staticData = await staticResponse.json();
+    return validateAndRepairContent(staticData);
   } catch (e) {
     console.error(
-      "Failed to load content from data.json, using initial content",
+      "Failed to load content, using initial content",
       e,
     );
     return initialContent;
@@ -469,7 +473,6 @@ export async function loadContent(): Promise<SiteContent> {
 
 export async function saveContent(content: SiteContent) {
   try {
-    // Try to save to backend API (only works in development)
     const response = await fetch("/api/save-content", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -477,9 +480,14 @@ export async function saveContent(content: SiteContent) {
     });
 
     if (!response.ok) {
-      console.warn("Failed to save content to server");
+      const errorData = await response.json();
+      console.error("Failed to save content:", errorData.error);
+      throw new Error(errorData.error || "Failed to save");
     }
+    
+    console.log("✅ Content saved successfully");
   } catch (e) {
     console.error("Failed to save content via API", e);
+    throw e;
   }
 }

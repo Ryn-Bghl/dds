@@ -5,25 +5,23 @@ Transformer le site React généré par Figma en un **site WordPress-like** édi
 
 ## ✅ Ce Qui a Été Fait
 
-### 1️⃣ Système de Gestion de Contenu (Commits: 29a6e78, c5b039c, a36acbf)
+### 1️⃣ Système de Gestion de Contenu (Commits: 29a6e78, c5b039c, a36acbf, d4e1f2a)
 
-**Avant:** Données dans localStorage (local-only, risque de perte)
-**Après:** Données dans `public/data.json` (fichier commitable, Git-backed)
+**Avant:** Données dans localStorage (local-only) ou `data.json` statique (rebuild requis)
+**Après:** Données hybrides (Fichier local + Upstash Redis pour le Live Edit)
 
 **Changements:**
-- ✅ Créé `public/data.json` avec toutes les données du site
-- ✅ Créé `server.js` - API Server local pour sauvegarder les changements
-- ✅ Créé `vite-api-plugin.js` - Plugin qui auto-lance le serveur
-- ✅ Modifié `src/lib/content-store.ts` pour charger depuis `/data.json`
-- ✅ Modifié `src/app/context/EditorContext.tsx` pour async loading
-- ✅ Ajouté proxy API dans `vite.config.ts`
+- ✅ Créé `api/get-content.js` et `api/save-content.js` - Serverless functions pour Vercel
+- ✅ Intégration de `@upstash/redis` pour le stockage persistant en production
+- ✅ Modifié `src/lib/content-store.ts` pour supporter le mode hybride (API avec fallback statique)
+- ✅ Mis à jour `server.js` pour la parité de fonctionnalités locale
+- ✅ Ajouté `@upstash/redis` aux dépendances
 
 **Avantages:**
-- 🎉 Données persistantes (fichier dans le repo)
-- 🎉 Contrôle de version complet (Git history)
-- 🎉 Pas de base de données externe
-- 🎉 Compatible Vercel (statique)
-- 🎉 Facile à transmettre (tout dans le repo)
+- 🎉 **Live Edit en Production:** Les modifications sont immédiates pour tous les visiteurs (via Upstash Redis)
+- 🎉 **WordPress-like Experience:** Édition directe sur le site hébergé
+- 🎉 **Robustesse:** Fallback automatique sur le fichier statique si la DB est indisponible
+- 🎉 **Simplicité:** Intégration native Redis via le marketplace Vercel
 
 ---
 
