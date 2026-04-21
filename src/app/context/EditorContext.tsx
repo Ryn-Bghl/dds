@@ -17,6 +17,8 @@ interface EditorContextType {
   discardChanges: () => void;
   hasUnsavedChanges: boolean;
   isLoading: boolean;
+  activeEditorId: string | null;
+  setActiveEditorId: (id: string | null) => void;
 }
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
@@ -29,6 +31,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
   const [content, setContent] = useState<SiteContent>(initialContent);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeEditorId, setActiveEditorId] = useState<string | null>(null);
 
   // Load content on mount
   useEffect(() => {
@@ -116,6 +119,8 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
         discardChanges,
         hasUnsavedChanges,
         isLoading,
+        activeEditorId,
+        setActiveEditorId,
       }}
     >
       {children}

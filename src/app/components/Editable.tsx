@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useEditor } from "../context/EditorContext";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Pencil, Check, X } from "lucide-react";
+import { Pencil, Check, X, Image as ImageIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "./ui/utils";
 
 interface EditableProps {
   path: string;
   children: React.ReactNode;
-  type?: "text" | "textarea" | "image";
+  type?: "text" | "textarea" | "image" | "url";
   className?: string;
   label?: string;
+  id?: string; // Unique ID to track this specific editor
 }
 
 export const Editable: React.FC<EditableProps> = ({
@@ -20,30 +21,62 @@ export const Editable: React.FC<EditableProps> = ({
   type = "text",
   className,
   label,
+  id: providedId,
 }) => {
-  const { isEditMode, content, updateContent } = useEditor();
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditMode, content, updateContent, activeEditorId, setActiveEditorId } = useEditor();
+  
+  // Create a stable ID for this editable instance if not provided
+  const [internalId] = useState(providedId || `edit-${path}-${Math.random().toString(36).substr(2, 9)}`);
+  
+  // Local temporary value for the editor
+  const [tempValue, setTempValue] = useState("");
 
-  // Extract value from path
+  // Check if THIS specific instance is the active editor
+  const isEditing = activeEditorId === internalId;
+
+  // Helper to get value from nested path
   const getValue = (path: string, obj: any) => {
-    return path.split(".").reduce((acc, key) => acc?.[key], obj);
+    try {
+      return path.split(".").reduce((acc, key) => acc?.[key], obj);
+    } catch (e) {
+      return "";
+    }
   };
 
   const currentValue = getValue(path, content);
-  const [tempValue, setTempValue] = useState(currentValue);
+
+  // Sync tempValue when starting to edit
+  useEffect(() => {
+    if (isEditing) {
+      setTempValue(currentValue || "");
+    }
+  }, [isEditing, currentValue]);
 
   if (!isEditMode) {
     return <div className={className}>{children}</div>;
   }
 
-  const handleSave = () => {
+  const handleSave = (e?: React.MouseEvent | React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     updateContent(path, tempValue);
-    setIsEditing(false);
+    setActiveEditorId(null);
   };
 
-  const handleCancel = () => {
-    setTempValue(currentValue);
-    setIsEditing(false);
+  const handleCancel = (e?: React.MouseEvent | React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setActiveEditorId(null);
+  };
+
+  const handleStartEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActiveEditorId(internalId);
   };
 
   if (isEditing) {
@@ -55,82 +88,93 @@ export const Editable: React.FC<EditableProps> = ({
     return (
       <div
         className={cn(
-          "relative border-2 border-[#F29F05] p-2 rounded-md bg-black/50 z-50",
-          className,
+          "relative border-2 border-[#F29F05] p-3 rounded-lg bg-[#121212] z-[100] shadow-2xl min-w-[300px]",
+          className
         )}
         onClick={blockEvent}
-        onMouseDown={blockEvent}
-        onMouseUp={blockEvent}
       >
-        {label && (
-          <label className="text-xs text-[#F29F05] mb-1 block">{label}</label>
-        )}
+        <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#F29F05]">
+            {label || "Édition " + type}
+          </span>
+          <div className="flex gap-1">
+             <Button
+              size="icon"
+              variant="ghost"
+              onClick={handleCancel}
+              className="h-7 w-7 text-gray-400 hover:text-white hover:bg-white/10"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+            <Button
+              size="icon"
+              onClick={handleSave}
+              className="h-7 w-7 bg-[#F29F05] text-black hover:bg-[#D96704]"
+            >
+              <Check className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
         {type === "textarea" ? (
           <Textarea
+            autoFocus
             value={tempValue}
             onChange={(e) => setTempValue(e.target.value)}
-            className="bg-[#1a1a1a] text-white border-gray-700 min-h-[100px]"
-            onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
+            className="bg-[#1a1a1a] text-white border-gray-700 min-h-[150px] w-full focus:border-[#F29F05] focus:ring-1 focus:ring-[#F29F05]"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.ctrlKey) handleSave();
+              if (e.key === 'Escape') handleCancel();
+            }}
           />
         ) : (
-          <Input
-            value={tempValue}
-            onChange={(e) => setTempValue(e.target.value)}
-            className="bg-[#1a1a1a] text-white border-gray-700"
-            onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
-          />
+          <div className="space-y-2">
+            <Input
+              autoFocus
+              value={tempValue}
+              onChange={(e) => setTempValue(e.target.value)}
+              className="bg-[#1a1a1a] text-white border-gray-700 w-full focus:border-[#F29F05] focus:ring-1 focus:ring-[#F29F05]"
+              placeholder={type === "image" ? "URL de l'image..." : "Texte..."}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSave();
+                if (e.key === 'Escape') handleCancel();
+              }}
+            />
+            {type === "image" && tempValue && (
+              <div className="mt-2 rounded border border-white/10 overflow-hidden bg-black/50 aspect-video flex items-center justify-center">
+                <img 
+                  src={tempValue} 
+                  alt="Aperçu" 
+                  className="max-w-full max-h-full object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=Image+Invalide';
+                  }}
+                />
+              </div>
+            )}
+          </div>
         )}
-        <div className="flex gap-2 mt-2 justify-end">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={(e) => {
-              blockEvent(e);
-              handleCancel();
-            }}
-            className="text-gray-400 hover:text-white"
-          >
-            <X className="w-4 h-4" />
-          </Button>
-          <Button
-            size="sm"
-            className="bg-[#F29F05] text-black hover:bg-[#D96704]"
-            onClick={(e) => {
-              blockEvent(e);
-              handleSave();
-            }}
-          >
-            <Check className="w-4 h-4" />
-          </Button>
+        
+        <div className="mt-3 flex items-center justify-between text-[10px] text-gray-500">
+          <span>{path}</span>
+          <span>Echap pour annuler • Ctrl+Entrée pour sauver</span>
         </div>
       </div>
     );
   }
 
-  const handleStartEdit = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsEditing(true);
-  };
-
   return (
     <div
       className={cn(
-        "relative group cursor-pointer border-2 border-transparent hover:border-[#F29F05]/50 rounded-md transition-all",
-        className,
+        "relative group cursor-pointer transition-all duration-300",
+        "before:absolute before:-inset-2 before:border-2 before:border-dashed before:border-transparent before:rounded-lg before:transition-all before:pointer-events-none",
+        "hover:before:border-[#F29F05]/40 hover:before:bg-[#F29F05]/5",
+        className
       )}
       onClick={handleStartEdit}
-      onMouseDown={handleStartEdit}
-      onMouseUp={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
     >
-      {" "}
-      <div className="absolute -top-3 -right-3 bg-[#F29F05] text-black p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-lg">
-        <Pencil className="w-3 h-3" />
+      <div className="absolute -top-4 -right-4 bg-[#F29F05] text-black w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-20 shadow-xl scale-75 group-hover:scale-100 hover:bg-[#D96704]">
+        {type === "image" ? <ImageIcon className="w-4 h-4" /> : <Pencil className="w-4 h-4" />}
       </div>
       {children}
     </div>
