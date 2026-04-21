@@ -1,4 +1,5 @@
 export interface HomePageContent {
+  impact: { title: string };
   hero: {
     title: string;
     description: string;
@@ -172,6 +173,7 @@ export interface SiteContent {
   rentalRequests: RentalRequest[];
   settings: GlobalSettings;
   inventory: InventoryItem[];
+  teamMembers: { name: string; role: string; bio: string; imageUrl: string }[];
 }
 
 export const initialContent: SiteContent = {
@@ -218,6 +220,7 @@ export const initialContent: SiteContent = {
         description: "Instruments et retours scène pour groupes live",
       },
     ],
+    impact: { title: "Notre Impact" },
   },
   association: {
     header: {
@@ -255,7 +258,7 @@ export const initialContent: SiteContent = {
     },
     info: {
       email: "contact@donsduson.fr",
-      address: "123 rue de la Musique\n75018 Paris",
+      address: "123 rue de la Musique 75018 Paris",
       zone: "Zone d'intervention : Île-de-France",
       socials: {
         facebook: "https://facebook.com",
@@ -410,36 +413,51 @@ export const initialContent: SiteContent = {
       id: "son-1",
       category: "Son",
       name: "Enceinte JBL PRX815",
-      image: "https://images.unsplash.com/photo-1686709709573-a877d7012cf4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzcGVha2VycyUyMHNvdW5kJTIwc3lzdGVtfGVufDF8fHx8MTc3NDYyMDE3Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      image:
+        "https://images.unsplash.com/photo-1686709709573-a877d7012cf4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzcGVha2VycyUyMHNvdW5kJTIwc3lzdGVtfGVufDF8fHx8MTc3NDYyMDE3Mnww&ixlib=rb-4.1.0&q=80&w=1080",
       price: 80,
-      description: "Enceinte active 1500W, idéale pour petites et moyennes configurations",
-      specs: ["1500W RMS", "Bi-amplifiée", "DSP intégré", "Connectique XLR/Jack"],
+      description:
+        "Enceinte active 1500W, idéale pour petites et moyennes configurations",
+      specs: [
+        "1500W RMS",
+        "Bi-amplifiée",
+        "DSP intégré",
+        "Connectique XLR/Jack",
+      ],
       stock: 4,
-      status: "Disponible"
+      status: "Disponible",
     },
     {
       id: "son-2",
       category: "Son",
       name: "Console Yamaha MG16XU",
-      image: "https://images.unsplash.com/photo-1700166269606-b5ea327d0540?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb3VuZCUyMG1peGluZyUyMGNvbnNvbGUlMjBzdHVkaW98ZW58MXx8fHwxNzc0NTMyNTE2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      image:
+        "https://images.unsplash.com/photo-1700166269606-b5ea327d0540?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb3VuZCUyMG1peGluZyUyMGNvbnNvbGUlMjBzdHVkaW98ZW58MXx8fHwxNzc0NTMyNTE2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       price: 60,
       description: "Table de mixage 16 canaux avec effets et interface USB",
       specs: ["16 canaux", "Effets SPX intégrés", "Interface USB", "4 Aux"],
       stock: 2,
-      status: "Disponible"
+      status: "Disponible",
     },
     {
       id: "lumiere-1",
       category: "Lumière",
       name: "Lyre LED Moving Head",
-      image: "https://images.unsplash.com/photo-1758306120745-a2fb7b34b6b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFnZSUyMGxpZ2h0aW5nJTIwZXF1aXBtZW50fGVufDF8fHx8MTc3NDYxNTc1N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      image:
+        "https://images.unsplash.com/photo-1758306120745-a2fb7b34b6b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFnZSUyMGxpZ2h0aW5nJTIwZXF1aXBtZW50fGVufDF8fHx8MTc3NDYxNTc1N3ww&ixlib=rb-4.1.0&q=80&w=1080",
       price: 70,
       description: "Lyre à LED 150W avec gobos et prisme",
-      specs: ["LED 150W", "16 canaux DMX", "Gobos rotatifs", "Prisme 3 facettes"],
+      specs: [
+        "LED 150W",
+        "16 canaux DMX",
+        "Gobos rotatifs",
+        "Prisme 3 facettes",
+      ],
       stock: 6,
-      status: "Disponible"
-    }
-  ]
+      status: "Disponible",
+    },
+  ],
+  teamMembers: [],
 };
 
 function isValidArray(value: any): boolean {
@@ -461,6 +479,10 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
     if (!Array.isArray(repaired.home.services)) {
       console.warn("Repairing corrupted home.services");
       repaired.home.services = initialContent.home.services;
+    }
+    // Ensure impact field exists if home is being repaired or updated
+    if (!repaired.home.impact) {
+      repaired.home.impact = { title: "Notre Impact" };
     }
   }
 

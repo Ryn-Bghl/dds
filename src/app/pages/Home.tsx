@@ -127,7 +127,9 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-20 bg-gradient-to-br from-[#8C0343] via-[#771236] to-[#D96704] text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl text-center mb-12 font-bold">Notre Impact</h2>
+          <Editable path="home.impact.title" label="Titre Section Impact">
+            <h2>Notre Impact</h2>
+          </Editable>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {(Array.isArray(home.stats) ? home.stats : []).map(
               (stat, index) => (
@@ -160,10 +162,23 @@ export default function Home() {
       <section className="py-20 bg-[#0D0D0D]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl mb-4 text-white font-bold">Nos Services</h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Location de matériel professionnel pour tous vos événements
-            </p>
+            <Editable
+              path="home.services.sectionTitle"
+              label="Titre Section Services"
+            >
+              <h2 className="text-4xl mb-4 text-white font-bold">
+                Nos Services
+              </h2>
+            </Editable>
+            <Editable
+              path="home.services.sectionSubtitle"
+              type="textarea"
+              label="Sous-titre Section Services"
+            >
+              <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                Location de matériel professionnel pour tous vos événements
+              </p>
+            </Editable>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {(Array.isArray(home.services) ? home.services : []).map(
@@ -206,7 +221,13 @@ export default function Home() {
               className="bg-[#8C0343] hover:bg-[#771236]"
             >
               <Link to="/location">
-                Voir tout le catalogue <ArrowRight className="ml-2 w-5 h-5" />
+                <Editable
+                  path="home.services.ctaCatalog"
+                  label="Texte CTA Catalogue Services"
+                >
+                  Voir tout le catalogue
+                </Editable>{" "}
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
           </div>
@@ -217,12 +238,34 @@ export default function Home() {
       <section className="py-20 bg-[#1a1a1a]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl mb-4 text-white font-bold">
-              Dernières Réalisations
-            </h2>
-            <p className="text-xl text-gray-400">
-              Découvrez nos projets récents
-            </p>
+            <Editable
+              path="home.latestProjects.sectionTitle"
+              label="Titre Section Projets"
+            >
+              <Editable
+                path="home.latestProjects.sectionTitle"
+                label="Titre Section Projets"
+              >
+                <h2 className="text-4xl mb-4 text-white font-bold">
+                  Dernières Réalisations
+                </h2>
+              </Editable>
+            </Editable>
+            <Editable
+              path="home.latestProjects.sectionSubtitle"
+              type="textarea"
+              label="Sous-titre Section Projets"
+            >
+              <Editable
+                path="home.latestProjects.sectionSubtitle"
+                type="textarea"
+                label="Sous-titre Section Projets"
+              >
+                <p className="text-xl text-gray-400">
+                  Découvrez nos projets récents
+                </p>
+              </Editable>
+            </Editable>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {latestProjects.map((project) => (
@@ -255,7 +298,13 @@ export default function Home() {
               className="border-gray-600 text-gray-300 hover:bg-gray-800"
             >
               <Link to="/projets">
-                Tous nos projets <ArrowRight className="ml-2 w-5 h-5" />
+                <Editable
+                  path="home.latestProjects.ctaAllProjects"
+                  label="Texte CTA Tous les Projets"
+                >
+                  Tous nos projets
+                </Editable>{" "}
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
           </div>
@@ -266,18 +315,51 @@ export default function Home() {
       <section className="py-20 bg-gradient-to-br from-[#771236] to-[#0D0D0D] text-white">
         <div className="container mx-auto px-4 text-center">
           <Users className="w-16 h-16 mx-auto mb-6 text-[#F29F05]" />
-          <h2 className="text-4xl mb-6 font-bold">Rejoignez l'aventure</h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-            Devenez bénévole, adhérent ou soutenez nos actions pour contribuer
-            au développement de la scène musicale locale
-          </p>
+          <Editable path="home.ctaSection.title" label="Titre Section CTA">
+            <Editable path="home.ctaSection.title" label="Titre Section CTA">
+              <h2 className="text-4xl mb-6 font-bold">Rejoignez l'aventure</h2>
+            </Editable>
+          </Editable>
+          <Editable
+            path="home.ctaSection.description"
+            type="textarea"
+            label="Description Section CTA"
+          >
+            <Editable
+              path="home.ctaSection.description"
+              type="textarea"
+              label="Description Section CTA"
+            >
+              <Editable
+                path="home.ctaSection.description"
+                type="textarea"
+                label="Description Section CTA"
+              >
+                <Editable
+                  path="home.ctaSection.description"
+                  type="textarea"
+                  label="Description Section CTA"
+                >
+                  <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+                    Devenez bénévole, adhérent ou soutenez nos actions pour
+                    contribuer au développement de la scène musicale locale
+                  </p>
+                </Editable>
+              </Editable>
+            </Editable>
+          </Editable>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               asChild
               size="lg"
               className="bg-[#F29F05] text-black hover:bg-[#D96704]"
             >
-              <Link to="/rejoindre">Devenir bénévole</Link>
+              <Editable
+                path="home.ctaSection.volunteerCta"
+                label="Texte CTA Bénévolat"
+              >
+                Devenez bénévole
+              </Editable>
             </Button>
             <Button
               asChild
@@ -285,7 +367,14 @@ export default function Home() {
               variant="outline"
               className="border-white text-white hover:bg-white/10"
             >
-              <Link to="/soutenir">Faire un don</Link>
+              <Link to="/soutenir">
+                <Editable
+                  path="home.ctaSection.donateCta"
+                  label="Texte CTA Faire un don"
+                >
+                  Faire un don
+                </Editable>
+              </Link>
             </Button>
           </div>
         </div>

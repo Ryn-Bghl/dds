@@ -226,35 +226,60 @@ export default function Association() {
       {/* Team */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl mb-4 text-center text-foreground font-bold">
-            Notre Équipe
-          </h2>
-          <p className="text-xl text-muted-foreground text-center mb-12">
-            Les membres du bureau qui portent l'association au quotidien
-          </p>
+          <Editable path="association.team.title" label="Titre Section Équipe">
+            <h2 className="text-4xl mb-4 text-center text-foreground font-bold">
+              Notre Équipe
+            </h2>
+          </Editable>
+          <Editable path="association.team.description" type="textarea" label="Description Section Équipe">
+            <p className="text-xl text-muted-foreground text-center mb-12">
+              Les membres du bureau qui portent l'association au quotidien
+            </p>
+          </Editable>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            {team.map((member, index) => (
-              <Card
-                key={index}
-                className="overflow-hidden hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-background"
-              >
-                <CardContent className="p-0">
-                  <div className="aspect-square overflow-hidden">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4 text-center">
-                    <h3 className="text-xl mb-1 text-foreground font-semibold">
-                      {member.name}
-                    </h3>
-                    <p className="text-[#F29F05] font-medium">{member.role}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {Array.isArray(content.teamMembers) && content.teamMembers.length > 0 ? (
+              content.teamMembers.map((member, index) => (
+                <Card
+                  key={member.id || index} // Use id if available, fallback to index
+                  className="overflow-hidden hover:shadow-lg hover:shadow-[#8C0343]/20 transition-all border-border bg-background"
+                >
+                  <CardContent className="p-0">
+                    <div className="aspect-square overflow-hidden">
+                      <Editable
+                        path={`teamMembers.${index}.imageUrl`}
+                        type="image"
+                        label="Image Membre"
+                      >
+                        <img
+                          src={member.imageUrl || "https://placehold.co/400x400?text=No+Image"}
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </Editable>
+                    </div>
+                    <div className="p-4 text-center">
+                      <Editable path={`teamMembers.${index}.name`} label="Nom Membre">
+                        <h3 className="text-xl mb-1 text-foreground font-semibold">
+                          {member.name}
+                        </h3>
+                      </Editable>
+                      <Editable path={`teamMembers.${index}.role`} label="Rôle Membre">
+                        <p className="text-[#F29F05] font-medium">{member.role}</p>
+                      </Editable>
+                      <Editable path={`teamMembers.${index}.bio`} type="textarea" label="Biographie Membre" className="mt-2 text-sm text-muted-foreground text-center">
+                        <p className="text-sm text-muted-foreground text-center min-h-[40px]">
+                           {member.bio || "Pas de biographie disponible."}
+                        </p>
+                      </Editable>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <p className="col-span-full text-center text-muted-foreground italic">
+                L'équipe sera bientôt dévoilée.
+              </p>
+            )}
           </div>
           <div className="text-center mt-12">
             <p className="text-muted-foreground italic">

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import ddsLogo from "../assets/dds_logo.png";
 import { useEditor } from "../context/EditorContext";
+import { Editable } from "./Editable";
 
 export default function Footer() {
   const { content } = useEditor();
@@ -131,7 +132,12 @@ export default function Footer() {
                   to="/contact"
                   className="hover:text-[#F29F05] transition-colors"
                 >
-                  Nous contacter
+                  <Editable
+                    path="settings.footer.involvedLinks[3].label"
+                    label="Libellé Nous Contacter"
+                  >
+                    Nous contacter
+                  </Editable>
                 </Link>
               </li>
             </ul>

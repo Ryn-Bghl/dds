@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import ddsLogo from "../assets/dds_logo.png";
 import { useAuth } from "../context/AuthContext";
 import { useEditor } from "../context/EditorContext";
+import { Editable } from "./Editable";
 
 const navLinks = [
   { path: "/", label: "Accueil" },
@@ -68,7 +69,14 @@ export default function Header() {
                   className="flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full text-xs text-gray-300 hover:bg-gray-700 transition-colors"
                 >
                   <User className="w-3 h-3 text-[#F29F05]" />
-                  <span>Admin</span>
+                  <span>
+                    <Editable
+                      path="settings.header.adminLink.text"
+                      label="Texte Lien Admin"
+                    >
+                      Admin
+                    </Editable>
+                  </span>
                 </Link>
                 <Button
                   variant="ghost"
