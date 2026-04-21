@@ -445,49 +445,47 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
   return repaired;
 }
 
+import { saveToGitHub } from "./github-cms";
+
 export async function loadContent(): Promise<SiteContent> {
   try {
-    // 1. Try to load from API (Live data)
-    const apiResponse = await fetch("/api/get-content");
-    if (apiResponse.ok) {
-      const data = await apiResponse.json();
-      return validateAndRepairContent(data);
-    }
-
-    // 2. Fallback to static data.json if API is not available
-    console.warn("API not available or failed, falling back to static data.json");
-    const staticResponse = await fetch("/data.json");
-    if (!staticResponse.ok) {
+    // On charge toujours le fichier statique (il est mis à jour par GitHub + Vercel redeploy)
+    const response = await fetch("/data.json");
+    if (!response.ok) {
       return initialContent;
     }
-    const staticData = await staticResponse.json();
-    return validateAndRepairContent(staticData);
+    const data = await response.json();
+    return validateAndRepairContent(data);
   } catch (e) {
-    console.error(
-      "Failed to load content, using initial content",
-      e,
-    );
+    console.error("Failed to load content, using initial content", e);
     return initialContent;
   }
 }
 
 export async function saveContent(content: SiteContent) {
-  try {
-    const response = await fetch("/api/save-content", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(content),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Failed to save content:", errorData.error);
-      throw new Error(errorData.error || "Failed to save");
+  // 1. Si on est en local (dev) et que le serveur local tourne
+  if (import.meta.env.DEV) {
+    try {
+      const response = await fetch("/api/save-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(content),
+      });
+      if (response.ok) {
+        console.log("✅ Sauvegardé localement");
+        return;
+      }
+    } catch (e) {
+      console.warn("Serveur local non disponible, tentative via GitHub...");
     }
-    
-    console.log("✅ Content saved successfully");
+  }
+
+  // 2. Sinon (Production ou fallback), on utilise l'API GitHub
+  try {
+    await saveToGitHub(content);
+    console.log("✅ Sauvegardé via GitHub");
   } catch (e) {
-    console.error("Failed to save content via API", e);
+    console.error("Erreur sauvegarde GitHub:", e);
     throw e;
   }
 }
