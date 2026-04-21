@@ -1,136 +1,349 @@
-import React from 'react';
-import { useEditor } from '../../context/EditorContext';
-import { RentalRequest } from '../../../lib/content-store';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import { Package, Calendar, User, Mail, Phone, CheckCircle, XCircle, Clock } from 'lucide-react';
-import { toast } from 'sonner';
+import { useState } from "react";
+import {
+  Package,
+  Plus,
+  Search,
+  Filter,
+  MoreVertical,
+  Edit2,
+  Trash2,
+  AlertCircle,
+  CheckCircle2,
+  XCircle,
+  Info,
+  Music,
+  Lightbulb,
+  Radio,
+  Wrench,
+  Image as ImageIcon,
+} from "lucide-react";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Card, CardContent } from "../../components/ui/card";
+import { Badge } from "../../components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../../components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "../../components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
+import { Label } from "../../components/ui/label";
+import { Textarea } from "../../components/ui/textarea";
+import { useEditor } from "../../context/EditorContext";
+import { InventoryItem } from "../../../lib/content-store";
+import { toast } from "sonner";
+
+const categoryIcons = {
+  Son: Music,
+  Lumière: Lightbulb,
+  DJ: Radio,
+  Backline: Wrench,
+};
 
 export default function AdminRentals() {
   const { content, updateContent } = useEditor();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("Tous");
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<Partial<InventoryItem> | null>(null);
 
-  const updateStatus = (id: string, newStatus: RentalRequest['status']) => {
-    const newRequests = content.rentalRequests.map(req =>
-      req.id === id ? { ...req, status: newStatus } : req
-    );
-    updateContent('rentalRequests', newRequests);
-    toast.success(`Statut mis à jour : ${newStatus}`);
+  const inventory = content.inventory || [];
+
+  const filteredInventory = inventory.filter((item) => {
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = categoryFilter === "Tous" || item.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleSaveItem = () => {
+    if (!editingItem?.name || !editingItem?.category || !editingItem?.price) {
+      toast.error("Veuillez remplir les champs obligatoires");
+      return;
+    }
+
+    let newInventory;
+    if (editingItem.id) {
+      // Edit existing
+      newInventory = inventory.map(item => item.id === editingItem.id ? (editingItem as InventoryItem) : item);
+      toast.success("Matériel mis à jour");
+    } else {
+      // Add new
+      const newItem = {
+        ...editingItem,
+        id: `item-${Date.now()}`,
+        specs: editingItem.specs || [],
+        status: editingItem.status || "Disponible",
+        stock: editingItem.stock || 1,
+      } as InventoryItem;
+      newInventory = [newItem, ...inventory];
+      toast.success("Nouveau matériel ajouté");
+    }
+
+    updateContent("inventory", newInventory);
+    setIsEditDialogOpen(false);
+    setEditingItem(null);
   };
 
-  const getStatusColor = (status: RentalRequest['status']) => {
+  const handleDeleteItem = (id: string) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce matériel ?")) {
+      const newInventory = inventory.filter(item => item.id !== id);
+      updateContent("inventory", newInventory);
+      toast.info("Matériel supprimé");
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'En attente': return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
-      case 'Validé': return 'bg-green-500/10 text-green-500 border-green-500/20';
-      case 'Refusé': return 'bg-red-500/10 text-red-500 border-red-500/20';
-      default: return 'bg-gray-500/10 text-gray-500 border-gray-500/20';
+      case "Disponible":
+        return <Badge className="bg-green-500/20 text-green-500 border-green-500/30">Disponible</Badge>;
+      case "Indisponible":
+        return <Badge className="bg-red-500/20 text-red-500 border-red-500/30">Indisponible</Badge>;
+      case "Maintenance":
+        return <Badge className="bg-orange-500/20 text-orange-500 border-orange-500/30">Maintenance</Badge>;
+      default:
+        return <Badge>{status}</Badge>;
     }
   };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Demandes de Location</h1>
-        <p className="text-gray-400">Gérez les demandes de devis et les réservations de matériel.</p>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Gestion de l'Inventaire</h1>
+          <p className="text-gray-400">Gérez le parc de matériel technique de l'association.</p>
+        </div>
+        <Button 
+          onClick={() => {
+            setEditingItem({ category: "Son", status: "Disponible", stock: 1, specs: [] });
+            setIsEditDialogOpen(true);
+          }}
+          className="bg-[#8C0343] hover:bg-[#771236]"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Ajouter du matériel
+        </Button>
       </div>
 
-      <div className="grid gap-6">
-        {content.rentalRequests.length === 0 ? (
-          <Card className="bg-[#1a1a1a] border-gray-800 p-12 text-center">
-            <Package className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">Aucune demande de location pour le moment.</p>
-          </Card>
-        ) : (
-          content.rentalRequests.map((request) => (
-            <Card key={request.id} className="bg-[#1a1a1a] border-gray-800 overflow-hidden">
-              <CardHeader className="border-b border-gray-800 bg-[#262626]/50 flex flex-row items-center justify-between py-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#8C0343]/20 flex items-center justify-center text-[#F29F05]">
-                    <Package className="w-5 h-5" />
+      <Card className="bg-card border-border">
+        <CardContent className="p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <Input
+                placeholder="Rechercher un matériel..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-background border-border"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-[180px] bg-background border-border">
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-4 h-4" />
+                    <SelectValue placeholder="Catégorie" />
                   </div>
-                  <div>
-                    <CardTitle className="text-white text-lg">Commande #{request.id}</CardTitle>
-                    <p className="text-xs text-gray-500">Reçue le {request.createdAt}</p>
-                  </div>
-                </div>
-                <Badge className={getStatusColor(request.status)}>
-                  {request.status}
-                </Badge>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Customer Info */}
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
-                      <User className="w-4 h-4 text-[#F29F05]" /> Client
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      <p className="text-white font-medium">{request.customerName}</p>
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <Mail className="w-3.5 h-3.5" /> {request.email}
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <Phone className="w-3.5 h-3.5" /> {request.phone}
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <Calendar className="w-3.5 h-3.5" /> Événement : {request.eventDate}
-                      </div>
-                    </div>
-                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Tous">Toutes catégories</SelectItem>
+                  <SelectItem value="Son">Son</SelectItem>
+                  <SelectItem value="Lumière">Lumière</SelectItem>
+                  <SelectItem value="DJ">DJ</SelectItem>
+                  <SelectItem value="Backline">Backline</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-                  {/* Items list */}
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-[#F29F05]" /> Matériel
-                    </h4>
-                    <div className="bg-[#262626] rounded-lg p-4 space-y-2">
-                      {request.items.map((item, i) => (
-                        <div key={i} className="flex justify-between text-sm">
-                          <span className="text-gray-300">{item.quantity}x {item.name}</span>
-                          <span className="text-white font-medium">{item.price * item.quantity}€</span>
-                        </div>
-                      ))}
-                      <div className="pt-2 border-t border-gray-700 flex justify-between font-bold">
-                        <span className="text-white">Total Estimé</span>
-                        <span className="text-[#F29F05]">{request.totalPrice}€</span>
-                      </div>
-                    </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredInventory.map((item) => {
+          const Icon = categoryIcons[item.category] || Package;
+          return (
+            <Card key={item.id} className="overflow-hidden border-border bg-card group">
+              <div className="aspect-video relative overflow-hidden bg-muted">
+                {item.image ? (
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-600">
+                    <ImageIcon className="w-12 h-12" />
                   </div>
+                )}
+                <div className="absolute top-2 right-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="secondary" size="icon" className="h-8 w-8 bg-black/50 backdrop-blur-sm border-none text-white hover:bg-black/70">
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => {
+                        setEditingItem(item);
+                        setIsEditDialogOpen(true);
+                      }}>
+                        <Edit2 className="w-4 h-4 mr-2" /> Modifier
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="text-red-500"
+                        onClick={() => handleDeleteItem(item.id)}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" /> Supprimer
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
-
-                <div className="mt-8 flex justify-end gap-3 pt-6 border-t border-gray-800">
-                  {request.status === 'En attente' && (
-                    <>
-                      <Button
-                        variant="outline"
-                        onClick={() => updateStatus(request.id, 'Refusé')}
-                        className="border-red-900/50 text-red-400 hover:bg-red-900/10 hover:text-red-300"
-                      >
-                        <XCircle className="w-4 h-4 mr-2" /> Refuser
-                      </Button>
-                      <Button
-                        onClick={() => updateStatus(request.id, 'Validé')}
-                        className="bg-green-600 hover:bg-green-700 text-white"
-                      >
-                        <CheckCircle className="w-4 h-4 mr-2" /> Valider le devis
-                      </Button>
-                    </>
-                  )}
-                  {request.status !== 'En attente' && (
-                    <Button
-                      variant="outline"
-                      onClick={() => updateStatus(request.id, 'En attente')}
-                      className="border-gray-700 text-gray-400 hover:bg-gray-800"
-                    >
-                      Remettre en attente
-                    </Button>
-                  )}
+                <div className="absolute bottom-2 left-2">
+                  <Badge className="bg-black/50 backdrop-blur-sm border-none text-white">
+                    <Icon className="w-3 h-3 mr-1" />
+                    {item.category}
+                  </Badge>
+                </div>
+              </div>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-bold text-white line-clamp-1">{item.name}</h3>
+                  <span className="text-[#F29F05] font-bold">{item.price}€/j</span>
+                </div>
+                <p className="text-sm text-gray-400 line-clamp-2 mb-4 h-10">
+                  {item.description}
+                </p>
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <Package className="w-3.5 h-3.5 text-gray-500" />
+                    <span className="text-gray-300">Stock: {item.stock}</span>
+                  </div>
+                  {getStatusBadge(item.status)}
                 </div>
               </CardContent>
             </Card>
-          ))
+          );
+        })}
+
+        {filteredInventory.length === 0 && (
+          <div className="col-span-full py-12 text-center bg-card rounded-lg border border-dashed border-border">
+            <Package className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-xl font-medium text-white mb-2">Aucun matériel trouvé</h3>
+            <p className="text-gray-400">Essayez de modifier vos filtres ou ajoutez du nouveau matériel.</p>
+          </div>
         )}
       </div>
+
+      {/* Edit/Add Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] bg-card border-border text-white">
+          <DialogHeader>
+            <DialogTitle>{editingItem?.id ? "Modifier le matériel" : "Ajouter du matériel"}</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-4 py-4">
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="name">Nom du matériel *</Label>
+              <Input 
+                id="name" 
+                value={editingItem?.name || ""} 
+                onChange={e => setEditingItem(prev => ({...prev, name: e.target.value}))}
+                className="bg-background border-border"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Catégorie *</Label>
+              <Select 
+                value={editingItem?.category} 
+                onValueChange={v => setEditingItem(prev => ({...prev, category: v as any}))}
+              >
+                <SelectTrigger className="bg-background border-border">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Son">Son</SelectItem>
+                  <SelectItem value="Lumière">Lumière</SelectItem>
+                  <SelectItem value="DJ">DJ</SelectItem>
+                  <SelectItem value="Backline">Backline</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="price">Prix journalier (€) *</Label>
+              <Input 
+                id="price" 
+                type="number" 
+                value={editingItem?.price || ""} 
+                onChange={e => setEditingItem(prev => ({...prev, price: Number(e.target.value)}))}
+                className="bg-background border-border"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="stock">Stock total</Label>
+              <Input 
+                id="stock" 
+                type="number" 
+                value={editingItem?.stock || ""} 
+                onChange={e => setEditingItem(prev => ({...prev, stock: Number(e.target.value)}))}
+                className="bg-background border-border"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="status">Statut</Label>
+              <Select 
+                value={editingItem?.status} 
+                onValueChange={v => setEditingItem(prev => ({...prev, status: v as any}))}
+              >
+                <SelectTrigger className="bg-background border-border">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Disponible">Disponible</SelectItem>
+                  <SelectItem value="Indisponible">Indisponible</SelectItem>
+                  <SelectItem value="Maintenance">Maintenance</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="image">URL de l'image</Label>
+              <Input 
+                id="image" 
+                value={editingItem?.image || ""} 
+                onChange={e => setEditingItem(prev => ({...prev, image: e.target.value}))}
+                className="bg-background border-border"
+                placeholder="https://images.unsplash.com/..."
+              />
+            </div>
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea 
+                id="description" 
+                value={editingItem?.description || ""} 
+                onChange={e => setEditingItem(prev => ({...prev, description: e.target.value}))}
+                className="bg-background border-border"
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="border-border">
+              Annuler
+            </Button>
+            <Button onClick={handleSaveItem} className="bg-[#8C0343] hover:bg-[#771236]">
+              Enregistrer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
