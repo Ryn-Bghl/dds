@@ -284,7 +284,7 @@
       "image": "https://images.unsplash.com/photo-1758306120745-a2fb7b34b6b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFnZSUyMGxpZ2h0aW5nJTIwZXF1aXBtZW50fGVufDF8fHx8MTc3NDYxNTc1N3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "price": 70,
       "description": "Lyre à LED 150W avec gobos et prisme",
-      "specs: ["LED 150W", "16 canaux DMX", "Gobos rotatifs", "Prisme 3 facettes"],
+      "specs": ["LED 150W", "16 canaux DMX", "Gobos rotatifs", "Prisme 3 facettes"],
       "stock": 6,
       "status": "Disponible"
     }
