@@ -322,7 +322,7 @@ export default function AdminRentals() {
 
       {/* Edit/Add Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] bg-card border-border text-white">
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-card border-border text-white custom-scrollbar">
           <DialogHeader>
             <DialogTitle>
               {editingItem?.id ? "Modifier le matériel" : "Ajouter du matériel"}
