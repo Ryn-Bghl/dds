@@ -438,13 +438,21 @@ export default function EquipmentRental() {
                   className="overflow-hidden hover:shadow-xl hover:shadow-[#8C0343]/20 transition-all border-border bg-card group"
                 >
                   <CardContent className="p-0">
-                    <div className="aspect-square overflow-hidden">
+                    <Link
+                      to={`/location/${equipment.id}`}
+                      className="block aspect-square overflow-hidden relative"
+                    >
                       <img
                         src={equipment.image}
                         alt={equipment.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                    </div>
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-white font-bold text-sm bg-[#8C0343] px-4 py-2 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                          Voir les détails
+                        </span>
+                      </div>
+                    </Link>
                     <div className="p-4">
                       <Badge
                         variant="secondary"
@@ -453,9 +461,11 @@ export default function EquipmentRental() {
                         <Icon className="w-3 h-3 mr-1" />
                         {equipment.category}
                       </Badge>
-                      <h3 className="text-lg mb-2 text-foreground font-bold line-clamp-1">
-                        {equipment.name}
-                      </h3>
+                      <Link to={`/location/${equipment.id}`}>
+                        <h3 className="text-lg mb-2 text-foreground font-bold line-clamp-1 hover:text-[#8C0343] transition-colors">
+                          {equipment.name}
+                        </h3>
+                      </Link>
                       <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                         {equipment.description}
                       </p>

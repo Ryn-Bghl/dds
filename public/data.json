@@ -23,7 +23,7 @@
         "suffix": "+"
       },
       {
-        "value": "10",
+        "value": 4,
         "label": "Années d'expérience",
         "suffix": ""
       },
@@ -93,7 +93,7 @@
     },
     "info": {
       "email": "contact@donsduson.fr",
-      "address": "123 rue de la Musique\n75018 Paris",
+      "address": "123 rue de la Musique 75018 Paris",
       "zone": "Zone d'intervention : Île-de-France",
       "socials": {
         "facebook": "https://facebook.com",
@@ -155,11 +155,15 @@
       ],
       "content": [
         {
-          "subtitle": "Objectifs du projet",
+          "id": "1",
+          "type": "text",
+          "title": "Objectifs du projet",
           "text": "Offrir une plateforme de visibilité aux artistes émergents."
         },
         {
-          "subtitle": "Organisation",
+          "id": "2",
+          "type": "text",
+          "title": "Organisation",
           "text": "L'événement s'est déroulé sur 3 jours avec 2 scènes principales."
         }
       ],
@@ -184,7 +188,9 @@
       ],
       "content": [
         {
-          "subtitle": "Programme",
+          "id": "1",
+          "type": "text",
+          "title": "Programme",
           "text": "CAO, mixage et mastering."
         }
       ]
@@ -201,7 +207,8 @@
       "description": "Finale du tremplin avec 5 rappeurs sélectionnés",
       "price": "Gratuit sur réservation",
       "image": "https://images.unsplash.com/photo-1561264819-1ccc1c6e0ae9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsaXZlJTIwbXVzaWMlMjBiYW5kJTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzc0NjIwMTcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "isPast": false
+      "isPast": false,
+      "content": []
     },
     {
       "id": 2,
@@ -212,7 +219,8 @@
       "description": "Édition passée du festival",
       "image": "https://images.unsplash.com/photo-1669459881627-06c2a4948e33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwc3RhZ2UlMjBsaWdodHMlMjBwZXJmb3JtYW5jZXxlbnwxfHx8fDE3NzQ1MDc2OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "isPast": true,
-      "attendees": 3500
+      "attendees": 3500,
+      "content": []
     }
   ],
   "rentalRequests": [
@@ -272,7 +280,8 @@
         "Connectique XLR/Jack"
       ],
       "stock": 4,
-      "status": "Disponible"
+      "status": "Disponible",
+      "content": []
     },
     {
       "id": "son-2",
@@ -281,14 +290,10 @@
       "image": "https://images.unsplash.com/photo-1700166269606-b5ea327d0540?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb3VuZCUyMG1peGluZyUyMGNvbnNvbGUlMjBzdHVkaW98ZW58MXx8fHwxNzc0NTMyNTE2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "price": 60,
       "description": "Table de mixage 16 canaux avec effets et interface USB",
-      "specs": [
-        "16 canaux",
-        "Effets SPX intégrés",
-        "Interface USB",
-        "4 Aux"
-      ],
+      "specs": ["16 canaux", "Effets SPX intégrés", "Interface USB", "4 Aux"],
       "stock": 2,
-      "status": "Disponible"
+      "status": "Disponible",
+      "content": []
     },
     {
       "id": "lumiere-1",
@@ -304,7 +309,9 @@
         "Prisme 3 facettes"
       ],
       "stock": 6,
-      "status": "Disponible"
+      "status": "Disponible",
+      "content": []
     }
-  ]
+  ],
+  "teamMembers": []
 }

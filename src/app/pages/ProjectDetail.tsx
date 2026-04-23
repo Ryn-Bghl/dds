@@ -3,12 +3,15 @@ import { ArrowLeft, Calendar, MapPin, Users } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { useEditor } from "../context/EditorContext";
+import { Editable } from "../components/Editable";
+import DetailContent from "../components/DetailContent";
 
 export default function ProjectDetail() {
   const { id } = useParams();
   const { content } = useEditor();
   const projects = content.projects;
-  const project = id ? projects.find((p) => p.id === id) : null;
+  const projectIndex = projects.findIndex((p) => p.id === id);
+  const project = projectIndex !== -1 ? projects[projectIndex] : null;
 
   if (!project) {
     return (
@@ -26,16 +29,20 @@ export default function ProjectDetail() {
     );
   }
 
+  const basePath = `projects.${projectIndex}`;
+
   return (
     <div className="flex flex-col">
       {/* Header Image */}
       <div className="relative h-[500px] overflow-hidden">
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+        <Editable path={`${basePath}.image`} label="URL Image de couverture">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover"
+          />
+        </Editable>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container mx-auto">
             <Button
@@ -48,18 +55,30 @@ export default function ProjectDetail() {
                 Retour aux projets
               </Link>
             </Button>
-            <Badge className="bg-[#8C0343] text-white mb-4">
-              {project.category}
-            </Badge>
-            <h1 className="text-5xl text-white mb-4">{project.title}</h1>
-            <div className="flex flex-wrap gap-4 text-white">
+            <div className="mb-4">
+              <Editable path={`${basePath}.category`} label="Catégorie">
+                <Badge className="bg-[#8C0343] text-white">
+                  {project.category}
+                </Badge>
+              </Editable>
+            </div>
+            <Editable path={`${basePath}.title`} label="Titre du projet">
+              <h1 className="text-5xl text-white mb-4 font-bold">
+                {project.title}
+              </h1>
+            </Editable>
+            <div className="flex flex-wrap gap-6 text-white/90">
               <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                <span>{project.date}</span>
+                <Calendar className="w-5 h-5 text-[#F29F05]" />
+                <Editable path={`${basePath}.date`} label="Date">
+                  <span>{project.date}</span>
+                </Editable>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5" />
-                <span>{project.location}</span>
+                <MapPin className="w-5 h-5 text-[#F29F05]" />
+                <Editable path={`${basePath}.location`} label="Lieu">
+                  <span>{project.location}</span>
+                </Editable>
               </div>
             </div>
           </div>
@@ -71,48 +90,46 @@ export default function ProjectDetail() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Description */}
-            <p className="text-xl text-muted-foreground leading-relaxed mb-12">
-              {project.description}
-            </p>
+            <Editable
+              path={`${basePath}.description`}
+              type="textarea"
+              label="Description courte"
+            >
+              <p className="text-2xl text-foreground font-medium leading-relaxed mb-16">
+                {project.description}
+              </p>
+            </Editable>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 mb-12 p-8 bg-gradient-to-br from-[#8C0343]/20 to-[#D96704]/20 rounded-xl border border-border">
-              {project.stats.map((stat: any, index: number) => (
-                <div key={index} className="text-center">
-                  <div className="text-4xl text-[#F29F05] mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Content Sections */}
-            <div className="space-y-8 mb-12">
-              {project.content.map((section: any, index: number) => (
-                <div key={index}>
-                  <h2 className="text-3xl mb-4 text-foreground">
-                    {section.subtitle}
-                  </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    {section.text}
-                  </p>
-                </div>
-              ))}
+            {/* Content Blocks */}
+            <div className="mb-20">
+              <DetailContent
+                blocks={project.content}
+                basePath={`${basePath}.content`}
+              />
             </div>
 
             {/* Testimonial */}
             {project.testimonial && (
-              <div className="bg-card p-8 rounded-xl border-l-4 border-[#F29F05]">
-                <Users className="w-10 h-10 text-[#F29F05] mb-4" />
-                <p className="text-lg italic text-muted-foreground mb-4">
-                  "{project.testimonial.text}"
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  — {project.testimonial.author}
-                </p>
+              <div className="bg-card p-10 rounded-3xl border border-border relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-[#F29F05]" />
+                <Users className="w-12 h-12 text-[#F29F05] mb-6 opacity-50" />
+                <Editable
+                  path={`${basePath}.testimonial.text`}
+                  type="textarea"
+                  label="Texte du témoignage"
+                >
+                  <p className="text-xl italic text-foreground mb-6 leading-relaxed">
+                    "{project.testimonial.text}"
+                  </p>
+                </Editable>
+                <Editable
+                  path={`${basePath}.testimonial.author`}
+                  label="Auteur"
+                >
+                  <p className="text-base font-bold text-[#F29F05] uppercase tracking-wider">
+                    — {project.testimonial.author}
+                  </p>
+                </Editable>
               </div>
             )}
           </div>

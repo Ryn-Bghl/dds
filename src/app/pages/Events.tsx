@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Calendar, MapPin, Clock, ExternalLink } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Clock,
+  ExternalLink,
+  ArrowRight,
+} from "lucide-react";
 import {
   Tabs,
   TabsContent,
@@ -10,6 +16,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { useEditor } from "../context/EditorContext";
+import { Link } from "react-router";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -167,21 +174,33 @@ export default function Events() {
                               </div>
                             </div>
                           </div>
-                          {event.ticketUrl && (
+                          <div className="flex flex-wrap gap-3">
                             <Button
                               asChild
                               className="bg-[#8C0343] hover:bg-[#771236]"
                             >
-                              <a
-                                href={event.ticketUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <ExternalLink className="mr-2 w-4 h-4" />
-                                Réserver / S'inscrire
-                              </a>
+                              <Link to={`/evenements/${event.id}`}>
+                                <ArrowRight className="mr-2 w-4 h-4" />
+                                Voir les détails
+                              </Link>
                             </Button>
-                          )}
+                            {event.ticketUrl && (
+                              <Button
+                                asChild
+                                variant="outline"
+                                className="border-[#8C0343] text-[#8C0343] hover:bg-[#8C0343]/10"
+                              >
+                                <a
+                                  href={event.ticketUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <ExternalLink className="mr-2 w-4 h-4" />
+                                  Réserver
+                                </a>
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -219,17 +238,23 @@ export default function Events() {
                             <Calendar className="w-4 h-4" />
                             <span>{formatDate(event.date)}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                             <MapPin className="w-4 h-4" />
                             <span>{event.location}</span>
                           </div>
-                          {event.attendees && (
-                            <div className="pt-3 border-t border-border">
+                          <div className="pt-3 border-t border-border flex items-center justify-between">
+                            <Link
+                              to={`/evenements/${event.id}`}
+                              className="text-sm font-bold text-[#8C0343] hover:text-[#771236] inline-flex items-center gap-1"
+                            >
+                              Détails <ArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                            {event.attendees && (
                               <span className="text-sm text-muted-foreground">
                                 {event.attendees} participants
                               </span>
-                            </div>
-                          )}
+                            )}
+                          </div>
                         </div>
                       </CardContent>
                     </Card>

@@ -86,6 +86,15 @@ export interface SupportPageContent {
   };
 }
 
+export interface ContentBlock {
+  id: string;
+  type: "text" | "image" | "title" | "stats";
+  title?: string;
+  text?: string;
+  url?: string;
+  stats?: { label: string; value: string }[];
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -95,7 +104,7 @@ export interface Project {
   date: string;
   location: string;
   stats: { label: string; value: string }[];
-  content: { subtitle: string; text: string }[];
+  content: ContentBlock[];
   testimonial?: { text: string; author: string };
 }
 
@@ -112,6 +121,7 @@ export interface Event {
   image: string;
   attendees?: number;
   isPast: boolean;
+  content: ContentBlock[];
 }
 
 export interface RentalRequest {
@@ -160,6 +170,7 @@ export interface InventoryItem {
   specs: string[];
   stock: number;
   status: "Disponible" | "Indisponible" | "Maintenance";
+  content: ContentBlock[];
 }
 
 export interface SiteContent {
@@ -319,11 +330,15 @@ export const initialContent: SiteContent = {
       ],
       content: [
         {
-          subtitle: "Objectifs du projet",
+          id: "1",
+          type: "text",
+          title: "Objectifs du projet",
           text: "Offrir une plateforme de visibilité aux artistes émergents.",
         },
         {
-          subtitle: "Organisation",
+          id: "2",
+          type: "text",
+          title: "Organisation",
           text: "L'événement s'est déroulé sur 3 jours avec 2 scènes principales.",
         },
       ],
@@ -340,7 +355,14 @@ export const initialContent: SiteContent = {
       date: "4-8 Mars 2024",
       location: "Studio Dons Du Son, Paris 18e",
       stats: [{ label: "Participants", value: "12" }],
-      content: [{ subtitle: "Programme", text: "CAO, mixage et mastering." }],
+      content: [
+        {
+          id: "1",
+          type: "text",
+          title: "Programme",
+          text: "CAO, mixage et mastering.",
+        },
+      ],
     },
   ],
   events: [
@@ -356,6 +378,7 @@ export const initialContent: SiteContent = {
       image:
         "https://images.unsplash.com/photo-1561264819-1ccc1c6e0ae9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsaXZlJTIwbXVzaWMlMjBiYW5kJTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzc0NjIwMTcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
       isPast: false,
+      content: [],
     },
     {
       id: 2,
@@ -368,6 +391,7 @@ export const initialContent: SiteContent = {
         "https://images.unsplash.com/photo-1669459881627-06c2a4948e33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwc3RhZ2UlMjBsaWdodHMlMjBwZXJmb3JtYW5jZXxlbnwxfHx8fDE3NzQ1MDc2OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       isPast: true,
       attendees: 3500,
+      content: [],
     },
   ],
   rentalRequests: [
@@ -426,6 +450,7 @@ export const initialContent: SiteContent = {
       ],
       stock: 4,
       status: "Disponible",
+      content: [],
     },
     {
       id: "son-2",
@@ -438,6 +463,7 @@ export const initialContent: SiteContent = {
       specs: ["16 canaux", "Effets SPX intégrés", "Interface USB", "4 Aux"],
       stock: 2,
       status: "Disponible",
+      content: [],
     },
     {
       id: "lumiere-1",
@@ -455,6 +481,7 @@ export const initialContent: SiteContent = {
       ],
       stock: 6,
       status: "Disponible",
+      content: [],
     },
   ],
   teamMembers: [],

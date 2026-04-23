@@ -5,9 +5,11 @@ import Association from "./pages/Association";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Events from "./pages/Events";
+import EventDetail from "./pages/EventDetail";
 import Join from "./pages/Join";
 import Support from "./pages/Support";
 import EquipmentRental from "./pages/EquipmentRental";
+import EquipmentDetail from "./pages/EquipmentDetail";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -60,9 +62,11 @@ export const router = createBrowserRouter([
       { path: "projets", Component: Projects },
       { path: "projets/:id", Component: ProjectDetail },
       { path: "evenements", Component: Events },
+      { path: "evenements/:id", Component: EventDetail },
       { path: "rejoindre", Component: Join },
       { path: "soutenir", Component: Support },
       { path: "location", Component: EquipmentRental },
+      { path: "location/:id", Component: EquipmentDetail },
       { path: "contact", Component: Contact },
       { path: "*", Component: NotFound },
     ],

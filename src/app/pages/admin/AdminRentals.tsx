@@ -46,6 +46,7 @@ import { Textarea } from "../../components/ui/textarea";
 import { useEditor } from "../../context/EditorContext";
 import { InventoryItem } from "../../../lib/content-store";
 import { toast } from "sonner";
+import BlockEditor from "../../components/admin/BlockEditor";
 
 const categoryIcons = {
   Son: Music,
@@ -171,6 +172,7 @@ export default function AdminRentals() {
               status: "Disponible",
               stock: 1,
               specs: [],
+              content: [],
             });
             setIsEditDialogOpen(true);
           }}
@@ -426,6 +428,17 @@ export default function AdminRentals() {
                 }
                 className="bg-background border-border"
                 rows={3}
+              />
+            </div>
+
+            <div className="col-span-2 border-t border-border pt-6 mt-2">
+              <BlockEditor
+                blocks={editingItem?.content || []}
+                onChange={(newBlocks) =>
+                  setEditingItem((prev) =>
+                    prev ? { ...prev, content: newBlocks } : null,
+                  )
+                }
               />
             </div>
           </div>
