@@ -56,11 +56,7 @@ const categoryIcons = {
 
 export default function AdminRentals() {
   const { content, updateContent } = useEditor();
-  const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("Tous");
-  const [statusFilter, setStatusFilter] = useState("Tous");
-  const [stockFilter, setStockFilter] = useState("Tous");
-  const [sortBy, setSortBy] = useState("name");
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Partial<InventoryItem> | null>(
     null,
@@ -68,43 +64,20 @@ export default function AdminRentals() {
 
   const inventory = content.inventory || [];
 
-  const filteredInventory = inventory
-    .filter((item) => {
-      const matchesSearch =
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory =
-        categoryFilter === "Tous" || item.category === categoryFilter;
-      const matchesStatus =
-        statusFilter === "Tous" || item.status === statusFilter;
-      const matchesStock =
-        stockFilter === "Tous" ||
-        (stockFilter === "En Stock" && item.stock > 0) ||
-        (stockFilter === "Rupture" && item.stock === 0);
-      return matchesSearch && matchesCategory && matchesStatus && matchesStock;
-    })
-    .sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name);
-      if (sortBy === "price-asc") return a.price - b.price;
-      if (sortBy === "price-desc") return b.price - a.price;
-      if (sortBy === "stock-desc") return b.stock - a.stock;
-      return 0;
-    });
+  const existingCategories = [
+    "Tous",
+    ...Array.from(new Set(inventory.map((item) => item.category))),
+  ];
+
+  const filteredInventory = inventory.filter((item) => {
+    return categoryFilter === "Tous" || item.category === categoryFilter;
+  });
 
   const resetFilters = () => {
-    setSearchTerm("");
     setCategoryFilter("Tous");
-    setStatusFilter("Tous");
-    setStockFilter("Tous");
-    setSortBy("name");
   };
 
-  const activeFiltersCount = [
-    categoryFilter !== "Tous",
-    statusFilter !== "Tous",
-    stockFilter !== "Tous",
-    searchTerm !== "",
-  ].filter(Boolean).length;
+  const activeFiltersCount = categoryFilter !== "Tous" ? 1 : 0;
 
   const handleSaveItem = () => {
     if (!editingItem?.name || !editingItem?.category || !editingItem?.price) {
@@ -200,64 +173,24 @@ export default function AdminRentals() {
 
       <Card className="bg-card border-border">
         <CardContent className="p-4 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-              <Input
-                placeholder="Rechercher un matériel..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-background border-border"
-              />
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-400">
+                Filtrer par catégorie :
+              </span>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 flex-1">
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-[140px] bg-background border-border">
+                <SelectTrigger className="w-[200px] bg-background border-border">
                   <SelectValue placeholder="Catégorie" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Tous">Toutes catégories</SelectItem>
-                  <SelectItem value="Son">Son</SelectItem>
-                  <SelectItem value="Lumière">Lumière</SelectItem>
-                  <SelectItem value="DJ">DJ</SelectItem>
-                  <SelectItem value="Backline">Backline</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[140px] bg-background border-border">
-                  <SelectValue placeholder="Statut" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Tous">Tous les statuts</SelectItem>
-                  <SelectItem value="Disponible">Disponible</SelectItem>
-                  <SelectItem value="Indisponible">Indisponible</SelectItem>
-                  <SelectItem value="Maintenance">Maintenance</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={stockFilter} onValueChange={setStockFilter}>
-                <SelectTrigger className="w-[140px] bg-background border-border">
-                  <SelectValue placeholder="Stock" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Tous">Tout le stock</SelectItem>
-                  <SelectItem value="En Stock">En Stock</SelectItem>
-                  <SelectItem value="Rupture">Rupture</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[160px] bg-background border-border">
-                  <SelectValue placeholder="Trier par" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="name">Nom (A-Z)</SelectItem>
-                  <SelectItem value="price-asc">Prix croissant</SelectItem>
-                  <SelectItem value="price-desc">Prix décroissant</SelectItem>
-                  <SelectItem value="stock-desc">
-                    Stock (Décroissant)
-                  </SelectItem>
+                  {existingCategories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat === "Tous" ? "Toutes les catégories" : cat}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
@@ -272,45 +205,12 @@ export default function AdminRentals() {
                 </Button>
               )}
             </div>
-          </div>
 
-          <div className="flex items-center justify-between text-sm text-gray-400 border-t border-border pt-4">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4" />
-              <span>
-                {filteredInventory.length} matériel
-                {filteredInventory.length > 1 ? "s" : ""} trouvé
-                {filteredInventory.length > 1 ? "s" : ""}
-              </span>
+            <div className="text-sm text-gray-400">
+              {filteredInventory.length} matériel
+              {filteredInventory.length > 1 ? "s" : ""} trouvé
+              {filteredInventory.length > 1 ? "s" : ""}
             </div>
-            {activeFiltersCount > 0 && (
-              <div className="flex gap-2">
-                {categoryFilter !== "Tous" && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-muted text-gray-300 border-none"
-                  >
-                    {categoryFilter}
-                  </Badge>
-                )}
-                {statusFilter !== "Tous" && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-muted text-gray-300 border-none"
-                  >
-                    {statusFilter}
-                  </Badge>
-                )}
-                {stockFilter !== "Tous" && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-muted text-gray-300 border-none"
-                  >
-                    {stockFilter}
-                  </Badge>
-                )}
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>

@@ -57,8 +57,6 @@ export default function EquipmentRental() {
   const { content, updateContent } = useEditor();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("Tous");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("name");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [quoteForm, setQuoteForm] = useState({
     name: "",
@@ -68,24 +66,18 @@ export default function EquipmentRental() {
     message: "",
   });
 
-  const categories = ["Tous", "Son", "Lumière", "DJ", "Backline"];
   const inventory = content.inventory || [];
+  const existingCategories = [
+    "Tous",
+    ...Array.from(new Set(inventory.map((item) => item.category))),
+  ];
 
-  const filteredEquipment = inventory
-    .filter((item) => {
-      const matchesCategory =
-        selectedCategory === "Tous" || item.category === selectedCategory;
-      const matchesSearch =
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const isAvailable = item.status === "Disponible";
-      return matchesCategory && matchesSearch && isAvailable;
-    })
-    .sort((a, b) => {
-      if (sortBy === "price-asc") return a.price - b.price;
-      if (sortBy === "price-desc") return b.price - a.price;
-      return a.name.localeCompare(b.name);
-    });
+  const filteredEquipment = inventory.filter((item) => {
+    const matchesCategory =
+      selectedCategory === "Tous" || item.category === selectedCategory;
+    const isAvailable = item.status === "Disponible";
+    return matchesCategory && isAvailable;
+  });
 
   const addToCart = (equipment: InventoryItem) => {
     const existingItem = cart.find((item) => item.id === equipment.id);
@@ -189,39 +181,21 @@ export default function EquipmentRental() {
       {/* Filters & Cart */}
       <section className="py-8 bg-card border-b border-border sticky top-20 z-40">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
-              <div className="relative flex-1 max-w-sm">
-                <Input
-                  placeholder="Rechercher du matériel..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-background border-border pl-4"
-                />
-              </div>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex-1 w-full overflow-x-auto">
               <Tabs
                 value={selectedCategory}
                 onValueChange={setSelectedCategory}
-                className="w-full md:w-auto"
+                className="w-full"
               >
-                <TabsList className="grid grid-cols-5 w-full md:w-[400px]">
-                  {categories.map((cat) => (
-                    <TabsTrigger key={cat} value={cat}>
+                <TabsList className="inline-flex w-auto min-w-full md:min-w-0">
+                  {existingCategories.map((cat) => (
+                    <TabsTrigger key={cat} value={cat} className="px-6">
                       {cat}
                     </TabsTrigger>
                   ))}
                 </TabsList>
               </Tabs>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-full md:w-[180px] bg-background border-border">
-                  <SelectValue placeholder="Trier par" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="name">Nom (A-Z)</SelectItem>
-                  <SelectItem value="price-asc">Prix croissant</SelectItem>
-                  <SelectItem value="price-desc">Prix décroissant</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
 
             {/* Cart Button */}
