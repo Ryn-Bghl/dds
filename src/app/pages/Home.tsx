@@ -127,9 +127,13 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-20 bg-gradient-to-br from-[#8C0343] via-[#771236] to-[#D96704] text-white">
         <div className="container mx-auto px-4">
-          <Editable path="home.impact.title" label="Titre Section Impact">
-            <h2>Notre Impact</h2>
-          </Editable>
+          <div className="text-center mb-12">
+            <Editable path="home.impact.title" label="Titre Section Impact">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                Notre Impact
+              </h2>
+            </Editable>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {(Array.isArray(home.stats) ? home.stats : []).map(
               (stat, index) => (
@@ -160,8 +164,8 @@ export default function Home() {
 
       {/* Services Teaser */}
       <section className="py-20 bg-[#0D0D0D]">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+        <div className="container mx-auto px-4 text-center">
+          <div className="mb-12">
             <Editable
               path="home.services.sectionTitle"
               label="Titre Section Services"
@@ -180,7 +184,7 @@ export default function Home() {
               </p>
             </Editable>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 text-left">
             {(Array.isArray(home.services) ? home.services : []).map(
               (service, index) => {
                 const Icon = iconMap[service.iconName] || Music;
@@ -236,38 +240,27 @@ export default function Home() {
 
       {/* Latest Projects */}
       <section className="py-20 bg-[#1a1a1a]">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+        <div className="container mx-auto px-4 text-center">
+          <div className="mb-12">
             <Editable
               path="home.latestProjects.sectionTitle"
               label="Titre Section Projets"
             >
-              <Editable
-                path="home.latestProjects.sectionTitle"
-                label="Titre Section Projets"
-              >
-                <h2 className="text-4xl mb-4 text-white font-bold">
-                  Dernières Réalisations
-                </h2>
-              </Editable>
+              <h2 className="text-4xl mb-4 text-white font-bold">
+                Dernières Réalisations
+              </h2>
             </Editable>
             <Editable
               path="home.latestProjects.sectionSubtitle"
               type="textarea"
               label="Sous-titre Section Projets"
             >
-              <Editable
-                path="home.latestProjects.sectionSubtitle"
-                type="textarea"
-                label="Sous-titre Section Projets"
-              >
-                <p className="text-xl text-gray-400">
-                  Découvrez nos projets récents
-                </p>
-              </Editable>
+              <p className="text-xl text-gray-400">
+                Découvrez nos projets récents
+              </p>
             </Editable>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-left">
             {latestProjects.map((project) => (
               <Link
                 key={project.id}
@@ -316,37 +309,17 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center">
           <Users className="w-16 h-16 mx-auto mb-6 text-[#F29F05]" />
           <Editable path="home.ctaSection.title" label="Titre Section CTA">
-            <Editable path="home.ctaSection.title" label="Titre Section CTA">
-              <h2 className="text-4xl mb-6 font-bold">Rejoignez l'aventure</h2>
-            </Editable>
+            <h2 className="text-4xl mb-6 font-bold">Rejoignez l'aventure</h2>
           </Editable>
           <Editable
             path="home.ctaSection.description"
             type="textarea"
             label="Description Section CTA"
           >
-            <Editable
-              path="home.ctaSection.description"
-              type="textarea"
-              label="Description Section CTA"
-            >
-              <Editable
-                path="home.ctaSection.description"
-                type="textarea"
-                label="Description Section CTA"
-              >
-                <Editable
-                  path="home.ctaSection.description"
-                  type="textarea"
-                  label="Description Section CTA"
-                >
-                  <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-                    Devenez bénévole, adhérent ou soutenez nos actions pour
-                    contribuer au développement de la scène musicale locale
-                  </p>
-                </Editable>
-              </Editable>
-            </Editable>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+              Devenez bénévole, adhérent ou soutenez nos actions pour contribuer
+              au développement de la scène musicale locale
+            </p>
           </Editable>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -354,12 +327,14 @@ export default function Home() {
               size="lg"
               className="bg-[#F29F05] text-black hover:bg-[#D96704]"
             >
-              <Editable
-                path="home.ctaSection.volunteerCta"
-                label="Texte CTA Bénévolat"
-              >
-                Devenez bénévole
-              </Editable>
+              <Link to="/rejoindre">
+                <Editable
+                  path="home.ctaSection.volunteerCta"
+                  label="Texte CTA Bénévolat"
+                >
+                  Devenez bénévole
+                </Editable>
+              </Link>
             </Button>
             <Button
               asChild
