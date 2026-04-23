@@ -173,6 +173,18 @@ export interface InventoryItem {
   content: ContentBlock[];
 }
 
+export interface RentalPack {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  items: { equipmentId: string; quantity: number }[];
+  services: string[];
+  status: "Disponible" | "Indisponible" | "Sur demande";
+  content: ContentBlock[];
+}
+
 export interface SiteContent {
   home: HomePageContent;
   association: AssociationPageContent;
@@ -184,6 +196,7 @@ export interface SiteContent {
   rentalRequests: RentalRequest[];
   settings: GlobalSettings;
   inventory: InventoryItem[];
+  rentalPacks: RentalPack[];
   teamMembers: { name: string; role: string; bio: string; imageUrl: string }[];
 }
 
@@ -484,6 +497,23 @@ export const initialContent: SiteContent = {
       content: [],
     },
   ],
+  rentalPacks: [
+    {
+      id: "pack-full-son-1",
+      name: "Pack Sonorisation Standard",
+      description: "Solution complète pour événements jusqu'à 100 personnes",
+      price: 150,
+      image:
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+      items: [
+        { equipmentId: "son-1", quantity: 2 },
+        { equipmentId: "son-2", quantity: 1 },
+      ],
+      services: ["Livraison", "Installation"],
+      status: "Disponible",
+      content: [],
+    },
+  ],
   teamMembers: [],
 };
 
@@ -542,6 +572,11 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
   if (!Array.isArray(repaired.inventory)) {
     console.warn("Repairing corrupted inventory array");
     repaired.inventory = initialContent.inventory;
+  }
+
+  if (!Array.isArray(repaired.rentalPacks)) {
+    console.warn("Repairing corrupted rentalPacks array");
+    repaired.rentalPacks = initialContent.rentalPacks || [];
   }
 
   if (!repaired.settings) {

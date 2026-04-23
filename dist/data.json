@@ -281,7 +281,27 @@
       ],
       "stock": 4,
       "status": "Disponible",
-      "content": []
+      "content": [
+        {
+          "id": "block-1776950141575",
+          "type": "title",
+          "title": "Photo #1",
+          "text": ""
+        },
+        {
+          "id": "block-1776950082545",
+          "type": "image",
+          "title": "",
+          "text": "",
+          "url": ""
+        },
+        {
+          "id": "block-1776950158293",
+          "type": "text",
+          "title": "",
+          "text": "Description de l'image"
+        }
+      ]
     },
     {
       "id": "son-2",
@@ -290,7 +310,12 @@
       "image": "https://images.unsplash.com/photo-1700166269606-b5ea327d0540?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb3VuZCUyMG1peGluZyUyMGNvbnNvbGUlMjBzdHVkaW98ZW58MXx8fHwxNzc0NTMyNTE2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "price": 60,
       "description": "Table de mixage 16 canaux avec effets et interface USB",
-      "specs": ["16 canaux", "Effets SPX intégrés", "Interface USB", "4 Aux"],
+      "specs": [
+        "16 canaux",
+        "Effets SPX intégrés",
+        "Interface USB",
+        "4 Aux"
+      ],
       "stock": 2,
       "status": "Disponible",
       "content": []
