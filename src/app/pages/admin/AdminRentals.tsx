@@ -85,17 +85,27 @@ export default function AdminRentals() {
       return;
     }
 
+    // Normalize category: trim and capitalize first letter
+    const normalizedCategory = editingItem.category.trim();
+    const formattedCategory =
+      normalizedCategory.charAt(0).toUpperCase() + normalizedCategory.slice(1);
+
+    const itemToSave = {
+      ...editingItem,
+      category: formattedCategory,
+    };
+
     let newInventory;
     if (editingItem.id) {
       // Edit existing
       newInventory = inventory.map((item) =>
-        item.id === editingItem.id ? (editingItem as InventoryItem) : item,
+        item.id === editingItem.id ? (itemToSave as InventoryItem) : item,
       );
       toast.success("Matériel mis à jour");
     } else {
       // Add new
       const newItem = {
-        ...editingItem,
+        ...itemToSave,
         id: `item-${Date.now()}`,
         specs: editingItem.specs || [],
         status: editingItem.status || "Disponible",
@@ -157,7 +167,7 @@ export default function AdminRentals() {
         <Button
           onClick={() => {
             setEditingItem({
-              category: "Son",
+              category: "",
               status: "Disponible",
               stock: 1,
               specs: [],
@@ -330,22 +340,18 @@ export default function AdminRentals() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="category">Catégorie *</Label>
-              <Select
-                value={editingItem?.category}
-                onValueChange={(v) =>
-                  setEditingItem((prev) => ({ ...prev, category: v as any }))
+              <Input
+                id="category"
+                value={editingItem?.category || ""}
+                onChange={(e) =>
+                  setEditingItem((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                  }))
                 }
-              >
-                <SelectTrigger className="bg-background border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Son">Son</SelectItem>
-                  <SelectItem value="Lumière">Lumière</SelectItem>
-                  <SelectItem value="DJ">DJ</SelectItem>
-                  <SelectItem value="Backline">Backline</SelectItem>
-                </SelectContent>
-              </Select>
+                className="bg-background border-border"
+                placeholder="Ex: Son, Lumière, Vidéo..."
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="price">Prix journalier (€) *</Label>
