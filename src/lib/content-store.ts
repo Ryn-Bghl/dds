@@ -153,7 +153,7 @@ export interface GlobalSettings {
 export interface InventoryItem {
   id: string;
   name: string;
-  category: "Son" | "Lumière" | "DJ" | "Backline";
+  category: "Son" | "Lumière" | "DJ" | "Backline" | string;
   image: string;
   price: number;
   description: string;
