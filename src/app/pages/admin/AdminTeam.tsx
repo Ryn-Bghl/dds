@@ -4,7 +4,7 @@ import {
   initialContent,
   saveContent,
   SiteContent,
-} from "../../../lib/content-store"; // Assuming SiteContent and saveContent are exported
+} from "../../../lib/content-store";
 import { Button } from "../../components/ui/button";
 import {
   Card,
@@ -19,16 +19,19 @@ import { Label } from "../../components/ui/label";
 import { Plus, Edit, Trash2, Save, Upload, Image } from "lucide-react";
 import { toast } from "sonner";
 
-// Define the TeamMember interface, matching the one in content-store.ts
+const TEAM_PLACEHOLDER =
+  "https://images.unsplash.com/vector-1742875355318-00d715aec3e8?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
+// Define the TeamMember interface
 interface TeamMember {
-  id?: string; // Add an ID for easier management
+  id?: string;
   name: string;
   role: string;
   bio: string;
   imageUrl: string;
 }
 
-// Helper function to generate a simple unique ID for new members
+// Helper function to generate a simple unique ID
 function generateUniqueId() {
   return (
     Math.random().toString(36).substring(2, 15) +
@@ -40,7 +43,7 @@ export default function AdminTeam() {
   const { content, updateContent, saveChanges } = useEditor();
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [newMember, setNewMember] = useState<TeamMember>({
-    id: "", // Will be generated on add
+    id: "",
     name: "",
     role: "",
     bio: "",
@@ -54,7 +57,7 @@ export default function AdminTeam() {
     } else {
       setNewMember({ id: "", name: "", role: "", bio: "", imageUrl: "" });
     }
-  }, [editingMember, content.teamMembers]); // Re-run if editingMember or teamMembers change
+  }, [editingMember, content.teamMembers]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -67,12 +70,9 @@ export default function AdminTeam() {
     if (
       !newMember.name.trim() ||
       !newMember.role.trim() ||
-      !newMember.bio.trim() ||
-      !newMember.imageUrl.trim()
+      !newMember.bio.trim()
     ) {
-      toast.warning(
-        "Tous les champs sont obligatoires. Veuillez vérifier les informations saisies.",
-      );
+      toast.warning("Les champs Nom, Rôle et Biographie sont obligatoires.");
       return;
     }
     const memberToAdd: TeamMember = { ...newMember, id: generateUniqueId() };
@@ -87,12 +87,9 @@ export default function AdminTeam() {
       !editingMember ||
       !newMember.name.trim() ||
       !newMember.role.trim() ||
-      !newMember.bio.trim() ||
-      !newMember.imageUrl.trim()
+      !newMember.bio.trim()
     ) {
-      toast.warning(
-        "Tous les champs sont obligatoires pour mettre à jour le membre. Veuillez vérifier les informations saisies.",
-      );
+      toast.warning("Les champs Nom, Rôle et Biographie sont obligatoires.");
       return;
     }
     const updatedTeamMembers = (content.teamMembers || []).map((member) =>
@@ -114,7 +111,7 @@ export default function AdminTeam() {
       );
       updateContent("teamMembers", updatedTeamMembers);
       if (editingMember && editingMember.id === id) {
-        setEditingMember(null); // Exit editing if the deleted member was being edited
+        setEditingMember(null);
       }
       toast.success(`Le membre a été supprimé avec succès.`);
     }
@@ -122,12 +119,12 @@ export default function AdminTeam() {
 
   const handleEditClick = (member: TeamMember) => {
     setEditingMember(member);
-    setNewMember(member); // Pre-fill form with member's data
+    setNewMember(member);
   };
 
   const handleCancelEdit = () => {
     setEditingMember(null);
-    setNewMember({ id: "", name: "", role: "", bio: "", imageUrl: "" }); // Clear form
+    setNewMember({ id: "", name: "", role: "", bio: "", imageUrl: "" });
   };
 
   const handleSave = async () => {
@@ -153,7 +150,6 @@ export default function AdminTeam() {
         </p>
       </div>
 
-      {/* Formulaire d'ajout/édition */}
       <Card className="bg-[#1a1a1a] border-gray-800">
         <CardHeader>
           <CardTitle className="text-white">
@@ -199,17 +195,15 @@ export default function AdminTeam() {
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-gray-400">URL de l'image</Label>
+            <Label className="text-gray-400">URL de l'image (optionnel)</Label>
             <div className="flex gap-2">
               <Input
                 name="imageUrl"
                 value={newMember.imageUrl}
                 onChange={handleInputChange}
-                placeholder="https://example.com/image.jpg"
+                placeholder="Laissez vide pour utiliser l'image par défaut"
                 className="bg-[#262626] border-gray-700 flex-grow"
               />
-              {/* Placeholder for image upload button if needed */}
-              {/* <Button variant="outline" className="border-gray-700 text-gray-300"><Image className="w-4 h-4" /></Button> */}
             </div>
           </div>
 
@@ -242,7 +236,6 @@ export default function AdminTeam() {
         </CardContent>
       </Card>
 
-      {/* Liste des membres */}
       <Card className="bg-[#1a1a1a] border-gray-800">
         <CardHeader>
           <CardTitle className="text-white">
@@ -265,13 +258,11 @@ export default function AdminTeam() {
                   key={member.id}
                   className="bg-[#262626] border border-gray-700 rounded-lg p-4 flex flex-col justify-between"
                 >
-                  {member.imageUrl && (
-                    <img
-                      src={member.imageUrl}
-                      alt={member.name}
-                      className="w-full h-32 object-cover rounded-md mb-3"
-                    />
-                  )}
+                  <img
+                    src={member.imageUrl || TEAM_PLACEHOLDER}
+                    alt={member.name}
+                    className="w-full h-32 object-cover rounded-md mb-3"
+                  />
                   <h3 className="text-lg font-bold text-white mb-1">
                     {member.name}
                   </h3>

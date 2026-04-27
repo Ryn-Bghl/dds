@@ -346,13 +346,51 @@
       "price": 150,
       "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
       "items": [
-        { "equipmentId": "son-1", "quantity": 2 },
-        { "equipmentId": "son-2", "quantity": 1 }
+        {
+          "equipmentId": "son-1",
+          "quantity": 2
+        },
+        {
+          "equipmentId": "son-2",
+          "quantity": 1
+        }
       ],
-      "services": ["Livraison", "Installation"],
+      "services": [
+        "Livraison",
+        "Installation"
+      ],
       "status": "Disponible",
       "content": []
     }
   ],
-  "teamMembers": []
+  "teamMembers": [
+    {
+      "id": "member-1",
+      "name": "Sophie Martin",
+      "role": "Présidente",
+      "bio": "Passionnée par l'accompagnement artistique depuis plus de 10 ans.",
+      "imageUrl": ""
+    },
+    {
+      "id": "member-2",
+      "name": "Thomas Dubois",
+      "role": "Trésorier",
+      "bio": "Expert en gestion associative et passionné de technique sonore.",
+      "imageUrl": ""
+    },
+    {
+      "id": "member-3",
+      "name": "Léa Bernard",
+      "role": "Secrétaire",
+      "bio": "Coordination et organisation au service de la culture.",
+      "imageUrl": ""
+    },
+    {
+      "id": "member-4",
+      "name": "Marc Petit",
+      "role": "Responsable Technique",
+      "bio": "Ingénieur du son expérimenté veillant sur notre parc matériel.",
+      "imageUrl": ""
+    }
+  ]
 }

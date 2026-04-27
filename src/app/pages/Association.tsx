@@ -10,6 +10,9 @@ import { Card, CardContent } from "../components/ui/card";
 import { useEditor } from "../context/EditorContext";
 import { Editable } from "../components/Editable";
 
+const TEAM_PLACEHOLDER =
+  "https://images.unsplash.com/vector-1742875355318-00d715aec3e8?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
 export default function Association() {
   const { content } = useEditor();
   const { association } = content;
@@ -231,13 +234,18 @@ export default function Association() {
               Notre Équipe
             </h2>
           </Editable>
-          <Editable path="association.team.description" type="textarea" label="Description Section Équipe">
+          <Editable
+            path="association.team.description"
+            type="textarea"
+            label="Description Section Équipe"
+          >
             <p className="text-xl text-muted-foreground text-center mb-12">
               Les membres du bureau qui portent l'association au quotidien
             </p>
           </Editable>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            {Array.isArray(content.teamMembers) && content.teamMembers.length > 0 ? (
+            {Array.isArray(content.teamMembers) &&
+            content.teamMembers.length > 0 ? (
               content.teamMembers.map((member, index) => (
                 <Card
                   key={member.id || index} // Use id if available, fallback to index
@@ -251,24 +259,37 @@ export default function Association() {
                         label="Image Membre"
                       >
                         <img
-                          src={member.imageUrl || "https://placehold.co/400x400?text=No+Image"}
+                          src={member.imageUrl || TEAM_PLACEHOLDER}
                           alt={member.name}
                           className="w-full h-full object-cover"
                         />
                       </Editable>
                     </div>
                     <div className="p-4 text-center">
-                      <Editable path={`teamMembers.${index}.name`} label="Nom Membre">
+                      <Editable
+                        path={`teamMembers.${index}.name`}
+                        label="Nom Membre"
+                      >
                         <h3 className="text-xl mb-1 text-foreground font-semibold">
                           {member.name}
                         </h3>
                       </Editable>
-                      <Editable path={`teamMembers.${index}.role`} label="Rôle Membre">
-                        <p className="text-[#F29F05] font-medium">{member.role}</p>
+                      <Editable
+                        path={`teamMembers.${index}.role`}
+                        label="Rôle Membre"
+                      >
+                        <p className="text-[#F29F05] font-medium">
+                          {member.role}
+                        </p>
                       </Editable>
-                      <Editable path={`teamMembers.${index}.bio`} type="textarea" label="Biographie Membre" className="mt-2 text-sm text-muted-foreground text-center">
+                      <Editable
+                        path={`teamMembers.${index}.bio`}
+                        type="textarea"
+                        label="Biographie Membre"
+                        className="mt-2 text-sm text-muted-foreground text-center"
+                      >
                         <p className="text-sm text-muted-foreground text-center min-h-[40px]">
-                           {member.bio || "Pas de biographie disponible."}
+                          {member.bio || "Pas de biographie disponible."}
                         </p>
                       </Editable>
                     </div>
