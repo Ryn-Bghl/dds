@@ -11,6 +11,8 @@ import {
   Send,
   CheckCircle2,
   ArrowRight,
+  Package,
+  LayoutGrid,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
@@ -22,12 +24,10 @@ import {
   TabsTrigger,
 } from "../components/ui/tabs";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../components/ui/select";
+  Separator } from "../components/ui/separator";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Textarea } from "../components/ui/textarea";
 import {
   Sheet,
   SheetContent,
@@ -35,16 +35,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../components/ui/sheet";
-import { Separator } from "../components/ui/separator";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
 import { toast } from "sonner";
 import { useEditor } from "../context/EditorContext";
-import { RentalRequest, InventoryItem } from "../../lib/content-store";
+import { RentalRequest, InventoryItem, RentalPack } from "../../lib/content-store";
 import { Link } from "react-router";
 
-type CartItem = InventoryItem & { quantity: number };
+type CartItem = (InventoryItem | RentalPack) & { quantity: number; isPack?: boolean };
 
 const categoryIcons = {
   Son: Music,
@@ -67,6 +63,8 @@ export default function EquipmentRental() {
   });
 
   const inventory = content.inventory || [];
+  const rentalPacks = content.rentalPacks || [];
+
   const existingCategories = [
     "Tous",
     ...Array.from(new Set(inventory.map((item) => item.category))),
@@ -79,20 +77,20 @@ export default function EquipmentRental() {
     return matchesCategory && isAvailable;
   });
 
-  const addToCart = (equipment: InventoryItem) => {
-    const existingItem = cart.find((item) => item.id === equipment.id);
+  const addToCart = (item: InventoryItem | RentalPack, isPack = false) => {
+    const existingItem = cart.find((i) => i.id === item.id);
     if (existingItem) {
       setCart(
-        cart.map((item) =>
-          item.id === equipment.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
+        cart.map((i) =>
+          i.id === item.id
+            ? { ...i, quantity: i.quantity + 1 }
+            : i,
         ),
       );
     } else {
-      setCart([...cart, { ...equipment, quantity: 1 }]);
+      setCart([...cart, { ...item, quantity: 1, isPack }]);
     }
-    toast.success(`${equipment.name} ajouté au panier`);
+    toast.success(`${item.name} ajouté au panier`);
   };
 
   const updateQuantity = (id: string, delta: number) => {
@@ -425,9 +423,95 @@ export default function EquipmentRental() {
         </div>
       </section>
 
+      {/* Packs Section */}
+      {selectedCategory === "Tous" && rentalPacks.length > 0 && (
+        <section className="py-16 bg-gray-900/50 border-b border-border">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-3 mb-8">
+              <Package className="w-8 h-8 text-[#F29F05]" />
+              <h2 className="text-3xl font-bold text-white">Nos Packs Tout-en-un</h2>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {rentalPacks.filter(p => p.status === "Disponible").map((pack) => (
+                <Card key={pack.id} className="bg-card border-border overflow-hidden hover:border-[#8C0343] transition-colors group">
+                  <div className="flex flex-col md:flex-row h-full">
+                    <div className="md:w-1/3 relative overflow-hidden">
+                      <img
+                        src={pack.image}
+                        alt={pack.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute top-2 left-2">
+                        <Badge className="bg-[#8C0343] text-white border-none">BEST-SELLER</Badge>
+                      </div>
+                    </div>
+                    <div className="md:w-2/3 p-6 flex flex-col">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-xl font-bold text-white mb-1">{pack.name}</h3>
+                          <p className="text-sm text-gray-400">{pack.description}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-2xl font-bold text-[#F29F05]">{pack.price}€</p>
+                          <p className="text-xs text-gray-500">/jour</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-4 mb-6 flex-1">
+                        <div>
+                          <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Matériel inclus</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {pack.items.map((item, idx) => {
+                              const equipment = inventory.find(e => e.id === item.equipmentId);
+                              return (
+                                <Badge key={idx} variant="outline" className="bg-background/50 border-border text-gray-300">
+                                  {item.quantity}x {equipment?.name || "Matériel"}
+                                </Badge>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Services inclus</h4>
+                          <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
+                            {pack.services.map((service, idx) => (
+                              <li key={idx} className="text-sm text-gray-300 flex items-center gap-2">
+                                <CheckCircle2 className="w-3 h-3 text-green-500" />
+                                {service}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <Button 
+                          className="flex-1 bg-[#8C0343] hover:bg-[#771236]"
+                          onClick={() => addToCart(pack, true)}
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Ajouter au devis
+                        </Button>
+                        <Button variant="outline" className="border-border" asChild>
+                          <Link to={`/location/pack/${pack.id}`}>Détails</Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Equipment Grid */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
+          <div className="flex items-center gap-3 mb-8">
+            <LayoutGrid className="w-8 h-8 text-[#F29F05]" />
+            <h2 className="text-3xl font-bold text-white">Matériel individuel</h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredEquipment.map((equipment) => {
               const Icon =

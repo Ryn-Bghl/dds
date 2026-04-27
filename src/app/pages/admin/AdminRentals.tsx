@@ -16,6 +16,7 @@ import {
   Radio,
   Wrench,
   Image as ImageIcon,
+  LayoutGrid,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -47,6 +48,8 @@ import { useEditor } from "../../context/EditorContext";
 import { InventoryItem } from "../../../lib/content-store";
 import { toast } from "sonner";
 import BlockEditor from "../../components/admin/BlockEditor";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import AdminPacks from "./AdminPacks";
 
 const categoryIcons = {
   Son: Music,
@@ -156,169 +159,190 @@ export default function AdminRentals() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Gestion de l'Inventaire
-          </h1>
-          <p className="text-gray-400">
-            Gérez le parc de matériel technique de l'association.
-          </p>
-        </div>
-        <Button
-          onClick={() => {
-            setEditingItem({
-              category: "",
-              status: "Disponible",
-              stock: 1,
-              specs: [],
-              content: [],
-            });
-            setIsEditDialogOpen(true);
-          }}
-          className="bg-[#8C0343] hover:bg-[#771236]"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Ajouter du matériel
-        </Button>
+      <div>
+        <h1 className="text-3xl font-bold text-white mb-2">
+          Gestion de la Location
+        </h1>
+        <p className="text-gray-400">
+          Gérez le parc de matériel technique et les offres combinées.
+        </p>
       </div>
 
-      <Card className="bg-card border-border">
-        <CardContent className="p-4 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-400">
-                Filtrer par catégorie :
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2 flex-1">
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-[200px] bg-background border-border">
-                  <SelectValue placeholder="Catégorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  {existingCategories.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat === "Tous" ? "Toutes les catégories" : cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      <Tabs defaultValue="inventory" className="w-full">
+        <TabsList className="bg-gray-800/50 border border-gray-700 p-1">
+          <TabsTrigger value="inventory" className="data-[state=active]:bg-[#8C0343] data-[state=active]:text-white">
+            <LayoutGrid className="w-4 h-4 mr-2" />
+            Inventaire Matériel
+          </TabsTrigger>
+          <TabsTrigger value="packs" className="data-[state=active]:bg-[#8C0343] data-[state=active]:text-white">
+            <Package className="w-4 h-4 mr-2" />
+            Packs & Bundles
+          </TabsTrigger>
+        </TabsList>
 
-              {activeFiltersCount > 0 && (
-                <Button
-                  variant="ghost"
-                  onClick={resetFilters}
-                  className="text-gray-400 hover:text-white"
-                >
-                  <XCircle className="w-4 h-4 mr-2" />
-                  Réinitialiser
-                </Button>
-              )}
-            </div>
-
-            <div className="text-sm text-gray-400">
-              {filteredInventory.length} matériel
-              {filteredInventory.length > 1 ? "s" : ""} trouvé
-              {filteredInventory.length > 1 ? "s" : ""}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredInventory.map((item) => {
-          const Icon = categoryIcons[item.category] || Package;
-          return (
-            <Card
-              key={item.id}
-              className="overflow-hidden border-border bg-card group"
+        <TabsContent value="inventory" className="space-y-6 pt-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <h2 className="text-2xl font-bold text-white">Matériel Individuel</h2>
+            <Button
+              onClick={() => {
+                setEditingItem({
+                  category: "",
+                  status: "Disponible",
+                  stock: 1,
+                  specs: [],
+                  content: [],
+                });
+                setIsEditDialogOpen(true);
+              }}
+              className="bg-[#8C0343] hover:bg-[#771236]"
             >
-              <div className="aspect-video relative overflow-hidden bg-muted">
-                {item.image ? (
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-600">
-                    <ImageIcon className="w-12 h-12" />
-                  </div>
-                )}
-                <div className="absolute top-2 right-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="secondary"
-                        size="icon"
-                        className="h-8 w-8 bg-black/50 backdrop-blur-sm border-none text-white hover:bg-black/70"
-                      >
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setEditingItem(item);
-                          setIsEditDialogOpen(true);
-                        }}
-                      >
-                        <Edit2 className="w-4 h-4 mr-2" /> Modifier
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-red-500"
-                        onClick={() => handleDeleteItem(item.id)}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" /> Supprimer
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <div className="absolute bottom-2 left-2">
-                  <Badge className="bg-black/50 backdrop-blur-sm border-none text-white">
-                    <Icon className="w-3 h-3 mr-1" />
-                    {item.category}
-                  </Badge>
-                </div>
-              </div>
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-bold text-white line-clamp-1">
-                    {item.name}
-                  </h3>
-                  <span className="text-[#F29F05] font-bold">
-                    {item.price}€/j
+              <Plus className="w-4 h-4 mr-2" />
+              Ajouter du matériel
+            </Button>
+          </div>
+
+          <Card className="bg-card border-border">
+            <CardContent className="p-4 space-y-4">
+              <div className="flex flex-col md:flex-row gap-4 items-center">
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-400">
+                    Filtrer par catégorie :
                   </span>
                 </div>
-                <p className="text-sm text-gray-400 line-clamp-2 mb-4 h-10">
-                  {item.description}
-                </p>
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5">
-                    <Package className="w-3.5 h-3.5 text-gray-500" />
-                    <span className="text-gray-300">Stock: {item.stock}</span>
-                  </div>
-                  {getStatusBadge(item.status)}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+                <div className="flex flex-wrap gap-2 flex-1">
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="w-[200px] bg-background border-border">
+                      <SelectValue placeholder="Catégorie" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {existingCategories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat === "Tous" ? "Toutes les catégories" : cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-        {filteredInventory.length === 0 && (
-          <div className="col-span-full py-12 text-center bg-card rounded-lg border border-dashed border-border">
-            <Package className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-white mb-2">
-              Aucun matériel trouvé
-            </h3>
-            <p className="text-gray-400">
-              Essayez de modifier vos filtres ou ajoutez du nouveau matériel.
-            </p>
+                  {activeFiltersCount > 0 && (
+                    <Button
+                      variant="ghost"
+                      onClick={resetFilters}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      <XCircle className="w-4 h-4 mr-2" />
+                      Réinitialiser
+                    </Button>
+                  )}
+                </div>
+
+                <div className="text-sm text-gray-400">
+                  {filteredInventory.length} matériel
+                  {filteredInventory.length > 1 ? "s" : ""} trouvé
+                  {filteredInventory.length > 1 ? "s" : ""}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredInventory.map((item) => {
+              const Icon = categoryIcons[item.category] || Package;
+              return (
+                <Card
+                  key={item.id}
+                  className="overflow-hidden border-border bg-card group"
+                >
+                  <div className="aspect-video relative overflow-hidden bg-muted">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-gray-600">
+                        <ImageIcon className="w-12 h-12" />
+                      </div>
+                    )}
+                    <div className="absolute top-2 right-2">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="secondary"
+                            size="icon"
+                            className="h-8 w-8 bg-black/50 backdrop-blur-sm border-none text-white hover:bg-black/70"
+                          >
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setEditingItem(item);
+                              setIsEditDialogOpen(true);
+                            }}
+                          >
+                            <Edit2 className="w-4 h-4 mr-2" /> Modifier
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-500"
+                            onClick={() => handleDeleteItem(item.id)}
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" /> Supprimer
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                    <div className="absolute bottom-2 left-2">
+                      <Badge className="bg-black/50 backdrop-blur-sm border-none text-white">
+                        <Icon className="w-3 h-3 mr-1" />
+                        {item.category}
+                      </Badge>
+                    </div>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-bold text-white line-clamp-1">
+                        {item.name}
+                      </h3>
+                      <span className="text-[#F29F05] font-bold">
+                        {item.price}€/j
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-400 line-clamp-2 mb-4 h-10">
+                      {item.description}
+                    </p>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <Package className="w-3.5 h-3.5 text-gray-500" />
+                        <span className="text-gray-300">Stock: {item.stock}</span>
+                      </div>
+                      {getStatusBadge(item.status)}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+
+            {filteredInventory.length === 0 && (
+              <div className="col-span-full py-12 text-center bg-card rounded-lg border border-dashed border-border">
+                <Package className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-medium text-white mb-2">
+                  Aucun matériel trouvé
+                </h3>
+                <p className="text-gray-400">
+                  Essayez de modifier vos filtres ou ajoutez du nouveau matériel.
+                </p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </TabsContent>
+
+        <TabsContent value="packs" className="pt-6">
+          <AdminPacks />
+        </TabsContent>
+      </Tabs>
 
       {/* Edit/Add Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>

@@ -10,6 +10,7 @@ import Join from "./pages/Join";
 import Support from "./pages/Support";
 import EquipmentRental from "./pages/EquipmentRental";
 import EquipmentDetail from "./pages/EquipmentDetail";
+import PackDetail from "./pages/PackDetail";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -67,6 +68,7 @@ export const router = createBrowserRouter([
       { path: "soutenir", Component: Support },
       { path: "location", Component: EquipmentRental },
       { path: "location/:id", Component: EquipmentDetail },
+      { path: "location/pack/:id", Component: PackDetail },
       { path: "contact", Component: Contact },
       { path: "*", Component: NotFound },
     ],

@@ -338,5 +338,21 @@
       "content": []
     }
   ],
+  "rentalPacks": [
+    {
+      "id": "pack-full-son-1",
+      "name": "Pack Sonorisation Standard",
+      "description": "Solution complète pour événements jusqu'à 100 personnes",
+      "price": 150,
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+      "items": [
+        { "equipmentId": "son-1", "quantity": 2 },
+        { "equipmentId": "son-2", "quantity": 1 }
+      ],
+      "services": ["Livraison", "Installation"],
+      "status": "Disponible",
+      "content": []
+    }
+  ],
   "teamMembers": []
 }
