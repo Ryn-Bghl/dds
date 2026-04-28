@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Mail,
-  MapPin,
-  Facebook,
-  Instagram,
-  Youtube,
-  Send,
-} from "lucide-react";
+import { Mail, MapPin, Facebook, Instagram, Youtube, Send } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -15,6 +8,13 @@ import { Textarea } from "../components/ui/textarea";
 import { toast } from "sonner";
 import { useEditor } from "../context/EditorContext";
 import { Editable } from "../components/Editable";
+// Import Accordion components
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../components/ui/accordion";
 
 export default function Contact() {
   const { content } = useEditor();
@@ -266,13 +266,12 @@ export default function Contact() {
             Zone d'intervention
           </h2>
           <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-            Nous intervenons principalement en Île-de-France : Paris et toute la
-            région parisienne
+            Nous intervenons dans toute la France metropolitaine.
           </p>
 
           {/* Map Placeholder */}
           <div className="max-w-5xl mx-auto">
-            <div
+            {/* <div
               className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-2xl"
               style={{
                 backgroundImage:
@@ -285,10 +284,10 @@ export default function Contact() {
                 <div className="bg-card/90 backdrop-blur-sm border border-border p-8 rounded-2xl shadow-2xl text-center max-w-sm">
                   <MapPin className="w-12 h-12 text-[#F29F05] mx-auto mb-4" />
                   <h3 className="text-2xl mb-2 text-foreground font-bold font-bold">
-                    Paris & Île-de-France
+                    France
                   </h3>
                   <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                    Nous nous déplaçons dans toute l'Île-de-France pour
+                    Nous nous déplaçons dans toute la France metropolitaine pour
                     sonoriser vos événements et accompagner vos projets.
                   </p>
                   <Button
@@ -299,12 +298,21 @@ export default function Contact() {
                   </Button>
                 </div>
               </div>
-            </div>
+            </div> */}
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4742943.902230488!2d2.5003734339051586!3d46.75246807722547!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sfr!2sfr!4v1777389890964!5m2!1sfr!2sfr"
+              width="100%"
+              height="600"
+              style={{ border: 0 }}
+              allowFullScreen={true}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
       </section>
 
-      {/* FAQ Quick Links */}
+      {/* FAQ Section */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl mb-4 text-foreground font-bold">
@@ -312,37 +320,96 @@ export default function Contact() {
           </h2>
           <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
             Vous avez une question ? Consultez nos pages dédiées ou
-            contactez-nous directement
+            contactez-nous directement.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-border hover:bg-card"
-            >
-              Location de matériel
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-border hover:bg-card"
-            >
-              Devenir bénévole
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-border hover:bg-card"
-            >
-              Adhésion
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-border hover:bg-card"
-            >
-              Faire un don
-            </Button>
+          {/* FAQ Accordion */}
+          <div className="max-w-3xl mx-auto text-left">
+            <Accordion type="multiple" className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>
+                  <Editable
+                    path="contact.faq.rental.question"
+                    label="Location Matériel Q"
+                  >
+                    Quelle est la procédure pour louer du matériel ?
+                  </Editable>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Editable
+                    path="contact.faq.rental.answer"
+                    type="textarea"
+                    label="Location Matériel A"
+                  >
+                    Pour louer du matériel, consultez notre page "Location de
+                    matériel". Vous y trouverez notre catalogue, les tarifs et
+                    un formulaire de demande.
+                  </Editable>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2">
+                <AccordionTrigger>
+                  <Editable
+                    path="contact.faq.volunteer.question"
+                    label="Bénévole Q"
+                  >
+                    Comment devenir bénévole chez DonsDuSon ?
+                  </Editable>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Editable
+                    path="contact.faq.volunteer.answer"
+                    type="textarea"
+                    label="Bénévole A"
+                  >
+                    Nous sommes toujours à la recherche de bénévoles passionnés
+                    ! Rendez-vous sur notre page "Devenir bénévole" pour
+                    découvrir comment vous impliquer.
+                  </Editable>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3">
+                <AccordionTrigger>
+                  <Editable
+                    path="contact.faq.membership.question"
+                    label="Adhésion Q"
+                  >
+                    Quelles sont les conditions d'adhésion ?
+                  </Editable>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Editable
+                    path="contact.faq.membership.answer"
+                    type="textarea"
+                    label="Adhésion A"
+                  >
+                    Adhérer à DonsDuSon, c'est soutenir notre mission. Consultez
+                    notre page "Adhésion" pour connaître les avantages et les
+                    différentes formules.
+                  </Editable>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-4">
+                <AccordionTrigger>
+                  <Editable path="contact.faq.donation.question" label="Don Q">
+                    Comment puis-je faire un don ?
+                  </Editable>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Editable
+                    path="contact.faq.donation.answer"
+                    type="textarea"
+                    label="Don A"
+                  >
+                    Chaque don, petit ou grand, nous aide à continuer nos
+                    actions. Visitez notre page "Faire un don" pour toutes les
+                    informations nécessaires.
+                  </Editable>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </section>
