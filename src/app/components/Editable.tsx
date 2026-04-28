@@ -39,7 +39,7 @@ export const Editable: React.FC<EditableProps> = ({
     try {
       return path.split(".").reduce((acc, key) => {
         // Handle array index if key is a number
-        if (Array.isArray(acc) && !isNaN(Number(key))) {
+        if (Array.isArray(acc) && !Number.isNaN(Number(key))) {
           return acc[Number(key)];
         }
         return acc?.[key];

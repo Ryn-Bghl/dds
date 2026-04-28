@@ -70,6 +70,7 @@ export interface JoinPageContent {
     title: string;
     content: string;
     benefits: string[];
+    cta: string;
   };
 }
 
@@ -170,7 +171,7 @@ export interface GlobalSettings {
 export interface InventoryItem {
   id: string;
   name: string;
-  category: "Son" | "Lumière" | "DJ" | "Backline" | string;
+  category: string;
   image: string;
   price: number;
   description: string;
@@ -324,6 +325,7 @@ export const initialContent: SiteContent = {
         "Accès prioritaire aux formations et ateliers",
         "Droit de vote à l'Assemblée Générale",
       ],
+      cta: "Adhérer en ligne (15€/an)",
     },
   },
   support: {
@@ -579,9 +581,10 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
       repaired.join.membership = initialContent.join.membership;
     } else if (!Array.isArray(repaired.join.membership.benefits)) {
       console.warn("Repairing corrupted join.membership.benefits");
-      repaired.join.membership.benefits = initialContent.join.membership.benefits;
+      repaired.join.membership.benefits =
+        initialContent.join.membership.benefits;
     }
-    
+
     if (!repaired.join.volunteering) {
       repaired.join.volunteering = initialContent.join.volunteering;
     } else if (!Array.isArray(repaired.join.volunteering.tasks)) {

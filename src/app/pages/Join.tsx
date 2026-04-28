@@ -153,14 +153,19 @@ export default function Join() {
                   </ul>
                 </CardContent>
               </Card>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#8C0343] text-[#8C0343] hover:bg-[#8C0343] hover:text-white w-full sm:w-auto px-8"
-                onClick={handleMembership}
+              <Editable
+                path="join.membership.cta"
+                label="Texte Bouton Adhésion"
               >
-                Adhérer en ligne (15€/an)
-              </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-[#8C0343] text-[#8C0343] hover:bg-[#8C0343] hover:text-white w-full sm:w-auto px-8"
+                  onClick={handleMembership}
+                >
+                  {join.membership?.cta || "Adhérer en ligne (15€/an)"}
+                </Button>
+              </Editable>
             </div>
           </div>
         </div>
