@@ -84,6 +84,46 @@
         "title": "Engagement",
         "description": "S'investir pour le développement culturel local"
       }
+    ],
+    "valuesSectionTitle": "Nos Valeurs",
+    "interventionSection": {
+      "title": "Nos Axes d'Intervention",
+      "description": "Trois domaines d'action complémentaires pour un accompagnement global des artistes"
+    },
+    "interventionAreas": [
+      {
+        "iconName": "GraduationCap",
+        "title": "Éducation & Formation",
+        "description": "Ateliers pédagogiques, formations techniques et accompagnement des jeunes talents dans leur apprentissage des métiers du son et de la musique.",
+        "features": [
+          "Ateliers d'initiation à la MAO",
+          "Formation ingénierie du son",
+          "Workshops production musicale",
+          "Stages en milieu scolaire"
+        ]
+      },
+      {
+        "iconName": "Wrench",
+        "title": "Accompagnement Technique",
+        "description": "Mise à disposition de studios, conseil en ingénierie sonore et suivi technique des projets artistiques de A à Z.",
+        "features": [
+          "Accès studio d'enregistrement",
+          "Conseil en prise de son",
+          "Mixage et mastering",
+          "Support technique événements"
+        ]
+      },
+      {
+        "iconName": "Radio",
+        "title": "Diffusion Culturelle",
+        "description": "Organisation d'événements, concerts et festivals pour promouvoir les artistes émergents et la diversité musicale.",
+        "features": [
+          "Festivals et concerts",
+          "Showcases et tremplins",
+          "Résidences artistiques",
+          "Partenariats culturels"
+        ]
+      }
     ]
   },
   "contact": {
@@ -93,8 +133,8 @@
     },
     "info": {
       "email": "contact@donsduson.fr",
-      "address": "123 rue de la Musique 75018 Paris",
-      "zone": "Zone d'intervention : Île-de-France",
+      "address": "19 RUE DE LA NOUE RDC RESIDENCE CIRCE, 77350 LE MEE-SUR-SEINE",
+      "zone": "Zone d'intervention : France",
       "socials": {
         "facebook": "https://facebook.com",
         "instagram": "https://instagram.com",
@@ -109,11 +149,23 @@
     },
     "volunteering": {
       "title": "Bénévolat",
-      "content": "Nous recherchons régulièrement des bénévoles pour nous aider sur nos événements : accueil public, logistique, technique, communication. C'est une excellente occasion de découvrir les coulisses du spectacle vivant."
+      "content": "Nous recherchons régulièrement des bénévoles pour nous aider sur nos événements : accueil public, logistique, technique, communication. C'est une excellente occasion de découvrir les coulisses du spectacle vivant.",
+      "tasks": [
+        "Accueil des artistes et du public",
+        "Aide à l'installation technique",
+        "Soutien à la communication locale",
+        "Gestion de la billetterie et du bar"
+      ]
     },
     "membership": {
       "title": "Adhésion",
-      "content": "Adhérer à Dons Du Son, c'est soutenir nos actions et bénéficier de tarifs préférentiels sur la location de matériel et les formations. L'adhésion annuelle est de 20€."
+      "content": "Adhérer à Dons Du Son, c'est soutenir nos actions et bénéficier de tarifs préférentiels sur la location de matériel et les formations. L'adhésion annuelle est de 15€.",
+      "benefits": [
+        "Réduction de 10% sur les billets de concert",
+        "Accès prioritaire aux formations et ateliers",
+        "Droit de vote à l'Assemblée Générale"
+      ],
+      "cta": "Adhérer en ligne (15€/an)"
     }
   },
   "support": {
@@ -257,6 +309,11 @@
       "instagram": "https://instagram.com/donsduson",
       "youtube": "https://youtube.com/donsduson"
     },
+    "links": {
+      "helloAssoDonation": "https://www.helloasso.com/associations/dons-du-son/formulaires/3",
+      "helloAssoMembership": "https://www.helloasso.com/associations/dons-du-son/adhesions/adhesion-saison-25-26",
+      "helloAssoStore": "https://www.helloasso.com/associations/dons-du-son/boutique"
+    },
     "rental": {
       "replyDelay": "Vous recevrez un devis sous 72 heures",
       "defaultDeposit": "30%"
@@ -338,5 +395,59 @@
       "content": []
     }
   ],
-  "teamMembers": []
+  "rentalPacks": [
+    {
+      "id": "pack-full-son-1",
+      "name": "Pack Sonorisation Standard",
+      "description": "Solution complète pour événements jusqu'à 100 personnes",
+      "price": 150,
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+      "items": [
+        {
+          "equipmentId": "son-1",
+          "quantity": 2
+        },
+        {
+          "equipmentId": "son-2",
+          "quantity": 1
+        }
+      ],
+      "services": [
+        "Livraison",
+        "Installation"
+      ],
+      "status": "Disponible",
+      "content": []
+    }
+  ],
+  "teamMembers": [
+    {
+      "id": "member-1",
+      "name": "Sophie Martin",
+      "role": "Présidente",
+      "bio": "Passionnée par l'accompagnement artistique depuis plus de 10 ans.",
+      "imageUrl": ""
+    },
+    {
+      "id": "member-2",
+      "name": "Thomas Dubois",
+      "role": "Trésorier",
+      "bio": "Expert en gestion associative et passionné de technique sonore.",
+      "imageUrl": ""
+    },
+    {
+      "id": "member-3",
+      "name": "Léa Bernard",
+      "role": "Secrétaire",
+      "bio": "Coordination et organisation au service de la culture.",
+      "imageUrl": ""
+    },
+    {
+      "id": "member-4",
+      "name": "Marc Petit",
+      "role": "Responsable Technique",
+      "bio": "Ingénieur du son expérimenté veillant sur notre parc matériel.",
+      "imageUrl": ""
+    }
+  ]
 }
