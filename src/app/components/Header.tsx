@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router";
 import { Menu, X, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import ddsLogo from "../assets/dds_logo.png";
+import ddsLogo from "../assets/dds_logo.webp";
 import { useAuth } from "../context/AuthContext";
 import { useEditor } from "../context/EditorContext";
 import { Editable } from "./Editable";

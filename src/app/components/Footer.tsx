@@ -7,7 +7,7 @@ import {
   MapPin,
   Phone,
 } from "lucide-react";
-import ddsLogo from "../assets/dds_logo.png";
+import ddsLogo from "../assets/dds_logo.webp";
 import { useEditor } from "../context/EditorContext";
 import { Editable } from "./Editable";
 
