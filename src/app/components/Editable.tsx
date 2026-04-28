@@ -37,7 +37,13 @@ export const Editable: React.FC<EditableProps> = ({
   // Helper to get value from nested path
   const getValue = (path: string, obj: any) => {
     try {
-      return path.split(".").reduce((acc, key) => acc?.[key], obj);
+      return path.split(".").reduce((acc, key) => {
+        // Handle array index if key is a number
+        if (Array.isArray(acc) && !isNaN(Number(key))) {
+          return acc[Number(key)];
+        }
+        return acc?.[key];
+      }, obj);
     } catch (e) {
       return "";
     }

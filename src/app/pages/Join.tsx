@@ -6,7 +6,20 @@ import { Editable } from "../components/Editable";
 
 export default function Join() {
   const { content } = useEditor();
-  const { join } = content;
+  const { join, settings } = content;
+
+  const handleVolunteer = () => {
+    const email = settings.contact.email;
+    const subject = encodeURIComponent("Candidature Bénévolat - Dons Du Son");
+    window.location.href = `mailto:${email}?subject=${subject}`;
+  };
+
+  const handleMembership = () => {
+    const url =
+      settings.links?.helloAssoMembership ||
+      "https://www.helloasso.com/associations/dons-du-son";
+    window.open(url, "_blank");
+  };
 
   return (
     <div className="flex flex-col">
@@ -59,24 +72,32 @@ export default function Join() {
                 </p>
               </Editable>
               <ul className="space-y-4">
-                {[
-                  "Accueil des artistes et du public",
-                  "Aide à l'installation technique",
-                  "Soutien à la communication locale",
-                  "Gestion de la billetterie et du bar",
-                ].map((item, i) => (
+                {(
+                  join.volunteering.tasks || [
+                    "Accueil des artistes et du public",
+                    "Aide à l'installation technique",
+                    "Soutien à la communication locale",
+                    "Gestion de la billetterie et du bar",
+                  ]
+                ).map((item, i) => (
                   <li
                     key={i}
                     className="flex items-center gap-3 text-muted-foreground"
                   >
-                    <CheckCircle2 className="w-5 h-5 text-[#F29F05]" />
-                    <span>{item}</span>
+                    <CheckCircle2 className="w-5 h-5 text-[#F29F05] flex-shrink-0" />
+                    <Editable
+                      path={`join.volunteering.tasks.${i}`}
+                      label={`Mission ${i + 1}`}
+                    >
+                      <span>{item}</span>
+                    </Editable>
                   </li>
                 ))}
               </ul>
               <Button
                 size="lg"
-                className="bg-[#8C0343] hover:bg-[#771236] w-full sm:w-auto"
+                className="bg-[#8C0343] hover:bg-[#771236] w-full sm:w-auto px-8"
+                onClick={handleVolunteer}
               >
                 Devenir bénévole
               </Button>
@@ -109,27 +130,36 @@ export default function Join() {
                     Avantages adhérents :
                   </h3>
                   <ul className="space-y-3">
-                    <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-1.5 flex-shrink-0" />
-                      -15% sur toute la location de matériel
-                    </li>
-                    <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-1.5 flex-shrink-0" />
-                      Accès prioritaire aux formations et ateliers
-                    </li>
-                    <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-1.5 flex-shrink-0" />
-                      Droit de vote à l'Assemblée Générale
-                    </li>
+                    {(
+                      join.membership.benefits || [
+                        "Réduction de 10% sur les billets de concert",
+                        "Accès prioritaire aux formations et ateliers",
+                        "Droit de vote à l'Assemblée Générale",
+                      ]
+                    ).map((benefit, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-sm text-muted-foreground"
+                      >
+                        <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-1.5 flex-shrink-0" />
+                        <Editable
+                          path={`join.membership.benefits.${i}`}
+                          label={`Avantage ${i + 1}`}
+                        >
+                          <span>{benefit}</span>
+                        </Editable>
+                      </li>
+                    ))}
                   </ul>
                 </CardContent>
               </Card>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-border hover:bg-card w-full sm:w-auto"
+                className="border-[#8C0343] text-[#8C0343] hover:bg-[#8C0343] hover:text-white w-full sm:w-auto px-8"
+                onClick={handleMembership}
               >
-                Adhérer en ligne (20€/an)
+                Adhérer en ligne (15€/an)
               </Button>
             </div>
           </div>

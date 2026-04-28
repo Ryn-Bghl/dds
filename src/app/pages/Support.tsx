@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Heart, Coins, Globe, Landmark } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -6,7 +7,37 @@ import { Editable } from "../components/Editable";
 
 export default function Support() {
   const { content } = useEditor();
-  const { support } = content;
+  const { support, settings } = content;
+  const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
+
+  const handleDonation = (amount?: string) => {
+    const baseUrl = settings.links?.helloAssoDonation || "https://www.helloasso.com/associations/dons-du-son";
+    
+    if (!amount || amount === "Libre") {
+      window.open(baseUrl, "_blank");
+      return;
+    }
+
+    // Convert "20€" to "20"
+    const numericAmount = amount.replace("€", "");
+    
+    try {
+      const url = new URL(baseUrl);
+      // HelloAsso parameters vary, but 'amount' is a common one for pre-filling.
+      // Usually it's in cents for checkouts, but simple forms might take euros.
+      // We'll provide it in euros as it's the most common for simple redirects.
+      url.searchParams.append("amount", numericAmount);
+      window.open(url.toString(), "_blank");
+    } catch (e) {
+      window.open(baseUrl, "_blank");
+    }
+  };
+
+  const handlePartnership = () => {
+    const email = settings.contact.email;
+    const subject = encodeURIComponent("Demande de partenariat - Dons Du Son");
+    window.location.href = `mailto:${email}?subject=${subject}`;
+  };
 
   return (
     <div className="flex flex-col">
@@ -60,8 +91,13 @@ export default function Support() {
                 {["10€", "20€", "50€", "100€", "Libre"].map((amount) => (
                   <Button
                     key={amount}
-                    variant="outline"
-                    className="border-border font-bold hover:bg-[#8C0343] hover:text-white transition-all"
+                    variant={selectedAmount === amount ? "default" : "outline"}
+                    className={`border-border font-bold transition-all ${
+                      selectedAmount === amount 
+                        ? "bg-[#8C0343] text-white hover:bg-[#8C0343]/90" 
+                        : "hover:bg-[#8C0343] hover:text-white"
+                    }`}
+                    onClick={() => setSelectedAmount(amount)}
                   >
                     {amount}
                   </Button>
@@ -70,9 +106,12 @@ export default function Support() {
 
               <Button
                 size="lg"
-                className="bg-[#8C0343] hover:bg-[#771236] w-full"
+                className="bg-[#8C0343] hover:bg-[#771236] w-full h-14 text-lg font-bold"
+                onClick={() => handleDonation(selectedAmount || undefined)}
               >
-                Faire un don via HelloAsso
+                {selectedAmount && selectedAmount !== "Libre" 
+                  ? `Donner ${selectedAmount} via HelloAsso` 
+                  : "Faire un don via HelloAsso"}
               </Button>
               <p className="text-xs text-muted-foreground text-center italic">
                 * 66% de votre don est déductible de vos impôts.
@@ -113,7 +152,8 @@ export default function Support() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-[#F29F05] text-[#F29F05] hover:bg-[#F29F05] hover:text-black"
+                    className="border-[#F29F05] text-[#F29F05] hover:bg-[#F29F05] hover:text-black w-full"
+                    onClick={handlePartnership}
                   >
                     Devenir partenaire
                   </Button>

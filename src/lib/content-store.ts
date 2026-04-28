@@ -64,10 +64,12 @@ export interface JoinPageContent {
   volunteering: {
     title: string;
     content: string;
+    tasks: string[];
   };
   membership: {
     title: string;
     content: string;
+    benefits: string[];
   };
 }
 
@@ -150,6 +152,11 @@ export interface GlobalSettings {
     facebook: string;
     instagram: string;
     youtube: string;
+  };
+  links: {
+    helloAssoDonation: string;
+    helloAssoMembership: string;
+    helloAssoStore: string;
   };
   rental: {
     replyDelay: string;
@@ -255,7 +262,7 @@ export const initialContent: SiteContent = {
     history: {
       title: "Notre Histoire",
       content:
-        "Fondée en 2022, Dons Du Son est née de la rencontre entre des professionnels du secteur audio et des passionnés de musique, tous animés par la volonté de démocratiser l'accès aux moyens de production musicale.\n\nFace au constat que de nombreux artistes émergents manquent de moyens techniques et financiers pour concrétiser leurs projets, nous avons décidé de créer une structure associative permettant de mutualiser les ressources et les compétences.\n\nAujourd'hui, nous sommes une équipe de 15 bénévoles actifs et comptons plus de 200 adhérents. Notre association est reconnue d'intérêt général et œuvre quotidiennement pour le développement de la scène musicale en Île-de-France.",
+        "Fondée in 2022, Dons Du Son est née de la rencontre entre des professionnels du secteur audio et des passionnés de musique, tous animés par la volonté de démocratiser l'accès aux moyens de production musicale.\n\nFace au constat que de nombreux artistes émergents manquent de moyens techniques et financiers pour concrétiser leurs projets, nous avons décidé de créer une structure associative permettant de mutualiser les ressources et les compétences.\n\nAujourd'hui, nous sommes une équipe de 15 bénévoles actifs et comptons plus de 200 adhérents. Notre association est reconnue d'intérêt général et œuvre quotidiennement pour le développement de la scène musicale en Île-de-France.",
     },
     values: [
       {
@@ -301,11 +308,22 @@ export const initialContent: SiteContent = {
       title: "Bénévolat",
       content:
         "Nous recherchons régulièrement des bénévoles pour nous aider sur nos événements : accueil public, logistique, technique, communication. C'est une excellente occasion de découvrir les coulisses du spectacle vivant.",
+      tasks: [
+        "Accueil des artistes et du public",
+        "Aide à l'installation technique",
+        "Soutien à la communication locale",
+        "Gestion de la billetterie et du bar",
+      ],
     },
     membership: {
       title: "Adhésion",
       content:
         "Adhérer à Dons Du Son, c'est soutenir nos actions et bénéficier de tarifs préférentiels sur la location de matériel et les formations. L'adhésion annuelle est de 20€.",
+      benefits: [
+        "Réduction de 10% sur les billets de concert",
+        "Accès prioritaire aux formations et ateliers",
+        "Droit de vote à l'Assemblée Générale",
+      ],
     },
   },
   support: {
@@ -550,6 +568,25 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
     if (!Array.isArray(repaired.association.values)) {
       console.warn("Repairing corrupted association.values");
       repaired.association.values = initialContent.association.values;
+    }
+  }
+
+  // Validate join page
+  if (!repaired.join) {
+    repaired.join = initialContent.join;
+  } else {
+    if (!repaired.join.membership) {
+      repaired.join.membership = initialContent.join.membership;
+    } else if (!Array.isArray(repaired.join.membership.benefits)) {
+      console.warn("Repairing corrupted join.membership.benefits");
+      repaired.join.membership.benefits = initialContent.join.membership.benefits;
+    }
+    
+    if (!repaired.join.volunteering) {
+      repaired.join.volunteering = initialContent.join.volunteering;
+    } else if (!Array.isArray(repaired.join.volunteering.tasks)) {
+      console.warn("Repairing corrupted join.volunteering.tasks");
+      repaired.join.volunteering.tasks = initialContent.join.volunteering.tasks;
     }
   }
 

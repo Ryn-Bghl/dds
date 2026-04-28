@@ -67,16 +67,31 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
     let current: any = newContent;
 
     for (let i = 0; i < keys.length - 1; i++) {
-      // Preserve arrays using spread syntax, copy objects
-      if (Array.isArray(current[keys[i]])) {
-        current[keys[i]] = [...current[keys[i]]];
+      const key = keys[i];
+      const nextKey = keys[i + 1];
+
+      // Clone current level based on whether next level is array or object
+      if (Array.isArray(current[key])) {
+        current[key] = [...current[key]];
       } else {
-        current[keys[i]] = { ...current[keys[i]] };
+        current[key] = { ...current[key] };
       }
-      current = current[keys[i]];
+      
+      // Move to next level, handling numeric keys for arrays
+      if (Array.isArray(current[key]) && !isNaN(Number(nextKey))) {
+        current = current[key]; // stays as array, index access happens in next iteration or end
+      } else {
+        current = current[key];
+      }
     }
 
-    current[keys[keys.length - 1]] = value;
+    const lastKey = keys[keys.length - 1];
+    if (Array.isArray(current) && !isNaN(Number(lastKey))) {
+      current[Number(lastKey)] = value;
+    } else {
+      current[lastKey] = value;
+    }
+
     setContent(newContent);
     setHasUnsavedChanges(true);
   };

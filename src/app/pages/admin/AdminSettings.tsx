@@ -26,6 +26,7 @@ import {
   ShieldAlert,
   Trash2,
   Type,
+  Link as LinkIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -205,8 +206,55 @@ export default function AdminSettings() {
           </CardContent>
         </Card>
 
+        {/* External Links */}
+        <Card className="bg-[#1a1a1a] border-gray-800">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <LinkIcon className="w-5 h-5 text-[#F29F05]" />
+              <CardTitle className="text-white">Liens Externes (HelloAsso)</CardTitle>
+            </div>
+            <CardDescription className="text-gray-500">
+              Configurez vos liens de paiement et d'adhésion.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-gray-400">Lien Dons (HelloAsso)</Label>
+              <Input
+                value={content.settings.links?.helloAssoDonation || ""}
+                onChange={(e) =>
+                  handleUpdate("links", "helloAssoDonation", e.target.value)
+                }
+                className="bg-[#262626] border-gray-700"
+                placeholder="https://www.helloasso.com/associations/.../formulaires/1"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-gray-400">Lien Adhésion (HelloAsso)</Label>
+              <Input
+                value={content.settings.links?.helloAssoMembership || ""}
+                onChange={(e) =>
+                  handleUpdate("links", "helloAssoMembership", e.target.value)
+                }
+                className="bg-[#262626] border-gray-700"
+                placeholder="https://www.helloasso.com/associations/.../adhesions/..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-gray-400">Lien Boutique (Optionnel)</Label>
+              <Input
+                value={content.settings.links?.helloAssoStore || ""}
+                onChange={(e) =>
+                  handleUpdate("links", "helloAssoStore", e.target.value)
+                }
+                className="bg-[#262626] border-gray-700"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Data Management */}
-        <Card className="bg-[#1a1a1a] border-gray-800 md:col-span-2">
+        <Card className="bg-[#1a1a1a] border-gray-800">
           <CardHeader>
             <div className="flex items-center gap-2">
               <ShieldAlert className="w-5 h-5 text-red-500" />
@@ -216,25 +264,23 @@ export default function AdminSettings() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-lg bg-[#262626] border border-gray-700">
-                  <div className="space-y-0.5">
-                    <Label className="text-white">Mode Maintenance</Label>
-                    <p className="text-xs text-gray-500">
-                      Désactiver le site public.
-                    </p>
-                  </div>
-                  <Switch
-                    checked={content.settings.advanced.maintenanceMode}
-                    onCheckedChange={(checked) =>
-                      handleUpdate("advanced", "maintenanceMode", checked)
-                    }
-                  />
+            <div className="space-y-6">
+              <div className="flex items-center justify-between p-4 rounded-lg bg-[#262626] border border-gray-700">
+                <div className="space-y-0.5">
+                  <Label className="text-white">Mode Maintenance</Label>
+                  <p className="text-xs text-gray-500">
+                    Désactiver le site public.
+                  </p>
                 </div>
+                <Switch
+                  checked={content.settings.advanced.maintenanceMode}
+                  onCheckedChange={(checked) =>
+                    handleUpdate("advanced", "maintenanceMode", checked)
+                  }
+                />
               </div>
 
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 gap-3">
                 <Button
                   variant="outline"
                   className="w-full justify-start border-gray-700 text-gray-300 hover:bg-gray-800"
@@ -257,9 +303,6 @@ export default function AdminSettings() {
                   accept=".json"
                   className="hidden"
                 />
-              </div>
-
-              <div className="space-y-3">
                 <Button
                   variant="destructive"
                   className="w-full justify-start bg-red-900/20 hover:bg-red-900/40 text-red-500 border border-red-900/50"

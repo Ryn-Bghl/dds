@@ -109,11 +109,22 @@
     },
     "volunteering": {
       "title": "Bénévolat",
-      "content": "Nous recherchons régulièrement des bénévoles pour nous aider sur nos événements : accueil public, logistique, technique, communication. C'est une excellente occasion de découvrir les coulisses du spectacle vivant."
+      "content": "Nous recherchons régulièrement des bénévoles pour nous aider sur nos événements : accueil public, logistique, technique, communication. C'est une excellente occasion de découvrir les coulisses du spectacle vivant.",
+      "tasks": [
+        "Accueil des artistes et du public",
+        "Aide à l'installation technique",
+        "Soutien à la communication locale",
+        "Gestion de la billetterie et du bar"
+      ]
     },
     "membership": {
       "title": "Adhésion",
-      "content": "Adhérer à Dons Du Son, c'est soutenir nos actions et bénéficier de tarifs préférentiels sur la location de matériel et les formations. L'adhésion annuelle est de 20€."
+      "content": "Adhérer à Dons Du Son, c'est soutenir nos actions et bénéficier de tarifs préférentiels sur la location de matériel et les formations. L'adhésion annuelle est de 15€.",
+      "benefits": [
+        "Réduction de 10% sur les billets de concert",
+        "Accès prioritaire aux formations et ateliers",
+        "Droit de vote à l'Assemblée Générale"
+      ]
     }
   },
   "support": {
@@ -256,6 +267,11 @@
       "facebook": "https://facebook.com/donsduson",
       "instagram": "https://instagram.com/donsduson",
       "youtube": "https://youtube.com/donsduson"
+    },
+    "links": {
+      "helloAssoDonation": "https://www.helloasso.com/associations/dons-du-son/formulaires/3",
+      "helloAssoMembership": "https://www.helloasso.com/associations/dons-du-son/adhesions/adhesion-saison-25-26",
+      "helloAssoStore": "https://www.helloasso.com/associations/dons-du-son/boutique"
     },
     "rental": {
       "replyDelay": "Vous recevrez un devis sous 72 heures",
