@@ -338,7 +338,7 @@ export default function AdminPacks() {
               </div>
               
               {editingPack?.items?.map((item, index) => (
-                <div key={index} className="flex gap-4 items-end bg-background/50 p-3 rounded-lg border border-border">
+                <div key={item.equipmentId || index} className="flex gap-4 items-end bg-background/50 p-3 rounded-lg border border-border">
                   <div className="flex-1 space-y-2">
                     <Label>Matériel</Label>
                     <Select
@@ -396,7 +396,7 @@ export default function AdminPacks() {
               
               <div className="grid grid-cols-1 gap-2">
                 {editingPack?.services?.map((service, index) => (
-                  <div key={index} className="flex gap-2">
+                  <div key={`${service}-${index}`} className="flex gap-2">
                     <Input
                       value={service}
                       onChange={(e) => updateService(index, e.target.value)}

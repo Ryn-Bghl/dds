@@ -37,6 +37,15 @@ export interface AssociationPageContent {
     description: string;
     iconName: string;
   }[];
+  interventions: {
+    title: string;
+    description: string;
+  }[];
+  interventionAreas: {
+    title: string;
+    description: string;
+    features: string[];
+  }[];
 }
 
 export interface ContactPageContent {
@@ -205,7 +214,13 @@ export interface SiteContent {
   settings: GlobalSettings;
   inventory: InventoryItem[];
   rentalPacks: RentalPack[];
-  teamMembers: { name: string; role: string; bio: string; imageUrl: string }[];
+  teamMembers: {
+    id: string;
+    name: string;
+    role: string;
+    bio: string;
+    imageUrl: string;
+  }[];
 }
 
 export const initialContent: SiteContent = {
@@ -457,6 +472,14 @@ export const initialContent: SiteContent = {
       instagram: "https://instagram.com/donsduson",
       youtube: "https://youtube.com/donsduson",
     },
+    links: {
+      helloAssoDonation:
+        "https://www.helloasso.com/associations/dons-du-son/formulaires/3",
+      helloAssoMembership:
+        "https://www.helloasso.com/associations/dons-du-son/adhesions/adhesion-saison-25-26",
+      helloAssoStore:
+        "https://www.helloasso.com/associations/dons-du-son/boutique",
+    },
     rental: {
       replyDelay: "Vous recevrez un devis sous 72 heures",
       defaultDeposit: "30%",
@@ -534,7 +557,36 @@ export const initialContent: SiteContent = {
       content: [],
     },
   ],
-  teamMembers: [],
+  teamMembers: [
+    {
+      id: "member-1",
+      name: "Sophie Martin",
+      role: "Présidente",
+      bio: "Passionnée par l'accompagnement artistique depuis plus de 10 ans.",
+      imageUrl: "",
+    },
+    {
+      id: "member-2",
+      name: "Thomas Dubois",
+      role: "Trésorier",
+      bio: "Expert en gestion associative et passionné de technique sonore.",
+      imageUrl: "",
+    },
+    {
+      id: "member-3",
+      name: "Léa Bernard",
+      role: "Secrétaire",
+      bio: "Coordination et organisation au service de la culture.",
+      imageUrl: "",
+    },
+    {
+      id: "member-4",
+      name: "Marc Petit",
+      role: "Responsable Technique",
+      bio: "Ingénieur du son expérimenté veillant sur notre parc matériel.",
+      imageUrl: "",
+    },
+  ],
 };
 
 function isValidArray(value: any): boolean {

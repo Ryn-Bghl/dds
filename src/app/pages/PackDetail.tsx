@@ -94,10 +94,10 @@ export default function PackDetail() {
                     Matériel inclus
                   </h3>
                   <div className="space-y-3">
-                    {pack.items.map((item, idx) => {
+                    {pack.items.map((item) => {
                       const equipment = inventory.find(e => e.id === item.equipmentId);
                       return (
-                        <div key={idx} className="flex items-center gap-3 text-gray-300 bg-card p-3 rounded-lg border border-border">
+                        <div key={item.equipmentId} className="flex items-center gap-3 text-gray-300 bg-card p-3 rounded-lg border border-border">
                           <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#8C0343]/20 text-[#F29F05] font-bold text-sm">
                             {item.quantity}
                           </span>
@@ -115,8 +115,8 @@ export default function PackDetail() {
                     Services & Prestations
                   </h3>
                   <div className="space-y-3">
-                    {pack.services.map((service, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-gray-300 bg-card p-3 rounded-lg border border-border">
+                    {pack.services.map((service) => (
+                      <div key={service} className="flex items-center gap-3 text-gray-300 bg-card p-3 rounded-lg border border-border">
                         <CheckCircle2 className="w-5 h-5 text-green-500" />
                         <span className="font-medium">{service}</span>
                       </div>

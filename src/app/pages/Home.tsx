@@ -137,7 +137,7 @@ export default function Home() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {(Array.isArray(home.stats) ? home.stats : []).map(
               (stat, index) => (
-                <div key={index} className="text-center">
+                <div key={stat.label} className="text-center">
                   <div className="text-5xl md:text-6xl mb-2 font-bold">
                     <Editable
                       path={`home.stats.${index}.value`}
@@ -190,7 +190,7 @@ export default function Home() {
                 const Icon = iconMap[service.iconName] || Music;
                 return (
                   <Card
-                    key={index}
+                    key={service.title}
                     className="bg-[#1a1a1a] border-gray-800 hover:border-[#8C0343] hover:shadow-lg transition-all"
                   >
                     <CardContent className="p-6 text-center">

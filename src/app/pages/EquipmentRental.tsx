@@ -461,10 +461,10 @@ export default function EquipmentRental() {
                         <div>
                           <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Matériel inclus</h4>
                           <div className="flex flex-wrap gap-2">
-                            {pack.items.map((item, idx) => {
+                            {pack.items.map((item) => {
                               const equipment = inventory.find(e => e.id === item.equipmentId);
                               return (
-                                <Badge key={idx} variant="outline" className="bg-background/50 border-border text-gray-300">
+                                <Badge key={item.equipmentId} variant="outline" className="bg-background/50 border-border text-gray-300">
                                   {item.quantity}x {equipment?.name || "Matériel"}
                                 </Badge>
                               );
@@ -474,8 +474,8 @@ export default function EquipmentRental() {
                         <div>
                           <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Services inclus</h4>
                           <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
-                            {pack.services.map((service, idx) => (
-                              <li key={idx} className="text-sm text-gray-300 flex items-center gap-2">
+                            {pack.services.map((service) => (
+                              <li key={service} className="text-sm text-gray-300 flex items-center gap-2">
                                 <CheckCircle2 className="w-3 h-3 text-green-500" />
                                 {service}
                               </li>
@@ -554,8 +554,8 @@ export default function EquipmentRental() {
                         {equipment.description}
                       </p>
                       <ul className="text-xs text-muted-foreground mb-4 space-y-1 min-h-[48px]">
-                        {equipment.specs.slice(0, 3).map((spec, idx) => (
-                          <li key={idx}>• {spec}</li>
+                        {equipment.specs.slice(0, 3).map((spec) => (
+                          <li key={spec}>• {spec}</li>
                         ))}
                       </ul>
                       <div className="flex items-center justify-between mt-auto">

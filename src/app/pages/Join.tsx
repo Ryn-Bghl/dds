@@ -1,4 +1,4 @@
-import { Users, Heart, Star, CheckCircle2 } from "lucide-react";
+import { Heart, Star, CheckCircle2 } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { useEditor } from "../context/EditorContext";
@@ -11,7 +11,7 @@ export default function Join() {
   const handleVolunteer = () => {
     const email = settings.contact.email;
     const subject = encodeURIComponent("Candidature Bénévolat - Dons Du Son");
-    window.location.href = `mailto:${email}?subject=${subject}`;
+    globalThis.location.href = `mailto:${email}?subject=${subject}`;
   };
 
   const handleMembership = () => {
@@ -81,7 +81,7 @@ export default function Join() {
                   ]
                 ).map((item, i) => (
                   <li
-                    key={i}
+                    key={item}
                     className="flex items-center gap-3 text-muted-foreground"
                   >
                     <CheckCircle2 className="w-5 h-5 text-[#F29F05] flex-shrink-0" />
@@ -138,7 +138,7 @@ export default function Join() {
                       ]
                     ).map((benefit, i) => (
                       <li
-                        key={i}
+                        key={benefit}
                         className="flex items-start gap-2 text-sm text-muted-foreground"
                       >
                         <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-1.5 flex-shrink-0" />
