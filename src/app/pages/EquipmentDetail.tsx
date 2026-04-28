@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router";
-import { ArrowLeft, Package, CheckCircle2, AlertCircle, Wrench, ShoppingCart } from "lucide-react";
+import { ArrowLeft, Package, CheckCircle2, ShoppingCart } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { useEditor } from "../context/EditorContext";

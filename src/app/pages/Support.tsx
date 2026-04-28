@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, Coins, Globe, Landmark } from "lucide-react";
+import { Coins, Landmark } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { useEditor } from "../context/EditorContext";

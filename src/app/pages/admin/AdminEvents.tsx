@@ -14,7 +14,6 @@ import {
   Calendar as CalendarIcon,
   MapPin,
   Clock,
-  Layout,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Switch } from "../../components/ui/switch";

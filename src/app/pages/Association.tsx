@@ -76,7 +76,10 @@ export default function Association() {
       {/* Values */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4">
-          <Editable path="association.valuesSectionTitle" label="Titre Section Valeurs">
+          <Editable
+            path="association.valuesSectionTitle"
+            label="Titre Section Valeurs"
+          >
             <h2 className="text-4xl mb-12 text-center text-foreground font-bold">
               {association.valuesSectionTitle || "Nos Valeurs"}
             </h2>
@@ -123,19 +126,27 @@ export default function Association() {
       {/* Intervention Areas */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <Editable path="association.interventionSection.title" label="Titre Section Intervention">
+          <Editable
+            path="association.interventionSection.title"
+            label="Titre Section Intervention"
+          >
             <h2 className="text-4xl mb-4 text-center text-foreground font-bold">
-              {association.interventionSection?.title || "Nos Axes d'Intervention"}
+              {association.interventionSection?.title ||
+                "Nos Axes d'Intervention"}
             </h2>
           </Editable>
-          <Editable path="association.interventionSection.description" type="textarea" label="Description Section Intervention">
+          <Editable
+            path="association.interventionSection.description"
+            type="textarea"
+            label="Description Section Intervention"
+          >
             <p className="text-xl text-muted-foreground text-center mb-12 max-w-3xl mx-auto">
-              {association.interventionSection?.description || "Trois domaines d'action complémentaires pour un accompagnement global des artistes"}
+              {association.interventionSection?.description ||
+                "Trois domaines d'action complémentaires pour un accompagnement global des artistes"}
             </p>
           </Editable>
           <div className="space-y-12 max-w-6xl mx-auto">
             {(association.interventionAreas || []).map((area, index) => {
-              const Icon = iconMap[area.iconName] || GraduationCap;
               return (
                 <Card
                   key={index}
@@ -144,11 +155,19 @@ export default function Association() {
                   <CardContent className="p-0">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
                       <div className="bg-gradient-to-br from-[#8C0343] to-[#771236] p-8 text-white flex flex-col justify-center">
-                        <Icon className="w-12 h-12 mb-4" />
-                        <Editable path={`association.interventionAreas.${index}.title`} label="Titre Axe">
-                          <h3 className="text-3xl mb-3 font-bold">{area.title}</h3>
+                        <Editable
+                          path={`association.interventionAreas.${index}.title`}
+                          label="Titre Axe"
+                        >
+                          <h3 className="text-3xl mb-3 font-bold">
+                            {area.title}
+                          </h3>
                         </Editable>
-                        <Editable path={`association.interventionAreas.${index}.description`} type="textarea" label="Description Axe">
+                        <Editable
+                          path={`association.interventionAreas.${index}.description`}
+                          type="textarea"
+                          label="Description Axe"
+                        >
                           <p className="text-gray-100">{area.description}</p>
                         </Editable>
                       </div>
@@ -157,19 +176,24 @@ export default function Association() {
                           Actions concrètes :
                         </h4>
                         <ul className="space-y-3">
-                          {(area.features || []).map((feature, featureIndex) => (
-                            <li key={featureIndex} className="flex items-start gap-3">
-                              <div className="w-2 h-2 bg-[#F29F05] rounded-full mt-2 flex-shrink-0" />
-                              <Editable
-                                path={`association.interventionAreas.${index}.features.${featureIndex}`}
-                                label="Action Concrète"
+                          {(area.features || []).map(
+                            (feature, featureIndex) => (
+                              <li
+                                key={featureIndex}
+                                className="flex items-start gap-3"
                               >
-                                <span className="text-muted-foreground">
-                                  {feature}
-                                </span>
-                              </Editable>
-                            </li>
-                          ))}
+                                <div className="w-2 h-2 bg-[#F29F05] rounded-full mt-2 flex-shrink-0" />
+                                <Editable
+                                  path={`association.interventionAreas.${index}.features.${featureIndex}`}
+                                  label="Action Concrète"
+                                >
+                                  <span className="text-muted-foreground">
+                                    {feature}
+                                  </span>
+                                </Editable>
+                              </li>
+                            ),
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -195,7 +219,8 @@ export default function Association() {
             label="Description Section Équipe"
           >
             <p className="text-xl text-muted-foreground text-center mb-12">
-              {association.team?.description || "Les membres du bureau qui portent l'association au quotidien"}
+              {association.team?.description ||
+                "Les membres du bureau qui portent l'association au quotidien"}
             </p>
           </Editable>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">

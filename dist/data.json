@@ -92,7 +92,6 @@
     },
     "interventionAreas": [
       {
-        "iconName": "GraduationCap",
         "title": "Éducation & Formation",
         "description": "Ateliers pédagogiques, formations techniques et accompagnement des jeunes talents dans leur apprentissage des métiers du son et de la musique.",
         "features": [
@@ -103,7 +102,6 @@
         ]
       },
       {
-        "iconName": "Wrench",
         "title": "Accompagnement Technique",
         "description": "Mise à disposition de studios, conseil en ingénierie sonore et suivi technique des projets artistiques de A à Z.",
         "features": [
@@ -114,7 +112,6 @@
         ]
       },
       {
-        "iconName": "Radio",
         "title": "Diffusion Culturelle",
         "description": "Organisation d'événements, concerts et festivals pour promouvoir les artistes émergents et la diversité musicale.",
         "features": [

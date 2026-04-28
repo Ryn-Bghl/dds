@@ -10,7 +10,7 @@ import {
 } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
-import { Plus, Trash2, Edit3, Save, X, Music, Layout } from "lucide-react";
+import { Plus, Trash2, Edit3, Save, X } from "lucide-react";
 import { toast } from "sonner";
 import BlockEditor from "../../components/admin/BlockEditor";
 

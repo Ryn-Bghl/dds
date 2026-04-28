@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useEditor } from "../../context/EditorContext";
-import { initialContent, saveContent } from "../../../lib/content-store";
+import { saveContent } from "../../../lib/content-store";
 import { Button } from "../../components/ui/button";
 import {
   Card,
@@ -19,13 +19,11 @@ import {
   Upload,
   RefreshCcw,
   Globe,
-  Mail,
   Facebook,
   Instagram,
   Youtube,
   ShieldAlert,
   Trash2,
-  Type,
   Link as LinkIcon,
 } from "lucide-react";
 import { toast } from "sonner";

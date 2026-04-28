@@ -4,14 +4,12 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import {
-  Plus,
   Trash2,
   MoveUp,
   MoveDown,
   Type,
   AlignLeft,
   Image as ImageIcon,
-  BarChart3
 } from 'lucide-react';
 import {
   Select,

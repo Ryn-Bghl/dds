@@ -4,7 +4,6 @@ import {
   Music,
   Users,
   Lightbulb,
-  Calendar,
   Wrench,
   Radio,
 } from "lucide-react";

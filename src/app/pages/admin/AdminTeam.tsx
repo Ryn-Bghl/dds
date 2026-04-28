@@ -1,10 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useEditor } from "../../context/EditorContext";
-import {
-  initialContent,
-  saveContent,
-  SiteContent,
-} from "../../../lib/content-store";
+import { SiteContent } from "../../../lib/content-store";
 import { Button } from "../../components/ui/button";
 import {
   Card,
@@ -16,7 +12,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Label } from "../../components/ui/label";
-import { Plus, Edit, Trash2, Save, Upload, Image } from "lucide-react";
+import { Plus, Edit, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
 
 const TEAM_PLACEHOLDER =

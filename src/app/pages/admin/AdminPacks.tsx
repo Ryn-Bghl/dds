@@ -7,7 +7,6 @@ import {
   Trash2,
   Image as ImageIcon,
   CheckCircle2,
-  XCircle,
   Wrench,
   PlusCircle,
   MinusCircle,

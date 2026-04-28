@@ -10,7 +10,6 @@ import {
   Trash2,
   Send,
   CheckCircle2,
-  ArrowRight,
   Package,
   LayoutGrid,
 } from "lucide-react";

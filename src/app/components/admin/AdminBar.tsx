@@ -3,9 +3,6 @@ import { useAuth } from "../../context/AuthContext";
 import { useEditor } from "../../context/EditorContext";
 import {
   LayoutDashboard,
-  Settings,
-  Plus,
-  Eye,
   LogOut,
   Edit3,
   Save,
