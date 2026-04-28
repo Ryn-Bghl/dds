@@ -1,56 +1,74 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import Association from "./pages/Association";
-import Projects from "./pages/Projects";
-import ProjectDetail from "./pages/ProjectDetail";
-import Events from "./pages/Events";
-import EventDetail from "./pages/EventDetail";
-import Join from "./pages/Join";
-import Support from "./pages/Support";
-import EquipmentRental from "./pages/EquipmentRental";
-import EquipmentDetail from "./pages/EquipmentDetail";
-import PackDetail from "./pages/PackDetail";
-import Contact from "./pages/Contact";
-import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AdminLayout from "./pages/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminProjects from "./pages/admin/AdminProjects";
-import AdminEvents from "./pages/admin/AdminEvents";
-import AdminRentals from "./pages/admin/AdminRentals";
-import AdminSettings from "./pages/admin/AdminSettings";
+
+// Loading component for Suspense
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[60vh]">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8C0343]"></div>
+  </div>
+);
+
+// Lazy load pages
+const Home = lazy(() => import("./pages/Home"));
+const Association = lazy(() => import("./pages/Association"));
+const Projects = lazy(() => import("./pages/Projects"));
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
+const Events = lazy(() => import("./pages/Events"));
+const EventDetail = lazy(() => import("./pages/EventDetail"));
+const Join = lazy(() => import("./pages/Join"));
+const Support = lazy(() => import("./pages/Support"));
+const EquipmentRental = lazy(() => import("./pages/EquipmentRental"));
+const EquipmentDetail = lazy(() => import("./pages/EquipmentDetail"));
+const PackDetail = lazy(() => import("./pages/PackDetail"));
+const Contact = lazy(() => import("./pages/Contact"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Login = lazy(() => import("./pages/Login"));
+
+// Admin pages
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminProjects = lazy(() => import("./pages/admin/AdminProjects"));
+const AdminEvents = lazy(() => import("./pages/admin/AdminEvents"));
+const AdminRentals = lazy(() => import("./pages/admin/AdminRentals"));
+const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
+
+const withSuspense = (Component: React.ComponentType) => (
+  <Suspense fallback={<PageLoader />}>
+    <Component />
+  </Suspense>
+);
 
 export const router = createBrowserRouter([
   {
     path: "/login",
-    Component: Login,
+    element: withSuspense(Login),
   },
   {
     path: "/admin",
     element: (
       <ProtectedRoute requireAdmin>
-        <AdminLayout />
+        {withSuspense(AdminLayout)}
       </ProtectedRoute>
     ),
     children: [
-      { index: true, Component: AdminDashboard },
+      { index: true, element: withSuspense(AdminDashboard) },
       {
         path: "projects",
-        Component: AdminProjects,
+        element: withSuspense(AdminProjects),
       },
       {
         path: "events",
-        Component: AdminEvents,
+        element: withSuspense(AdminEvents),
       },
       {
         path: "rental",
-        Component: AdminRentals,
+        element: withSuspense(AdminRentals),
       },
       {
         path: "settings",
-        Component: AdminSettings,
+        element: withSuspense(AdminSettings),
       },
     ],
   },
@@ -58,19 +76,19 @@ export const router = createBrowserRouter([
     path: "/",
     Component: Layout,
     children: [
-      { index: true, Component: Home },
-      { path: "association", Component: Association },
-      { path: "projets", Component: Projects },
-      { path: "projets/:id", Component: ProjectDetail },
-      { path: "evenements", Component: Events },
-      { path: "evenements/:id", Component: EventDetail },
-      { path: "rejoindre", Component: Join },
-      { path: "soutenir", Component: Support },
-      { path: "location", Component: EquipmentRental },
-      { path: "location/:id", Component: EquipmentDetail },
-      { path: "location/pack/:id", Component: PackDetail },
-      { path: "contact", Component: Contact },
-      { path: "*", Component: NotFound },
+      { index: true, element: withSuspense(Home) },
+      { path: "association", element: withSuspense(Association) },
+      { path: "projets", element: withSuspense(Projects) },
+      { path: "projets/:id", element: withSuspense(ProjectDetail) },
+      { path: "evenements", element: withSuspense(Events) },
+      { path: "evenements/:id", element: withSuspense(EventDetail) },
+      { path: "rejoindre", element: withSuspense(Join) },
+      { path: "soutenir", element: withSuspense(Support) },
+      { path: "location", element: withSuspense(EquipmentRental) },
+      { path: "location/:id", element: withSuspense(EquipmentDetail) },
+      { path: "location/pack/:id", element: withSuspense(PackDetail) },
+      { path: "contact", element: withSuspense(Contact) },
+      { path: "*", element: withSuspense(NotFound) },
     ],
   },
 ]);

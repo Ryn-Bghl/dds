@@ -35,6 +35,17 @@ export default defineConfig({
     },
   },
 
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router"],
+          "vendor-mui": ["@mui/material", "@mui/icons-material", "@emotion/react", "@emotion/styled"],
+          "vendor-ui": ["lucide-react", "motion", "recharts", "date-fns"],
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       "/api": {
