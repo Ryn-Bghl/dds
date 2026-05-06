@@ -458,7 +458,7 @@ export default function AdminRentals() {
                 onChange={(e) =>
                   setEditingItem((prev) => ({
                     ...prev,
-                    specs: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean),
+                    specs: e.target.value.split("\n").map((s) => s.trim()),
                   }))
                 }
                 className="bg-background border-border"
