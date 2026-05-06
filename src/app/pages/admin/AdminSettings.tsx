@@ -106,7 +106,7 @@ export default function AdminSettings() {
           window.location.reload();
           toast.success("Données importées avec succès");
         } catch (err) {
-          toast.error("Erreur lors de l'importation du fichier JSON");
+          toast.error("Erreur lors de l{e.target?.result as string}importation du fichier JSON");
         }
       };
       reader.readAsText(file);
@@ -370,7 +370,7 @@ export default function AdminSettings() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {content.partners.map((partner) => (
+            {content.partners?.map((partner) => (
               <div
                 key={partner.id}
                 className="flex items-center justify-between p-3 rounded-lg bg-[#262626] border border-gray-700"
