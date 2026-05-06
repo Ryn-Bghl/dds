@@ -370,7 +370,7 @@ export default function AdminSettings() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {content.partners.map((partner, index) => (
+            {content.partners.map((partner) => (
               <div
                 key={partner.id}
                 className="flex items-center justify-between p-3 rounded-lg bg-[#262626] border border-gray-700"
