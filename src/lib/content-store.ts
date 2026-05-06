@@ -390,7 +390,6 @@ export const initialContent: SiteContent = {
           text: "L'événement s'est déroulé sur 3 jours avec 2 scènes principales.",
         },
       ],
-      testimonial: { text: "Une expérience inoubliable.", author: "Léa" },
     },
     {
       id: "atelier-prod",
@@ -435,6 +434,8 @@ export const initialContent: SiteContent = {
       location: "Parc de la Villette",
       category: "Festival",
       description: "Édition passée du festival",
+      price: "Gratuit",
+      ticketUrl: "",
       image:
         "https://images.unsplash.com/photo-1669459881627-06c2a4948e33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwc3RhZ2UlMjBsaWdodHMlMjBwZXJmb3JtYW5jZXxlbnwxfHx8fDE3NzQ1MDc2OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       isPast: true,

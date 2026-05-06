@@ -159,6 +159,36 @@ export default function AdminEvents() {
                     </div>
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs text-gray-400">Prix</label>
+                    <Input
+                      value={editForm?.price}
+                      onChange={(e) =>
+                        setEditForm((prev) =>
+                          prev ? { ...prev, price: e.target.value } : null,
+                        )
+                      }
+                      className="bg-[#262626] border-gray-700"
+                      placeholder="Ex: Gratuit, 10€, Sur Réservation"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs text-gray-400">
+                      Lien Billetterie
+                    </label>
+                    <Input
+                      value={editForm?.ticketUrl}
+                      onChange={(e) =>
+                        setEditForm((prev) =>
+                          prev ? { ...prev, ticketUrl: e.target.value } : null,
+                        )
+                      }
+                      className="bg-[#262626] border-gray-700"
+                      placeholder="URL complète (ex: https://helloasso.com/billetterie)"
+                    />
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <label className="text-xs text-gray-400">Lieu</label>
                   <Input
