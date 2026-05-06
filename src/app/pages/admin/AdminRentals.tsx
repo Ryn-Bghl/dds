@@ -450,6 +450,22 @@ export default function AdminRentals() {
                 rows={3}
               />
             </div>
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="specs">Caractéristiques techniques (une par ligne)</Label>
+              <Textarea
+                id="specs"
+                value={editingItem?.specs ? editingItem.specs.join("\n") : ""}
+                onChange={(e) =>
+                  setEditingItem((prev) => ({
+                    ...prev,
+                    specs: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean),
+                  }))
+                }
+                className="bg-background border-border"
+                rows={4}
+                placeholder="Ex: 16 canaux&#10;Effets SPX intégrés&#10;Interface USB"
+              />
+            </div>
 
             <div className="col-span-2 border-t border-border pt-6 mt-2">
               <BlockEditor
