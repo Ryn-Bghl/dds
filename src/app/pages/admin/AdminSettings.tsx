@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useEditor } from "../../context/EditorContext";
-import { saveContent } from "../../../lib/content-store";
+import { saveContent, Partner } from "../../../lib/content-store";
 import { Button } from "../../components/ui/button";
 import {
   Card,
@@ -27,13 +27,58 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../components/ui/dialog";
 
 export default function AdminSettings() {
   const { content, updateContent, saveChanges } = useEditor();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [isPartnerDialogOpen, setIsPartnerDialogOpen] = useState(false);
+  const [editingPartner, setEditingPartner] = useState<Partial<Partner> | null>(null);
+
   const handleUpdate = (section: string, field: string, value: any) => {
     updateContent(`settings.${section}.${field}`, value);
+  };
+
+  const handleAddPartnerClick = () => {
+    setEditingPartner({ id: Date.now().toString(), name: "", logoUrl: "" });
+    setIsPartnerDialogOpen(true);
+  };
+
+  const handleEditPartnerClick = (partner: Partner) => {
+    setEditingPartner({ ...partner });
+    setIsPartnerDialogOpen(true);
+  };
+
+  const handleDeletePartner = (id: string) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce partenaire ?")) {
+      const newPartners = content.partners.filter((p) => p.id !== id);
+      updateContent("partners", newPartners);
+      toast.info("Partenaire supprimé");
+    }
+  };
+
+  const handleSavePartner = () => {
+    if (!editingPartner?.name || !editingPartner?.logoUrl) {
+      toast.error("Veuillez remplir le nom et l'URL du logo du partenaire.");
+      return;
+    }
+
+    let newPartners;
+    if (content.partners.find(p => p.id === editingPartner.id)) {
+      // Edit existing partner
+      newPartners = content.partners.map((p) =>
+        p.id === editingPartner.id ? (editingPartner as Partner) : p
+      );
+      toast.success("Partenaire mis à jour");
+    } else {
+      // Add new partner
+      newPartners = [...content.partners, editingPartner as Partner];
+      toast.success("Nouveau partenaire ajouté");
+    }
+    updateContent("partners", newPartners);
+    setIsPartnerDialogOpen(false);
+    setEditingPartner(null);
   };
 
   const exportData = () => {
@@ -312,6 +357,54 @@ export default function AdminSettings() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Partners Management */}
+        <Card className="bg-[#1a1a1a] border-gray-800">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <LinkIcon className="w-5 h-5 text-[#F29F05]" />
+              <CardTitle className="text-white">Partenaires</CardTitle>
+            </div>
+            <CardDescription className="text-gray-500">
+              Gérez la liste des partenaires affichée sur la page "Nous soutenir".
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {content.partners.map((partner, index) => (
+              <div
+                key={partner.id}
+                className="flex items-center justify-between p-3 rounded-lg bg-[#262626] border border-gray-700"
+              >
+                <div className="flex items-center gap-3">
+                  <img src={partner.logoUrl} alt={partner.name} className="h-8 w-auto object-contain" />
+                  <span className="text-white">{partner.name}</span>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditPartnerClick(partner)}
+                  >
+                    Modifier
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDeletePartner(partner.id)}
+                  >
+                    Supprimer
+                  </Button>
+                </div>
+              </div>
+            ))}
+            <Button
+              className="w-full bg-[#8C0343] hover:bg-[#771236]"
+              onClick={handleAddPartnerClick}
+            >
+              <LinkIcon className="w-4 h-4 mr-2" /> Ajouter un partenaire
+            </Button>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="flex justify-end pt-8 border-t border-gray-800">
@@ -323,6 +416,57 @@ export default function AdminSettings() {
           <Save className="w-4 h-4 mr-2" /> Enregistrer tous les paramètres
         </Button>
       </div>
+
+      <Dialog open={isPartnerDialogOpen} onOpenChange={setIsPartnerDialogOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-card border-border text-white">
+          <DialogHeader>
+            <DialogTitle>{editingPartner?.id ? "Modifier le partenaire" : "Ajouter un partenaire"}</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="partner-name">Nom du partenaire</Label>
+              <Input
+                id="partner-name"
+                value={editingPartner?.name || ""}
+                onChange={(e) =>
+                  setEditingPartner((prev) => ({ ...prev, name: e.target.value }))
+                }
+                className="col-span-3 bg-background border-border"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="partner-logo-url">URL du logo</Label>
+              <Input
+                id="partner-logo-url"
+                value={editingPartner?.logoUrl || ""}
+                onChange={(e) =>
+                  setEditingPartner((prev) => ({ ...prev, logoUrl: e.target.value }))
+                }
+                className="col-span-3 bg-background border-border"
+                placeholder="https://via.placeholder.com/150x50"
+              />
+            </div>
+            {editingPartner?.logoUrl && (
+              <div className="space-y-2">
+                <Label>Aperçu du logo</Label>
+                <img src={editingPartner.logoUrl} alt="Logo preview" className="h-16 w-auto object-contain border border-border p-2 rounded-md" />
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsPartnerDialogOpen(false)}
+              className="border-border"
+            >
+              Annuler
+            </Button>
+            <Button onClick={handleSavePartner} className="bg-[#8C0343] hover:bg-[#771236]">
+              Enregistrer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

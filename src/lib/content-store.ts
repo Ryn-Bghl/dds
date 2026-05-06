@@ -202,6 +202,12 @@ export interface RentalPack {
   content: ContentBlock[];
 }
 
+export interface Partner {
+  id: string;
+  name: string;
+  logoUrl: string;
+}
+
 export interface SiteContent {
   home: HomePageContent;
   association: AssociationPageContent;
@@ -221,6 +227,7 @@ export interface SiteContent {
     bio: string;
     imageUrl: string;
   }[];
+  partners: Partner[];
 }
 
 export const initialContent: SiteContent = {
@@ -587,6 +594,12 @@ export const initialContent: SiteContent = {
       bio: "Ingénieur du son expérimenté veillant sur notre parc matériel.",
       imageUrl: "",
     },
+  ],
+  partners: [
+    { id: "partner-1", name: "Ville de Paris", logoUrl: "https://via.placeholder.com/150x50/FF0000/FFFFFF?text=Ville+de+Paris" },
+    { id: "partner-2", name: "Région Ile-de-France", logoUrl: "https://via.placeholder.com/150x50/0000FF/FFFFFF?text=Région+Ile-de-France" },
+    { id: "partner-3", name: "HelloAsso", logoUrl: "https://via.placeholder.com/150x50/00FF00/FFFFFF?text=HelloAsso" },
+    { id: "partner-4", name: "SACEM", logoUrl: "https://via.placeholder.com/150x50/FFFF00/000000?text=SACEM" },
   ],
 };
 

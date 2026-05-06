@@ -171,12 +171,14 @@ export default function Support() {
             Ils nous font confiance
           </h2>
           <div className="flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-            {/* Mock Partner Logos */}
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="h-12 w-32 bg-gray-600 rounded-lg animate-pulse"
-              />
+            {content.partners.map((partner, idx) => (
+              <Editable key={partner.id} path={`partners.${idx}.logoUrl`} label="URL Logo Partenaire">
+                <img
+                  src={partner.logoUrl}
+                  alt={partner.name}
+                  className="h-12 w-32 object-contain"
+                />
+              </Editable>
             ))}
           </div>
         </div>
