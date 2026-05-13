@@ -530,12 +530,14 @@ export default function AdminRentals() {
                             ))}
                           </tbody>
                           <tfoot className="bg-black/30">
-                            <tr>
-                              <td colSpan={3} className="px-4 py-2 text-right text-xs text-gray-500 uppercase">Acompte ({content.settings.rental.defaultDeposit})</td>
-                              <td className="px-4 py-2 text-right text-sm font-bold text-gray-400">
-                                {Math.round(selectedRequest.totalPrice * (parseFloat(content.settings.rental.defaultDeposit) / 100))}€
-                              </td>
-                            </tr>
+                            {parseFloat(content.settings.rental.defaultDeposit) > 0 && (
+                              <tr>
+                                <td colSpan={3} className="px-4 py-2 text-right text-xs text-gray-500 uppercase">Acompte ({content.settings.rental.defaultDeposit})</td>
+                                <td className="px-4 py-2 text-right text-sm font-bold text-gray-400">
+                                  {Math.round(selectedRequest.totalPrice * (parseFloat(content.settings.rental.defaultDeposit) / 100))}€
+                                </td>
+                              </tr>
+                            )}
                             <tr>
                               <td colSpan={3} className="px-4 py-4 text-right font-bold text-white uppercase tracking-wider">Total estimé</td>
                               <td className="px-4 py-4 text-right text-2xl font-bold text-[#F29F05]">
