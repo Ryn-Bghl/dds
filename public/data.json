@@ -271,26 +271,7 @@
       "content": []
     }
   ],
-  "rentalRequests": [
-    {
-      "id": "req-1778681709415",
-      "customerName": "Rayan BOUGHALIA",
-      "email": "rayan.boughalia.pro@gmail.com",
-      "phone": "0678540692",
-      "eventDate": "2026-05-13",
-      "message": "message",
-      "status": "En attente",
-      "totalPrice": 150,
-      "items": [
-        {
-          "name": "Pack Sonorisation Standard",
-          "quantity": 1,
-          "price": 150
-        }
-      ],
-      "createdAt": "13/05/2026"
-    }
-  ],
+  "rentalRequests": [],
   "settings": {
     "siteIdentity": {
       "title": "Dons Du Son",
