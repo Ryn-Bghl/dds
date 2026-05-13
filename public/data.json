@@ -273,21 +273,22 @@
   ],
   "rentalRequests": [
     {
-      "id": "req-1",
-      "customerName": "Jean Dupont",
-      "email": "jean@example.com",
-      "phone": "06 12 34 56 78",
-      "eventDate": "2026-05-20",
+      "id": "req-1778681709415",
+      "customerName": "Rayan BOUGHALIA",
+      "email": "rayan.boughalia.pro@gmail.com",
+      "phone": "0678540692",
+      "eventDate": "2026-05-13",
+      "message": "message",
       "status": "En attente",
-      "totalPrice": 155,
+      "totalPrice": 150,
       "items": [
         {
-          "name": "Enceinte JBL PRX815",
-          "quantity": 2,
-          "price": 80
+          "name": "Pack Sonorisation Standard",
+          "quantity": 1,
+          "price": 150
         }
       ],
-      "createdAt": "2026-04-01"
+      "createdAt": "13/05/2026"
     }
   ],
   "settings": {

@@ -79,7 +79,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
-  const submitQuote = (form: { name: string; email: string; phone: string; eventDate: string; message: string }) => {
+  const submitQuote = async (form: { name: string; email: string; phone: string; eventDate: string; message: string }) => {
     if (cart.length === 0) {
       toast.error("Votre panier est vide");
       return;
@@ -105,10 +105,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const currentRequests = content.rentalRequests || [];
     const updatedContent = updateContent("rentalRequests", [newRequest, ...currentRequests]);
     
-    // Auto-save the content so it persists in data.json
-    saveChanges(updatedContent);
+    // 1. On attend impérativement que la sauvegarde soit confirmée
+    await saveChanges(updatedContent);
 
-    // Send email via mailto
+    // 2. On prépare le mail
     const rentalEmail = content.settings.rental.rentalEmail || content.settings.contact.email;
     const subject = encodeURIComponent(`Demande de devis - ${form.name}`);
     const itemsList = cart.map(item => `- ${item.name} (x${item.quantity}) : ${item.price * item.quantity}€`).join('\n');
@@ -125,8 +125,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       `Cordialement,\nLe site Dons Du Son`
     );
 
-    window.location.href = `mailto:${rentalEmail}?subject=${subject}&body=${body}`;
+    // 3. On ouvre le mail dans une fenêtre séparée pour ne pas bloquer le site
+    window.open(`mailto:${rentalEmail}?subject=${subject}&body=${body}`, '_blank');
 
+    // 4. On confirme le succès visuellement sur la page
     setIsSubmitted(true);
     clearCart();
   };
