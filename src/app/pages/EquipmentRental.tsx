@@ -34,12 +34,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../components/ui/sheet";
-import { toast } from "sonner";
 import { useEditor } from "../context/EditorContext";
-import { RentalRequest, InventoryItem, RentalPack } from "../../lib/content-store";
+import { useCart } from "../context/CartContext";
+import { InventoryItem, RentalPack } from "../../lib/content-store";
 import { Link } from "react-router";
-
-type CartItem = (InventoryItem | RentalPack) & { quantity: number; isPack?: boolean };
 
 const categoryIcons = {
   Son: Music,
@@ -49,10 +47,19 @@ const categoryIcons = {
 };
 
 export default function EquipmentRental() {
-  const { content, updateContent } = useEditor();
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const { content } = useEditor();
+  const {
+    cart,
+    addToCart,
+    updateQuantity,
+    removeFromCart,
+    getTotalPrice,
+    submitQuote,
+    isSubmitted,
+    setIsSubmitted,
+  } = useCart();
+
   const [selectedCategory, setSelectedCategory] = useState("Tous");
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [quoteForm, setQuoteForm] = useState({
     name: "",
     email: "",
@@ -76,77 +83,18 @@ export default function EquipmentRental() {
     return matchesCategory && isAvailable;
   });
 
-  const addToCart = (item: InventoryItem | RentalPack, isPack = false) => {
-    const existingItem = cart.find((i) => i.id === item.id);
-    if (existingItem) {
-      setCart(
-        cart.map((i) =>
-          i.id === item.id
-            ? { ...i, quantity: i.quantity + 1 }
-            : i,
-        ),
-      );
-    } else {
-      setCart([...cart, { ...item, quantity: 1, isPack }]);
-    }
-    toast.success(`${item.name} ajouté au panier`);
-  };
-
-  const updateQuantity = (id: string, delta: number) => {
-    setCart(
-      cart
-        .map((item) =>
-          item.id === id
-            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-            : item,
-        )
-        .filter((item) => item.quantity > 0),
-    );
-  };
-
-  const removeFromCart = (id: string) => {
-    setCart(cart.filter((item) => item.id !== id));
-    toast.info("Article retiré du panier");
-  };
-
-  const getTotalPrice = () => {
-    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  };
-
   const handleSubmitQuote = (e: React.FormEvent) => {
     e.preventDefault();
-    if (cart.length === 0) {
-      toast.error("Votre panier est vide");
-      return;
+    submitQuote(quoteForm);
+    if (cart.length > 0) {
+      setQuoteForm({
+        name: "",
+        email: "",
+        phone: "",
+        eventDate: "",
+        message: "",
+      });
     }
-
-    const newRequest: RentalRequest = {
-      id: `req-${Date.now()}`,
-      customerName: quoteForm.name,
-      email: quoteForm.email,
-      phone: quoteForm.phone,
-      eventDate: quoteForm.eventDate,
-      status: "En attente",
-      totalPrice: getTotalPrice(),
-      items: cart.map((item) => ({
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      createdAt: new Date().toLocaleDateString("fr-FR"),
-    };
-
-    updateContent("rentalRequests", [newRequest, ...content.rentalRequests]);
-
-    setIsSubmitted(true);
-    setCart([]);
-    setQuoteForm({
-      name: "",
-      email: "",
-      phone: "",
-      eventDate: "",
-      message: "",
-    });
   };
 
   return (

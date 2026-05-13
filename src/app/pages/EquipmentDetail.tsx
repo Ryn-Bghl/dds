@@ -3,12 +3,14 @@ import { ArrowLeft, Package, CheckCircle2, ShoppingCart } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { useEditor } from "../context/EditorContext";
+import { useCart } from "../context/CartContext";
 import { Editable } from "../components/Editable";
 import DetailContent from "../components/DetailContent";
 
 export default function EquipmentDetail() {
   const { id } = useParams();
   const { content } = useEditor();
+  const { addToCart } = useCart();
   const inventory = content.inventory;
   const itemIndex = inventory.findIndex((i) => i.id === id);
   const item = itemIndex !== -1 ? inventory[itemIndex] : null;
@@ -125,6 +127,7 @@ export default function EquipmentDetail() {
               <div className="pt-6 flex flex-wrap gap-4">
                 <Button
                   size="lg"
+                  onClick={() => item && addToCart(item)}
                   className="bg-[#8C0343] hover:bg-[#771236] text-white px-8 h-14 text-lg font-bold"
                 >
                   <ShoppingCart className="mr-2 w-5 h-5" />

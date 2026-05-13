@@ -362,6 +362,54 @@ export default function AdminSettings() {
           </CardContent>
         </Card>
 
+        {/* Rental Configuration */}
+        <Card className="bg-[#1a1a1a] border-gray-800">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Package className="w-5 h-5 text-[#F29F05]" />
+              <CardTitle className="text-white">Configuration Location</CardTitle>
+            </div>
+            <CardDescription className="text-gray-500">
+              Paramètres du système de demande de devis.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-gray-400">Email de réception des devis</Label>
+              <Input
+                value={content.settings.rental.rentalEmail || ""}
+                onChange={(e) =>
+                  handleUpdate("rental", "rentalEmail", e.target.value)
+                }
+                className="bg-[#262626] border-gray-700"
+                placeholder="contact@donsduson.fr"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-gray-400">Délai de réponse affiché</Label>
+              <Input
+                value={content.settings.rental.replyDelay || ""}
+                onChange={(e) =>
+                  handleUpdate("rental", "replyDelay", e.target.value)
+                }
+                className="bg-[#262626] border-gray-700"
+                placeholder="Ex: 72 heures"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-gray-400">Acompte par défaut (%)</Label>
+              <Input
+                value={content.settings.rental.defaultDeposit || ""}
+                onChange={(e) =>
+                  handleUpdate("rental", "defaultDeposit", e.target.value)
+                }
+                className="bg-[#262626] border-gray-700"
+                placeholder="Ex: 30%"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Partners Management */}
         <Card className="bg-[#1a1a1a] border-gray-800">
           <CardHeader>

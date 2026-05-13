@@ -142,6 +142,7 @@ export interface RentalRequest {
   email: string;
   phone: string;
   eventDate: string;
+  message?: string;
   status: "En attente" | "Validé" | "Refusé";
   totalPrice: number;
   items: { name: string; quantity: number; price: number }[];
@@ -171,6 +172,7 @@ export interface GlobalSettings {
   rental: {
     replyDelay: string;
     defaultDeposit: string;
+    rentalEmail: string;
   };
   advanced: {
     maintenanceMode: boolean;
@@ -492,6 +494,7 @@ export const initialContent: SiteContent = {
     rental: {
       replyDelay: "Vous recevrez un devis sous 72 heures",
       defaultDeposit: "30%",
+      rentalEmail: "contact@donsduson.fr",
     },
     advanced: {
       maintenanceMode: false,

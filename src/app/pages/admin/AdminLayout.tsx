@@ -11,16 +11,26 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import AdminBar from "../../components/admin/AdminBar";
+import { useEditor } from "../../context/EditorContext";
+import { Badge } from "../../components/ui/badge";
 
 export default function AdminLayout() {
   const location = useLocation();
   const { logout } = useAuth();
+  const { content } = useEditor();
+
+  const pendingRequests = content.rentalRequests?.filter(r => r.status === "En attente").length || 0;
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
     { icon: Music, label: "Projets", path: "/admin/projects" },
     { icon: Calendar, label: "Événements", path: "/admin/events" },
-    { icon: Package, label: "Location", path: "/admin/rental" },
+    { 
+      icon: Package, 
+      label: "Location", 
+      path: "/admin/rental",
+      badge: pendingRequests > 0 ? pendingRequests : null
+    },
     { icon: Settings, label: "Paramètres", path: "/admin/settings" },
   ];
 
@@ -55,7 +65,12 @@ export default function AdminLayout() {
               >
                 <item.icon className="w-4 h-4" />
                 {item.label}
-                {location.pathname === item.path && (
+                {item.badge && (
+                  <Badge className="ml-auto bg-[#F29F05] text-black border-none h-5 min-w-5 flex items-center justify-center p-0 px-1 text-[10px] font-bold">
+                    {item.badge}
+                  </Badge>
+                )}
+                {location.pathname === item.path && !item.badge && (
                   <ChevronRight className="w-4 h-4 ml-auto" />
                 )}
               </Link>

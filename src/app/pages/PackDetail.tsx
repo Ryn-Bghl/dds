@@ -3,12 +3,14 @@ import { ArrowLeft, Package, CheckCircle2, ShoppingCart, Wrench } from "lucide-r
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { useEditor } from "../context/EditorContext";
+import { useCart } from "../context/CartContext";
 import { Editable } from "../components/Editable";
 import DetailContent from "../components/DetailContent";
 
 export default function PackDetail() {
   const { id } = useParams();
   const { content } = useEditor();
+  const { addToCart } = useCart();
   const packs = content.rentalPacks || [];
   const packIndex = packs.findIndex((p) => p.id === id);
   const pack = packIndex !== -1 ? packs[packIndex] : null;
@@ -80,7 +82,11 @@ export default function PackDetail() {
               </Editable>
 
               <div className="pt-6">
-                <Button size="lg" className="w-full md:w-auto bg-[#8C0343] hover:bg-[#771236] text-white px-12 h-14 text-lg font-bold">
+                <Button 
+                  size="lg" 
+                  onClick={() => pack && addToCart(pack, true)}
+                  className="w-full md:w-auto bg-[#8C0343] hover:bg-[#771236] text-white px-12 h-14 text-lg font-bold"
+                >
                   <ShoppingCart className="mr-2 w-5 h-5" />
                   Ajouter le pack au devis
                 </Button>
