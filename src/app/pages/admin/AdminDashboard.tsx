@@ -64,7 +64,7 @@ export default function AdminDashboard() {
       icon: Package,
       title: "Location de Matériel",
       description: "Catalogue et demandes",
-      href: "/location",
+      href: "/admin/rental",
       color: "bg-orange-500/10 text-orange-400",
     },
     {

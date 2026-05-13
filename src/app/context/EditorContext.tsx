@@ -12,8 +12,8 @@ interface EditorContextType {
   isEditMode: boolean;
   toggleEditMode: () => void;
   content: SiteContent;
-  updateContent: (path: string, value: any) => void;
-  saveChanges: () => void;
+  updateContent: (path: string, value: any) => SiteContent;
+  saveChanges: (contentToSave?: SiteContent) => Promise<void>;
   discardChanges: () => void;
   hasUnsavedChanges: boolean;
   isLoading: boolean;
@@ -94,11 +94,15 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setContent(newContent);
     setHasUnsavedChanges(true);
+    return newContent; // Return the updated content object
   };
 
-  const saveChanges = async () => {
+  const saveChanges = async (contentToSave?: SiteContent) => {
+    // If contentToSave is an event (e.g. from onClick), ignore it and use current content
+    const dataToSave = (contentToSave && 'home' in contentToSave) ? contentToSave : content;
+    
     try {
-      await saveContent(content);
+      await saveContent(dataToSave);
       setHasUnsavedChanges(false);
       toast.success("Modifications enregistrées avec succès !");
     } catch (e) {

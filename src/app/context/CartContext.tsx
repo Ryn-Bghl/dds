@@ -22,7 +22,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { content, updateContent } = useEditor();
+  const { content, updateContent, saveChanges } = useEditor();
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -103,7 +103,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const currentRequests = content.rentalRequests || [];
-    updateContent("rentalRequests", [newRequest, ...currentRequests]);
+    const updatedContent = updateContent("rentalRequests", [newRequest, ...currentRequests]);
+    
+    // Auto-save the content so it persists in data.json
+    saveChanges(updatedContent);
 
     // Send email via mailto
     const rentalEmail = content.settings.rental.rentalEmail || content.settings.contact.email;
