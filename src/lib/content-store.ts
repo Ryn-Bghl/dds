@@ -206,6 +206,7 @@ export interface Partner {
   id: string;
   name: string;
   logoUrl: string;
+  websiteUrl?: string;
 }
 
 export interface SiteContent {
@@ -630,19 +631,17 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
   }
 
   // Validate association page
-  if (!repaired.association) {
-    repaired.association = initialContent.association;
-  } else {
+  if (repaired.association) {
     if (!Array.isArray(repaired.association.values)) {
       console.warn("Repairing corrupted association.values");
       repaired.association.values = initialContent.association.values;
     }
+  } else {
+    repaired.association = initialContent.association;
   }
 
   // Validate join page
-  if (!repaired.join) {
-    repaired.join = initialContent.join;
-  } else {
+  if (repaired.join) {
     if (!repaired.join.membership) {
       repaired.join.membership = initialContent.join.membership;
     } else if (!Array.isArray(repaired.join.membership.benefits)) {
@@ -657,6 +656,8 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
       console.warn("Repairing corrupted join.volunteering.tasks");
       repaired.join.volunteering.tasks = initialContent.join.volunteering.tasks;
     }
+  } else {
+    repaired.join = initialContent.join;
   }
 
   // Validate top-level arrays

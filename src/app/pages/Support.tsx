@@ -4,6 +4,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { useEditor } from "../context/EditorContext";
 import { Editable } from "../components/Editable";
+import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 
 export default function Support() {
   const { content } = useEditor();
@@ -11,8 +12,10 @@ export default function Support() {
   const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
 
   const handleDonation = (amount?: string) => {
-    const baseUrl = settings.links?.helloAssoDonation || "https://www.helloasso.com/associations/dons-du-son";
-    
+    const baseUrl =
+      settings.links?.helloAssoDonation ||
+      "https://www.helloasso.com/associations/dons-du-son";
+
     if (!amount || amount === "Libre") {
       window.open(baseUrl, "_blank");
       return;
@@ -20,7 +23,7 @@ export default function Support() {
 
     // Convert "20€" to "20"
     const numericAmount = amount.replace("€", "");
-    
+
     try {
       const url = new URL(baseUrl);
       // HelloAsso parameters vary, but 'amount' is a common one for pre-filling.
@@ -93,8 +96,8 @@ export default function Support() {
                     key={amount}
                     variant={selectedAmount === amount ? "default" : "outline"}
                     className={`border-border font-bold transition-all ${
-                      selectedAmount === amount 
-                        ? "bg-[#8C0343] text-white hover:bg-[#8C0343]/90" 
+                      selectedAmount === amount
+                        ? "bg-[#8C0343] text-white hover:bg-[#8C0343]/90"
                         : "hover:bg-[#8C0343] hover:text-white"
                     }`}
                     onClick={() => setSelectedAmount(amount)}
@@ -109,8 +112,8 @@ export default function Support() {
                 className="bg-[#8C0343] hover:bg-[#771236] w-full h-14 text-lg font-bold"
                 onClick={() => handleDonation(selectedAmount || undefined)}
               >
-                {selectedAmount && selectedAmount !== "Libre" 
-                  ? `Donner ${selectedAmount} via HelloAsso` 
+                {selectedAmount && selectedAmount !== "Libre"
+                  ? `Donner ${selectedAmount} via HelloAsso`
                   : "Faire un don via HelloAsso"}
               </Button>
               <p className="text-xs text-muted-foreground text-center italic">
@@ -170,19 +173,45 @@ export default function Support() {
           <h2 className="text-3xl font-bold mb-12 text-foreground">
             Ils nous font confiance
           </h2>
-          <div className="flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+          <div className="flex flex-wrap justify-center items-center gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
             {content.partners?.map((partner, idx) => (
-              <Editable key={partner.id} path={`partners.${idx}.logoUrl`} label="URL Logo Partenaire">
-                <img
-                  src={partner.logoUrl}
-                  alt={partner.name}
-                  className="h-12 w-32 object-contain"
-                />
-              </Editable>
+              <div key={partner.id} className="group relative">
+                <Editable
+                  path={`partners.${idx}.logoUrl`}
+                  type="image"
+                  label="Logo Partenaire"
+                >
+                  {partner.websiteUrl ? (
+                    <a 
+                      href={partner.websiteUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="block transition-transform hover:scale-110"
+                      title={partner.name}
+                    >
+                      <ImageWithFallback
+                        src={partner.logoUrl}
+                        alt={`Logo de ${partner.name}`}
+                        className="h-48 w-48 object-contain"
+                      />
+                    </a>
+                  ) : (
+                    <ImageWithFallback
+                      src={partner.logoUrl}
+                      alt={`Logo de ${partner.name}`}
+                      title={partner.name}
+                      className="h-48 w-48 object-contain transition-transform hover:scale-110"
+                    />
+                  )}
+                </Editable>
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-[#F29F05] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  {partner.name}
+                </span>
+              </div>
             ))}
-            </div>
-            </div>
-            </section>
-            </div>
-            );
-            }
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

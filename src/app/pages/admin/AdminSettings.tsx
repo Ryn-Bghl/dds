@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../components/ui/dialog";
+import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
 
 export default function AdminSettings() {
   const { content, updateContent, saveChanges } = useEditor();
@@ -41,7 +42,7 @@ export default function AdminSettings() {
   };
 
   const handleAddPartnerClick = () => {
-    setEditingPartner({ id: Date.now().toString(), name: "", logoUrl: "" });
+    setEditingPartner({ id: Date.now().toString(), name: "", logoUrl: "", websiteUrl: "" });
     setIsPartnerDialogOpen(true);
   };
 
@@ -64,18 +65,21 @@ export default function AdminSettings() {
       return;
     }
 
+    const currentPartners = content.partners || [];
     let newPartners;
-    if (content.partners.find(p => p.id === editingPartner.id)) {
-      // Edit existing partner
-      newPartners = content.partners.map((p) =>
+    
+    if (currentPartners.find(p => p.id === editingPartner.id)) {
+      // Edit existing partner - creating a new array
+      newPartners = currentPartners.map((p) =>
         p.id === editingPartner.id ? (editingPartner as Partner) : p
       );
       toast.success("Partenaire mis à jour");
     } else {
-      // Add new partner
-      newPartners = [...content.partners, editingPartner as Partner];
+      // Add new partner - creating a new array
+      newPartners = [...currentPartners, editingPartner as Partner];
       toast.success("Nouveau partenaire ajouté");
     }
+    
     updateContent("partners", newPartners);
     setIsPartnerDialogOpen(false);
     setEditingPartner(null);
@@ -376,8 +380,15 @@ export default function AdminSettings() {
                 className="flex items-center justify-between p-3 rounded-lg bg-[#262626] border border-gray-700"
               >
                 <div className="flex items-center gap-3">
-                  <img src={partner.logoUrl} alt={partner.name} className="h-8 w-auto object-contain" />
-                  <span className="text-white">{partner.name}</span>
+                  <ImageWithFallback src={partner.logoUrl} alt={partner.name} className="h-8 w-auto object-contain" />
+                  <div className="flex flex-col">
+                    <span className="text-white font-medium">{partner.name}</span>
+                    {partner.websiteUrl && (
+                      <span className="text-xs text-gray-500 truncate max-w-[150px]">
+                        {partner.websiteUrl}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -446,10 +457,24 @@ export default function AdminSettings() {
                 placeholder="https://via.placeholder.com/150x50"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="partner-website-url">URL du site web (Optionnel)</Label>
+              <Input
+                id="partner-website-url"
+                value={editingPartner?.websiteUrl || ""}
+                onChange={(e) =>
+                  setEditingPartner((prev) => ({ ...prev, websiteUrl: e.target.value }))
+                }
+                className="col-span-3 bg-background border-border"
+                placeholder="https://www.partenaire.fr"
+              />
+            </div>
             {editingPartner?.logoUrl && (
               <div className="space-y-2">
                 <Label>Aperçu du logo</Label>
-                <img src={editingPartner.logoUrl} alt="Logo preview" className="h-16 w-auto object-contain border border-border p-2 rounded-md" />
+                <div className="h-16 w-full flex items-center justify-center border border-border p-2 rounded-md overflow-hidden">
+                   <ImageWithFallback src={editingPartner.logoUrl} alt="Logo preview" className="h-full w-auto object-contain" />
+                </div>
               </div>
             )}
           </div>

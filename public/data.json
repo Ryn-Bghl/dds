@@ -445,5 +445,31 @@
       "bio": "Ingénieur du son expérimenté veillant sur notre parc matériel.",
       "imageUrl": ""
     }
+  ],
+  "partners": [
+    {
+      "id": "1778142350707",
+      "name": "KAIROS",
+      "logoUrl": "https://picsum.photos/500",
+      "websiteUrl": "https://www.instagram.com/kairoslevrai/"
+    },
+    {
+      "id": "1778160714828",
+      "name": "KAIROS",
+      "logoUrl": "https://picsum.photos/500",
+      "websiteUrl": ""
+    },
+    {
+      "id": "1778160736709",
+      "name": "KAIROS",
+      "logoUrl": "https://picsum.photos/500",
+      "websiteUrl": ""
+    },
+    {
+      "id": "1778160741900",
+      "name": "KAIROS",
+      "logoUrl": "https://picsum.photos/500",
+      "websiteUrl": ""
+    }
   ]
 }
