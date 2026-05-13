@@ -559,6 +559,10 @@ export default function EquipmentRental() {
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
+                    Acompte de {content.settings.rental.defaultDeposit} à la réservation
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
                     Caution remboursable selon matériel
                   </li>
                 </ul>
