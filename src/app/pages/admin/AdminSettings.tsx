@@ -24,6 +24,7 @@ import {
   Youtube,
   ShieldAlert,
   Trash2,
+  Package,
   Link as LinkIcon,
 } from "lucide-react";
 import { toast } from "sonner";
