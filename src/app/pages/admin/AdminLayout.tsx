@@ -8,6 +8,8 @@ import {
   Home,
   LogOut,
   ChevronRight,
+  Users,
+  HelpCircle,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import AdminBar from "../../components/admin/AdminBar";
@@ -31,7 +33,9 @@ export default function AdminLayout() {
       path: "/admin/rental",
       badge: pendingRequests > 0 ? pendingRequests : null
     },
+    { icon: Users, label: "Équipe", path: "/admin/team" },
     { icon: Settings, label: "Paramètres", path: "/admin/settings" },
+    { icon: HelpCircle, label: "Guide d'aide", path: "/admin/help" },
   ];
 
   return (

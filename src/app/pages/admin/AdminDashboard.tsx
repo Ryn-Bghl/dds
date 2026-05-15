@@ -245,7 +245,7 @@ export default function AdminDashboard() {
              <h3 className="text-[#F29F05] font-bold mb-2">Besoin d'aide ?</h3>
              <p className="text-sm text-gray-400 mb-4">Consultez le guide administrateur pour apprendre à gérer vos contenus.</p>
              <Button variant="link" className="p-0 h-auto text-[#F29F05] hover:text-[#D96704]" asChild>
-                <Link to="/">Voir le guide simple →</Link>
+                <Link to="/admin/help">Voir le guide complet →</Link>
              </Button>
           </div>
         </div>
