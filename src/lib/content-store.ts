@@ -143,7 +143,7 @@ export interface RentalRequest {
   phone: string;
   eventDate: string;
   message?: string;
-  status: "En attente" | "Validé" | "Refusé";
+  status: "En attente" | "Validé" | "Refusé" | "Annulé";
   totalPrice: number;
   items: { name: string; quantity: number; price: number }[];
   createdAt: string;

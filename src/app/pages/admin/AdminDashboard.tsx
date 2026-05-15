@@ -149,6 +149,7 @@ export default function AdminDashboard() {
                       <Badge variant="outline" className={
                         req.status === "En attente" ? "border-orange-500/50 text-orange-500 bg-orange-500/10" :
                         req.status === "Validé" ? "border-green-500/50 text-green-500 bg-green-500/10" :
+                        req.status === "Annulé" ? "border-gray-500/50 text-gray-400 bg-gray-500/10" :
                         "border-red-500/50 text-red-500 bg-red-500/10"
                       }>
                         {req.status}

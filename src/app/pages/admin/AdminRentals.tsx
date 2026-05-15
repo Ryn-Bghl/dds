@@ -172,6 +172,7 @@ export default function AdminRentals() {
         );
       case "Indisponible":
       case "Refusé":
+      case "Annulé":
         return (
           <Badge className="bg-red-500/20 text-red-500 border-red-500/30">
             {status}
@@ -457,6 +458,9 @@ export default function AdminRentals() {
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleUpdateRequestStatus(selectedRequest.id, "Refusé")}>
                               <XCircleIcon className="w-4 h-4 mr-2 text-red-500" /> Refusé
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleUpdateRequestStatus(selectedRequest.id, "Annulé")}>
+                              <XCircleIcon className="w-4 h-4 mr-2 text-gray-400" /> Annulé
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
