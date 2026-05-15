@@ -160,9 +160,9 @@ export default function EquipmentRental() {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-full sm:max-w-lg overflow-y-auto bg-card border-l border-border">
+              <SheetContent className="w-full sm:max-w-lg overflow-y-auto bg-card border-l border-border p-0">
                 {isSubmitted ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-12">
+                  <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-12 px-6">
                     <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center text-green-500">
                       <CheckCircle2 className="w-12 h-12" />
                     </div>
@@ -183,186 +183,209 @@ export default function EquipmentRental() {
                     </Button>
                   </div>
                 ) : (
-                  <>
-                    <SheetHeader>
+                  <div className="flex flex-col h-full">
+                    <SheetHeader className="px-6 py-6 border-b border-border bg-background/50">
                       <SheetTitle className="text-foreground font-bold text-2xl">
                         Panier de devis
                       </SheetTitle>
                     </SheetHeader>
 
-                    <div className="mt-6 space-y-4">
+                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
                       {cart.length === 0 ? (
-                        <p className="text-center text-muted-foreground py-8">
-                          Votre panier est vide
-                        </p>
+                        <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12 opacity-50">
+                          <ShoppingCart className="w-12 h-12 text-gray-500" />
+                          <p className="text-muted-foreground font-medium">
+                            Votre panier est vide
+                          </p>
+                        </div>
                       ) : (
                         <>
-                          {cart.map((item) => (
-                            <Card
-                              key={item.id}
-                              className="border-border bg-background"
-                            >
-                              <CardContent className="p-4">
-                                <div className="flex gap-4">
-                                  <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="w-20 h-20 object-cover rounded"
-                                  />
-                                  <div className="flex-1">
-                                    <h4 className="font-bold mb-1 text-foreground">
-                                      {item.name}
-                                    </h4>
-                                    <p className="text-sm text-[#F29F05] mb-2 font-medium">
-                                      {item.price}€/jour
-                                    </p>
-                                    <div className="flex items-center gap-2">
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() =>
-                                          updateQuantity(item.id, -1)
-                                        }
-                                        className="h-8 w-8 p-0"
-                                      >
-                                        <Minus className="w-3 h-3" />
-                                      </Button>
-                                      <span className="w-8 text-center text-foreground font-bold">
-                                        {item.quantity}
-                                      </span>
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() =>
-                                          updateQuantity(item.id, 1)
-                                        }
-                                        className="h-8 w-8 p-0"
-                                      >
-                                        <Plus className="w-3 h-3" />
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => removeFromCart(item.id)}
-                                        className="ml-auto text-red-500 hover:text-red-400 hover:bg-red-500/10"
-                                      >
-                                        <Trash2 className="w-4 h-4" />
-                                      </Button>
+                          <div className="space-y-4">
+                            {cart.map((item) => (
+                              <Card
+                                key={item.id}
+                                className="border-border bg-background overflow-hidden"
+                              >
+                                <CardContent className="p-4">
+                                  <div className="flex gap-4">
+                                    <img
+                                      src={item.image}
+                                      alt={item.name}
+                                      className="w-20 h-20 object-cover rounded"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <h4 className="font-bold mb-1 text-foreground truncate">
+                                        {item.name}
+                                      </h4>
+                                      <p className="text-sm text-[#F29F05] mb-2 font-medium">
+                                        {item.price}€/jour
+                                      </p>
+                                      <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-1 bg-black/20 rounded-md p-1">
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() =>
+                                              updateQuantity(item.id, -1)
+                                            }
+                                            className="h-7 w-7 p-0 hover:bg-white/10"
+                                          >
+                                            <Minus className="w-3 h-3" />
+                                          </Button>
+                                          <span className="w-6 text-center text-foreground font-bold text-sm">
+                                            {item.quantity}
+                                          </span>
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() =>
+                                              updateQuantity(item.id, 1)
+                                            }
+                                            className="h-7 w-7 p-0 hover:bg-white/10"
+                                          >
+                                            <Plus className="w-3 h-3" />
+                                          </Button>
+                                        </div>
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => removeFromCart(item.id)}
+                                          className="ml-auto text-red-500 hover:text-red-400 hover:bg-red-500/10 h-8 w-8 p-0"
+                                        >
+                                          <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
 
-                          <Separator className="bg-border" />
-
-                          <div className="text-right">
-                            <p className="text-sm text-muted-foreground mb-1 font-medium">
-                              Total estimé (1 jour)
-                            </p>
-                            <p className="text-4xl text-[#F29F05] font-bold">
-                              {getTotalPrice()}€
+                          <div className="bg-[#8C0343]/5 p-6 rounded-xl border border-[#8C0343]/20 space-y-2">
+                            <div className="flex justify-between items-end">
+                              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
+                                Total estimé (1 jour)
+                              </p>
+                              <p className="text-4xl text-[#F29F05] font-bold leading-none">
+                                {getTotalPrice()}€
+                              </p>
+                            </div>
+                            <p className="text-[10px] text-gray-500 italic">
+                              * Ce total est une estimation journalière hors frais de livraison ou services techniques.
                             </p>
                           </div>
 
-                          <form
-                            onSubmit={handleSubmitQuote}
-                            className="space-y-4 pt-4 border-t border-border mt-4"
-                          >
-                            <div className="space-y-2">
-                              <Label htmlFor="quote-name">Nom *</Label>
-                              <Input
-                                id="quote-name"
-                                required
-                                value={quoteForm.name}
-                                onChange={(e) =>
-                                  setQuoteForm({
-                                    ...quoteForm,
-                                    name: e.target.value,
-                                  })
-                                }
-                                className="bg-background"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="quote-email">Email *</Label>
-                              <Input
-                                id="quote-email"
-                                type="email"
-                                required
-                                value={quoteForm.email}
-                                onChange={(e) =>
-                                  setQuoteForm({
-                                    ...quoteForm,
-                                    email: e.target.value,
-                                  })
-                                }
-                                className="bg-background"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="quote-phone">Téléphone</Label>
-                              <Input
-                                id="quote-phone"
-                                type="tel"
-                                value={quoteForm.phone}
-                                onChange={(e) =>
-                                  setQuoteForm({
-                                    ...quoteForm,
-                                    phone: e.target.value,
-                                  })
-                                }
-                                className="bg-background"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="quote-date">
-                                Date de l'événement *
-                              </Label>
-                              <Input
-                                id="quote-date"
-                                type="date"
-                                required
-                                value={quoteForm.eventDate}
-                                onChange={(e) =>
-                                  setQuoteForm({
-                                    ...quoteForm,
-                                    eventDate: e.target.value,
-                                  })
-                                }
-                                className="bg-background"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="quote-message">Message</Label>
-                              <Textarea
-                                id="quote-message"
-                                rows={3}
-                                value={quoteForm.message}
-                                onChange={(e) =>
-                                  setQuoteForm({
-                                    ...quoteForm,
-                                    message: e.target.value,
-                                  })
-                                }
-                                placeholder="Détails sur votre événement..."
-                                className="bg-background"
-                              />
-                            </div>
-                            <Button
-                              type="submit"
-                              className="w-full bg-[#8C0343] hover:bg-[#771236] text-white font-bold h-12"
-                              size="lg"
+                          <div className="space-y-6 pt-2">
+                            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                              <Send className="w-4 h-4 text-[#F29F05]" />
+                              Finaliser ma demande
+                            </h3>
+                            <form
+                              onSubmit={handleSubmitQuote}
+                              className="space-y-4"
                             >
-                              <Send className="mr-2 w-4 h-4" />
-                              Envoyer la demande de devis
-                            </Button>
-                          </form>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="quote-name">Nom complet *</Label>
+                                  <Input
+                                    id="quote-name"
+                                    required
+                                    value={quoteForm.name}
+                                    onChange={(e) =>
+                                      setQuoteForm({
+                                        ...quoteForm,
+                                        name: e.target.value,
+                                      })
+                                    }
+                                    className="bg-background border-border h-11"
+                                    placeholder="Ex: Jean Dupont"
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="quote-email">Email *</Label>
+                                  <Input
+                                    id="quote-email"
+                                    type="email"
+                                    required
+                                    value={quoteForm.email}
+                                    onChange={(e) =>
+                                      setQuoteForm({
+                                        ...quoteForm,
+                                        email: e.target.value,
+                                      })
+                                    }
+                                    className="bg-background border-border h-11"
+                                    placeholder="jean@exemple.fr"
+                                  />
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="quote-phone">Téléphone</Label>
+                                  <Input
+                                    id="quote-phone"
+                                    type="tel"
+                                    value={quoteForm.phone}
+                                    onChange={(e) =>
+                                      setQuoteForm({
+                                        ...quoteForm,
+                                        phone: e.target.value,
+                                      })
+                                    }
+                                    className="bg-background border-border h-11"
+                                    placeholder="06 12 34 56 78"
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="quote-date">
+                                    Date de l'événement *
+                                  </Label>
+                                  <Input
+                                    id="quote-date"
+                                    type="date"
+                                    required
+                                    value={quoteForm.eventDate}
+                                    onChange={(e) =>
+                                      setQuoteForm({
+                                        ...quoteForm,
+                                        eventDate: e.target.value,
+                                      })
+                                    }
+                                    className="bg-background border-border h-11"
+                                  />
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="quote-message">Message ou besoins spécifiques</Label>
+                                <Textarea
+                                  id="quote-message"
+                                  rows={4}
+                                  value={quoteForm.message}
+                                  onChange={(e) =>
+                                    setQuoteForm({
+                                      ...quoteForm,
+                                      message: e.target.value,
+                                    })
+                                  }
+                                  placeholder="Détails sur votre événement, horaires, lieu de livraison..."
+                                  className="bg-background border-border resize-none"
+                                />
+                              </div>
+                              <Button
+                                type="submit"
+                                className="w-full bg-[#8C0343] hover:bg-[#771236] text-white font-bold h-12 text-lg shadow-lg shadow-[#8C0343]/20"
+                                size="lg"
+                              >
+                                <Send className="mr-2 w-4 h-4" />
+                                Envoyer la demande de devis
+                              </Button>
+                            </form>
+                          </div>
                         </>
                       )}
                     </div>
-                  </>
+                  </div>
                 )}
               </SheetContent>
             </Sheet>
