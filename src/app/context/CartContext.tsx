@@ -13,7 +13,9 @@ interface CartContextType {
   clearCart: () => void;
   getTotalPrice: () => number;
   submitQuote: (form: { name: string; email: string; phone: string; eventDate: string; message: string }) => void;
+  cancelLastRequest: () => Promise<void>;
   isSubmitted: boolean;
+  lastRequestId: string | null;
   setIsSubmitted: (val: boolean) => void;
 }
 
@@ -22,6 +24,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [lastRequestId, setLastRequestId] = useState<string | null>(null);
   const { content, updateContent, saveChanges } = useEditor();
 
   // Load cart from localStorage on mount
@@ -107,6 +110,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // 1. On attend impérativement que la sauvegarde soit confirmée
     await saveChanges(updatedContent);
+    setLastRequestId(newRequest.id);
 
     // 2. On prépare le mail
     const rentalEmail = content.settings.rental.rentalEmail || content.settings.contact.email;
@@ -133,6 +137,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     clearCart();
   };
 
+  const cancelLastRequest = async () => {
+    if (!lastRequestId) return;
+
+    if (window.confirm("Voulez-vous vraiment annuler votre demande de devis ?")) {
+      const currentRequests = content.rentalRequests || [];
+      const updatedRequests = currentRequests.filter(r => r.id !== lastRequestId);
+      const updatedContent = updateContent("rentalRequests", updatedRequests);
+      
+      try {
+        await saveChanges(updatedContent);
+        setLastRequestId(null);
+        setIsSubmitted(false);
+        toast.info("Demande annulée avec succès");
+      } catch (e) {
+        toast.error("Erreur lors de l'annulation");
+      }
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -143,7 +166,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         clearCart,
         getTotalPrice,
         submitQuote,
+        cancelLastRequest,
         isSubmitted,
+        lastRequestId,
         setIsSubmitted,
       }}
     >

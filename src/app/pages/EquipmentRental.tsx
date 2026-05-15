@@ -55,6 +55,7 @@ export default function EquipmentRental() {
     removeFromCart,
     getTotalPrice,
     submitQuote,
+    cancelLastRequest,
     isSubmitted,
     setIsSubmitted,
   } = useCart();
@@ -175,12 +176,22 @@ export default function EquipmentRental() {
                         Notre équipe vous contactera sous 72 heures.
                       </p>
                     </div>
-                    <Button
-                      onClick={() => setIsSubmitted(false)}
-                      className="bg-[#8C0343] hover:bg-[#771236]"
-                    >
-                      Fermer
-                    </Button>
+                    <div className="flex flex-col w-full gap-3">
+                      <Button
+                        onClick={() => setIsSubmitted(false)}
+                        className="bg-[#8C0343] hover:bg-[#771236]"
+                      >
+                        Fermer le panier
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={cancelLastRequest}
+                        className="text-gray-500 hover:text-red-400 hover:bg-red-900/10"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Annuler ma demande (Erreur ?)
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex flex-col h-full">
