@@ -15,11 +15,11 @@ import { toast } from "sonner";
 import BlockEditor from "../../components/admin/BlockEditor";
 
 export default function AdminProjects() {
-  const { content, updateContent } = useEditor();
+  const { content, updateContent, saveChanges } = useEditor();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Project | null>(null);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const newProject: Project = {
       id: `project-${Date.now()}`,
       title: "Nouveau Projet",
@@ -32,16 +32,18 @@ export default function AdminProjects() {
       stats: [],
       content: [],
     };
-    updateContent("projects", [newProject, ...content.projects]);
+    const newContent = updateContent("projects", [newProject, ...content.projects]);
+    await saveChanges(newContent);
     toast.success("Projet ajouté");
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm("Supprimer ce projet ?")) {
-      updateContent(
+      const newContent = updateContent(
         "projects",
         content.projects.filter((p) => p.id !== id),
       );
+      await saveChanges(newContent);
       toast.success("Projet supprimé");
     }
   };
@@ -51,12 +53,13 @@ export default function AdminProjects() {
     setEditForm({ ...project });
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (editForm) {
       const newProjects = content.projects.map((p) =>
         p.id === editForm.id ? editForm : p,
       );
-      updateContent("projects", newProjects);
+      const newContent = updateContent("projects", newProjects);
+      await saveChanges(newContent);
       setEditingId(null);
       setEditForm(null);
       toast.success("Projet mis à jour");

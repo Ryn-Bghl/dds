@@ -43,14 +43,14 @@ import { toast } from "sonner";
 import BlockEditor from "../../components/admin/BlockEditor";
 
 export default function AdminPacks() {
-  const { content, updateContent } = useEditor();
+  const { content, updateContent, saveChanges } = useEditor();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingPack, setEditingPack] = useState<Partial<RentalPack> | null>(null);
 
   const packs = content.rentalPacks || [];
   const inventory = content.inventory || [];
 
-  const handleSavePack = () => {
+  const handleSavePack = async () => {
     if (!editingPack?.name || !editingPack?.price) {
       toast.error("Veuillez remplir les champs obligatoires");
       return;
@@ -62,7 +62,6 @@ export default function AdminPacks() {
       newPacks = packs.map((pack) =>
         pack.id === editingPack.id ? (editingPack as RentalPack) : pack,
       );
-      toast.success("Pack mis à jour");
     } else {
       // Add new
       const newPack = {
@@ -74,18 +73,19 @@ export default function AdminPacks() {
         content: editingPack.content || [],
       } as RentalPack;
       newPacks = [newPack, ...packs];
-      toast.success("Nouveau pack ajouté");
     }
 
-    updateContent("rentalPacks", newPacks);
+    const newContent = updateContent("rentalPacks", newPacks);
+    await saveChanges(newContent);
     setIsEditDialogOpen(false);
     setEditingPack(null);
   };
 
-  const handleDeletePack = (id: string) => {
+  const handleDeletePack = async (id: string) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce pack ?")) {
       const newPacks = packs.filter((pack) => pack.id !== id);
-      updateContent("rentalPacks", newPacks);
+      const newContent = updateContent("rentalPacks", newPacks);
+      await saveChanges(newContent);
       toast.info("Pack supprimé");
     }
   };

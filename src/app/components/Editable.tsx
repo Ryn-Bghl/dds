@@ -67,7 +67,7 @@ export const Editable: React.FC<EditableProps> = ({
       e.preventDefault();
       e.stopPropagation();
     }
-    updateContent(path, tempValue);
+    updateContent(path, tempValue, true);
     setActiveEditorId(null);
   };
 

@@ -62,7 +62,7 @@ export default function AdminTeam() {
     setNewMember((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddMember = () => {
+  const handleAddMember = async () => {
     if (
       !newMember.name.trim() ||
       !newMember.role.trim() ||
@@ -73,12 +73,13 @@ export default function AdminTeam() {
     }
     const memberToAdd: TeamMember = { ...newMember, id: generateUniqueId() };
     const updatedTeamMembers = [...(content.teamMembers || []), memberToAdd];
-    updateContent("teamMembers", updatedTeamMembers);
+    const newContent = updateContent("teamMembers", updatedTeamMembers);
+    await saveChanges(newContent);
     setNewMember({ id: "", name: "", role: "", bio: "", imageUrl: "" }); // Clear form
     toast.success(`Le membre "${memberToAdd.name}" a été ajouté avec succès!`);
   };
 
-  const handleUpdateMember = () => {
+  const handleUpdateMember = async () => {
     if (
       !editingMember ||
       !newMember.name.trim() ||
@@ -93,19 +94,21 @@ export default function AdminTeam() {
         ? { ...newMember, id: editingMember.id }
         : member,
     );
-    updateContent("teamMembers", updatedTeamMembers);
+    const newContent = updateContent("teamMembers", updatedTeamMembers);
+    await saveChanges(newContent);
     setEditingMember(null); // Exit editing mode
     toast.success(
       `Le membre "${newMember.name}" a été mis à jour avec succès!`,
     );
   };
 
-  const handleDeleteMember = (id: string) => {
+  const handleDeleteMember = async (id: string) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce membre ?")) {
       const updatedTeamMembers = (content.teamMembers || []).filter(
         (member) => member.id !== id,
       );
-      updateContent("teamMembers", updatedTeamMembers);
+      const newContent = updateContent("teamMembers", updatedTeamMembers);
+      await saveChanges(newContent);
       if (editingMember && editingMember.id === id) {
         setEditingMember(null);
       }
@@ -121,11 +124,6 @@ export default function AdminTeam() {
   const handleCancelEdit = () => {
     setEditingMember(null);
     setNewMember({ id: "", name: "", role: "", bio: "", imageUrl: "" });
-  };
-
-  const handleSave = async () => {
-    await saveChanges();
-    toast.success("Tous les changements pour l'équipe ont été sauvegardés.");
   };
 
   // Ensure teamMembers array exists
@@ -290,20 +288,6 @@ export default function AdminTeam() {
           )}
         </CardContent>
       </Card>
-
-      <div className="flex justify-end pt-8 border-t border-gray-800">
-        <Button
-          size="lg"
-          onClick={handleSave}
-          className="bg-[#8C0343] hover:bg-[#771236] text-white px-12"
-          disabled={!content.teamMembers || content.teamMembers.length === 0}
-        >
-          <Save className="w-4 h-4 mr-2" />{" "}
-          {content.teamMembers && content.teamMembers.length > 0
-            ? "Enregistrer les changements de l'équipe"
-            : "Aucun changement à enregistrer"}
-        </Button>
-      </div>
     </div>
   );
 }

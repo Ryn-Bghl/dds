@@ -12,10 +12,11 @@ interface EditorContextType {
   isEditMode: boolean;
   toggleEditMode: () => void;
   content: SiteContent;
-  updateContent: (path: string, value: any) => SiteContent;
+  updateContent: (path: string, value: any, isLive?: boolean) => SiteContent;
   saveChanges: (contentToSave?: SiteContent) => Promise<void>;
   discardChanges: () => void;
   hasUnsavedChanges: boolean;
+  hasUnsavedLiveChanges: boolean;
   isLoading: boolean;
   activeEditorId: string | null;
   setActiveEditorId: (id: string | null) => void;
@@ -30,6 +31,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isEditMode, setIsEditMode] = useState(false);
   const [content, setContent] = useState<SiteContent>(initialContent);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [hasUnsavedLiveChanges, setHasUnsavedLiveChanges] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeEditorId, setActiveEditorId] = useState<string | null>(null);
 
@@ -61,7 +63,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsEditMode(!isEditMode);
   };
 
-  const updateContent = (path: string, value: any) => {
+  const updateContent = (path: string, value: any, isLive: boolean = false) => {
     const keys = path.split(".");
     const newContent = { ...content };
     let current: any = newContent;
@@ -94,6 +96,9 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setContent(newContent);
     setHasUnsavedChanges(true);
+    if (isLive) {
+      setHasUnsavedLiveChanges(true);
+    }
     return newContent; // Return the updated content object
   };
 
@@ -104,6 +109,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       await saveContent(dataToSave);
       setHasUnsavedChanges(false);
+      setHasUnsavedLiveChanges(false);
       toast.success("Modifications enregistrées avec succès !");
     } catch (e) {
       toast.error("Erreur lors de la sauvegarde");
@@ -118,6 +124,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
           const loadedContent = await loadContent();
           setContent(loadedContent);
           setHasUnsavedChanges(false);
+          setHasUnsavedLiveChanges(false);
           toast.info("Modifications annulées");
         } catch (e) {
           console.error("Failed to reload content", e);
@@ -137,6 +144,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({
         saveChanges,
         discardChanges,
         hasUnsavedChanges,
+        hasUnsavedLiveChanges,
         isLoading,
         activeEditorId,
         setActiveEditorId,

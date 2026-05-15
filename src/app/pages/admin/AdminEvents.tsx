@@ -20,11 +20,11 @@ import { Switch } from "../../components/ui/switch";
 import BlockEditor from "../../components/admin/BlockEditor";
 
 export default function AdminEvents() {
-  const { content, updateContent } = useEditor();
+  const { content, updateContent, saveChanges } = useEditor();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<Event | null>(null);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const newEvent: Event = {
       id: Date.now(),
       title: "Nouvel Événement",
@@ -36,17 +36,20 @@ export default function AdminEvents() {
       image:
         "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800",
       isPast: false,
+      content: [],
     };
-    updateContent("events", [newEvent, ...content.events]);
+    const newContent = updateContent("events", [newEvent, ...content.events]);
+    await saveChanges(newContent);
     toast.success("Événement ajouté");
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm("Supprimer cet événement ?")) {
-      updateContent(
+      const newContent = updateContent(
         "events",
         content.events.filter((e) => e.id !== id),
       );
+      await saveChanges(newContent);
       toast.success("Événement supprimé");
     }
   };
@@ -56,12 +59,13 @@ export default function AdminEvents() {
     setEditForm({ ...event });
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (editForm) {
       const newEvents = content.events.map((e) =>
         e.id === editForm.id ? editForm : e,
       );
-      updateContent("events", newEvents);
+      const newContent = updateContent("events", newEvents);
+      await saveChanges(newContent);
       setEditingId(null);
       setEditForm(null);
       toast.success("Événement mis à jour");

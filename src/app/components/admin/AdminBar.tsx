@@ -18,7 +18,7 @@ export default function AdminBar() {
   const {
     isEditMode,
     toggleEditMode,
-    hasUnsavedChanges,
+    hasUnsavedLiveChanges,
     saveChanges,
     discardChanges,
   } = useEditor();
@@ -57,7 +57,7 @@ export default function AdminBar() {
             <span>{isEditMode ? "Édition Active" : "Modifier la page"}</span>
           </button>
 
-          {hasUnsavedChanges && (
+          {hasUnsavedLiveChanges && (
             <div className="flex items-center gap-1 bg-white/5 p-0.5 rounded border border-white/10 ml-2 animate-in fade-in slide-in-from-left-2 duration-300">
               <Button
                 size="sm"

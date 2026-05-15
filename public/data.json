@@ -313,7 +313,7 @@
     },
     "rental": {
       "replyDelay": "Vous recevrez un devis sous 72 heures",
-      "defaultDeposit": "30%"
+      "defaultDeposit": "0"
     },
     "advanced": {
       "maintenanceMode": false

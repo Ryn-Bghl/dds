@@ -64,7 +64,7 @@ const categoryIcons = {
 };
 
 export default function AdminRentals() {
-  const { content, updateContent } = useEditor();
+  const { content, updateContent, saveChanges } = useEditor();
   const [categoryFilter, setCategoryFilter] = useState("Tous");
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Partial<InventoryItem> | null>(
@@ -90,7 +90,7 @@ export default function AdminRentals() {
 
   const activeFiltersCount = categoryFilter !== "Tous" ? 1 : 0;
 
-  const handleSaveItem = () => {
+  const handleSaveItem = async () => {
     if (!editingItem?.name || !editingItem?.category || !editingItem?.price) {
       toast.error("Veuillez remplir les champs obligatoires");
       return;
@@ -112,7 +112,6 @@ export default function AdminRentals() {
       newInventory = inventory.map((item) =>
         item.id === editingItem.id ? (itemToSave as InventoryItem) : item,
       );
-      toast.success("Matériel mis à jour");
     } else {
       // Add new
       const newItem = {
@@ -123,37 +122,40 @@ export default function AdminRentals() {
         stock: editingItem.stock || 1,
       } as InventoryItem;
       newInventory = [newItem, ...inventory];
-      toast.success("Nouveau matériel ajouté");
     }
 
-    updateContent("inventory", newInventory);
+    const newContent = updateContent("inventory", newInventory);
+    await saveChanges(newContent);
     setIsEditDialogOpen(false);
     setEditingItem(null);
   };
 
-  const handleDeleteItem = (id: string) => {
+  const handleDeleteItem = async (id: string) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce matériel ?")) {
       const newInventory = inventory.filter((item) => item.id !== id);
-      updateContent("inventory", newInventory);
+      const newContent = updateContent("inventory", newInventory);
+      await saveChanges(newContent);
       toast.info("Matériel supprimé");
     }
   };
 
-  const handleUpdateRequestStatus = (id: string, status: RentalRequest["status"]) => {
+  const handleUpdateRequestStatus = async (id: string, status: RentalRequest["status"]) => {
     const newRequests = rentalRequests.map((req) =>
       req.id === id ? { ...req, status } : req
     );
-    updateContent("rentalRequests", newRequests);
+    const newContent = updateContent("rentalRequests", newRequests);
+    await saveChanges(newContent);
     toast.success(`Statut de la demande mis à jour: ${status}`);
     if (selectedRequest?.id === id) {
       setSelectedRequest({ ...selectedRequest, status });
     }
   };
 
-  const handleDeleteRequest = (id: string) => {
+  const handleDeleteRequest = async (id: string) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette demande ?")) {
       const newRequests = rentalRequests.filter((req) => req.id !== id);
-      updateContent("rentalRequests", newRequests);
+      const newContent = updateContent("rentalRequests", newRequests);
+      await saveChanges(newContent);
       toast.info("Demande supprimée");
       if (selectedRequest?.id === id) setSelectedRequest(null);
     }
