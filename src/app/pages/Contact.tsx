@@ -414,7 +414,7 @@ export default function Contact() {
                     path="contact.faq.rental.question"
                     label="Location Matériel Q"
                   >
-                    Quelle est la procédure pour louer du matériel ?
+                    Quelles sont les modalités pour louer du matériel ?
                   </Editable>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -423,9 +423,7 @@ export default function Contact() {
                     type="textarea"
                     label="Location Matériel A"
                   >
-                    Pour louer du matériel, consultez notre page "Location de
-                    matériel". Vous y trouverez notre catalogue, les tarifs et
-                    un formulaire de demande.
+                    La location est ouverte à tous. Il suffit de sélectionner vos articles dans notre catalogue, de valider votre panier de devis, et nous vous répondrons sous 72h avec un devis détaillé incluant les éventuels frais de livraison.
                   </Editable>
                 </AccordionContent>
               </AccordionItem>
@@ -436,7 +434,7 @@ export default function Contact() {
                     path="contact.faq.volunteer.question"
                     label="Bénévole Q"
                   >
-                    Comment devenir bénévole chez DonsDuSon ?
+                    Comment puis-je m'impliquer en tant que bénévole ?
                   </Editable>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -445,9 +443,7 @@ export default function Contact() {
                     type="textarea"
                     label="Bénévole A"
                   >
-                    Nous sommes toujours à la recherche de bénévoles passionnés
-                    ! Rendez-vous sur notre page "Devenir bénévole" pour
-                    découvrir comment vous impliquer.
+                    Nous recherchons toujours des passionnés pour l'accueil, la technique ou la logistique lors de nos événements. Rendez-vous sur la page "Rejoindre" pour nous envoyer votre candidature simplifiée par mail.
                   </Editable>
                 </AccordionContent>
               </AccordionItem>
@@ -458,7 +454,7 @@ export default function Contact() {
                     path="contact.faq.membership.question"
                     label="Adhésion Q"
                   >
-                    Quelles sont les conditions d'adhésion ?
+                    Pourquoi adhérer à l'association Dons Du Son ?
                   </Editable>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -467,9 +463,7 @@ export default function Contact() {
                     type="textarea"
                     label="Adhésion A"
                   >
-                    Adhérer à DonsDuSon, c'est soutenir notre mission. Consultez
-                    notre page "Adhésion" pour connaître les avantages et les
-                    différentes formules.
+                    Adhérer (15€/an) vous permet de soutenir nos actions culturelles, de bénéficier de réductions sur la location de matériel et d'accéder en priorité à nos ateliers et formations internes.
                   </Editable>
                 </AccordionContent>
               </AccordionItem>
@@ -477,7 +471,7 @@ export default function Contact() {
               <AccordionItem value="item-4">
                 <AccordionTrigger>
                   <Editable path="contact.faq.donation.question" label="Don Q">
-                    Comment puis-je faire un don ?
+                    Mes dons sont-ils déductibles d'impôts ?
                   </Editable>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -486,9 +480,24 @@ export default function Contact() {
                     type="textarea"
                     label="Don A"
                   >
-                    Chaque don, petit ou grand, nous aide à continuer nos
-                    actions. Visitez notre page "Faire un don" pour toutes les
-                    informations nécessaires.
+                    Oui, Dons Du Son est une association reconnue d'intérêt général. Vos dons ouvrent droit à une réduction d'impôt égale à 66% du montant versé, dans la limite de 20% de votre revenu imposable.
+                  </Editable>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-5">
+                <AccordionTrigger>
+                  <Editable path="contact.faq.zone.question" label="Zone Q">
+                    Dans quelles zones géographiques intervenez-vous ?
+                  </Editable>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Editable
+                    path="contact.faq.zone.answer"
+                    type="textarea"
+                    label="Zone A"
+                  >
+                    Nous sommes basés en Île-de-France, mais nous pouvons intervenir dans toute la France métropolitaine pour des projets spécifiques ou de la location de matériel avec livraison.
                   </Editable>
                 </AccordionContent>
               </AccordionItem>
