@@ -162,6 +162,20 @@ export default function AdminEvents() {
                       />
                     </div>
                   </div>
+                  <div className="space-y-2">
+                    <label className="text-xs text-gray-400">Participants (Optionnel)</label>
+                    <Input
+                      type="number"
+                      value={editForm?.attendees || ""}
+                      onChange={(e) =>
+                        setEditForm((prev) =>
+                          prev ? { ...prev, attendees: e.target.value ? Number(e.target.value) : undefined } : null,
+                        )
+                      }
+                      className="bg-[#262626] border-gray-700"
+                      placeholder="Nombre de participants"
+                    />
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">

@@ -249,7 +249,7 @@ export default function Events() {
                             >
                               Détails <ArrowRight className="w-3.5 h-3.5" />
                             </Link>
-                            {event.attendees && (
+                            {event.attendees !== undefined && event.attendees !== null && (
                               <span className="text-sm text-muted-foreground">
                                 {event.attendees} participants
                               </span>

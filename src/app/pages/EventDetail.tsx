@@ -124,7 +124,13 @@ export default function EventDetail() {
                         <p className="font-bold text-lg text-[#F29F05]">{event.price || 'Entrée libre'}</p>
                       </Editable>
                     </div>
-                    {event.ticketUrl && (
+                    {event.isPast && event.attendees !== undefined && event.attendees !== null && (
+                      <div>
+                        <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Participants</p>
+                        <p className="font-bold text-lg text-foreground">{event.attendees}</p>
+                      </div>
+                    )}
+                    {event.ticketUrl && !event.isPast && (
                       <Button className="w-full bg-[#8C0343] hover:bg-[#771236] mt-4">
                         Réserver ma place
                       </Button>
