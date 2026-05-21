@@ -85,6 +85,11 @@
         "description": "S'investir pour le développement culturel local"
       }
     ],
+    "team": {
+      "title": "Notre Équipe",
+      "description": "Les membres du bureau qui portent l'association au quotidien",
+      "volunteersMention": "+ 15 bénévoles actifs qui contribuent régulièrement aux actions de l'association"
+    },
     "valuesSectionTitle": "Nos Valeurs",
     "interventionSection": {
       "title": "Nos Axes d'Intervention",

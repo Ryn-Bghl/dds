@@ -283,10 +283,15 @@ export default function Association() {
             )}
           </div>
           <div className="text-center mt-12">
-            <p className="text-muted-foreground italic">
-              + 15 bénévoles actifs qui contribuent régulièrement aux actions de
-              l'association
-            </p>
+            <Editable
+              path="association.team.volunteersMention"
+              label="Mention Bénévoles"
+            >
+              <p className="text-muted-foreground italic">
+                {association.team?.volunteersMention ||
+                  "+ 15 bénévoles actifs qui contribuent régulièrement aux actions de l'association"}
+              </p>
+            </Editable>
           </div>
         </div>
       </section>

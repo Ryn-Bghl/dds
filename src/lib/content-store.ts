@@ -37,15 +37,22 @@ export interface AssociationPageContent {
     description: string;
     iconName: string;
   }[];
-  interventions: {
+  valuesSectionTitle: string;
+  interventionSection: {
     title: string;
     description: string;
-  }[];
+  };
   interventionAreas: {
+    iconName: string;
     title: string;
     description: string;
     features: string[];
   }[];
+  team: {
+    title: string;
+    description: string;
+    volunteersMention: string;
+  };
 }
 
 export interface ContactPageContent {
@@ -335,6 +342,51 @@ export const initialContent: SiteContent = {
         description: "S'investir pour le développement culturel local",
       },
     ],
+    valuesSectionTitle: "Nos Valeurs",
+    interventionSection: {
+      title: "Nos Axes d'Intervention",
+      description: "Trois domaines d'action complémentaires pour un accompagnement global des artistes",
+    },
+    interventionAreas: [
+      {
+        iconName: "GraduationCap",
+        title: "Éducation & Formation",
+        description: "Ateliers pédagogiques, formations techniques et accompagnement des jeunes talents dans leur apprentissage des métiers du son et de la musique.",
+        features: [
+          "Ateliers d'initiation à la MAO",
+          "Formation ingénierie du son",
+          "Workshops production musicale",
+          "Stages en milieu scolaire",
+        ],
+      },
+      {
+        iconName: "Wrench",
+        title: "Accompagnement Technique",
+        description: "Mise à disposition de studios, conseil en ingénierie sonore et suivi technique des projets artistiques de A à Z.",
+        features: [
+          "Accès studio d'enregistrement",
+          "Conseil en prise de son",
+          "Mixage et mastering",
+          "Support technique événements",
+        ],
+      },
+      {
+        iconName: "Radio",
+        title: "Diffusion Culturelle",
+        description: "Organisation d'événements, concerts et festivals pour promouvoir les artistes émergents et la diversité musicale.",
+        features: [
+          "Festivals et concerts",
+          "Showcases et tremplins",
+          "Résidences artistiques",
+          "Partenariats culturels",
+        ],
+      },
+    ],
+    team: {
+      title: "Notre Équipe",
+      description: "Les membres du bureau qui portent l'association au quotidien",
+      volunteersMention: "+ 15 bénévoles actifs qui contribuent régulièrement aux actions de l'association",
+    },
   },
   contact: {
     header: {
