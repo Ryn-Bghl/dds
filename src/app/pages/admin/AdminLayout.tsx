@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Outlet, Link, useLocation } from "react-router";
 import {
   LayoutDashboard,
@@ -21,6 +22,14 @@ export default function AdminLayout() {
   const location = useLocation();
   const { logout } = useAuth();
   const { content } = useEditor();
+  const mainRef = useRef<HTMLElement>(null);
+
+  // Reset scroll to top on navigation
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
 
   const pendingRequests = content.rentalRequests?.filter(r => r.status === "En attente").length || 0;
   const newMessages = content.contactMessages?.filter(m => m.status === "Nouveau").length || 0;
@@ -108,7 +117,10 @@ export default function AdminLayout() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-8 overflow-y-auto scroll-smooth bg-[#0D0D0D]">
+        <main 
+          ref={mainRef}
+          className="flex-1 p-8 overflow-y-auto scroll-smooth bg-[#0D0D0D]"
+        >
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>

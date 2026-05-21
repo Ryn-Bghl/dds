@@ -2,6 +2,7 @@ import { Outlet } from "react-router";
 import Header from "./Header";
 import Footer from "./Footer";
 import AdminBar from "./admin/AdminBar";
+import ScrollToTop from "./ScrollToTop";
 import { useEditor } from "../context/EditorContext";
 import { useAuth } from "../context/AuthContext";
 import Maintenance from "../pages/Maintenance";
@@ -19,6 +20,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollToTop />
       <AdminBar />
       <Header />
       <main className="flex-1">
