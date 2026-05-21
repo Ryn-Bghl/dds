@@ -1,7 +1,23 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, ComponentType } from "react";
 import { createBrowserRouter } from "react-router";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+
+// Helper to handle ChunkLoadError (common on Vercel after new deploys)
+const lazyRetry = (componentImport: () => Promise<{ default: ComponentType<any> }>) => {
+  return lazy(async () => {
+    try {
+      return await componentImport();
+    } catch (error) {
+      // Check if it's a chunk load error
+      if (error instanceof Error && error.message.includes("dynamically imported module")) {
+        // Force a page reload to get the latest manifest
+        window.location.reload();
+      }
+      throw error;
+    }
+  });
+};
 
 // Loading component for Suspense
 const PageLoader = () => (
@@ -10,32 +26,32 @@ const PageLoader = () => (
   </div>
 );
 
-// Lazy load pages
-const Home = lazy(() => import("./pages/Home"));
-const Association = lazy(() => import("./pages/Association"));
-const Projects = lazy(() => import("./pages/Projects"));
-const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
-const Events = lazy(() => import("./pages/Events"));
-const EventDetail = lazy(() => import("./pages/EventDetail"));
-const Join = lazy(() => import("./pages/Join"));
-const Support = lazy(() => import("./pages/Support"));
-const EquipmentRental = lazy(() => import("./pages/EquipmentRental"));
-const EquipmentDetail = lazy(() => import("./pages/EquipmentDetail"));
-const PackDetail = lazy(() => import("./pages/PackDetail"));
-const Contact = lazy(() => import("./pages/Contact"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Login = lazy(() => import("./pages/Login"));
+// Lazy load pages with retry logic
+const Home = lazyRetry(() => import("./pages/Home"));
+const Association = lazyRetry(() => import("./pages/Association"));
+const Projects = lazyRetry(() => import("./pages/Projects"));
+const ProjectDetail = lazyRetry(() => import("./pages/ProjectDetail"));
+const Events = lazyRetry(() => import("./pages/Events"));
+const EventDetail = lazyRetry(() => import("./pages/EventDetail"));
+const Join = lazyRetry(() => import("./pages/Join"));
+const Support = lazyRetry(() => import("./pages/Support"));
+const EquipmentRental = lazyRetry(() => import("./pages/EquipmentRental"));
+const EquipmentDetail = lazyRetry(() => import("./pages/EquipmentDetail"));
+const PackDetail = lazyRetry(() => import("./pages/PackDetail"));
+const Contact = lazyRetry(() => import("./pages/Contact"));
+const NotFound = lazyRetry(() => import("./pages/NotFound"));
+const Login = lazyRetry(() => import("./pages/Login"));
 
 // Admin pages
-const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
-const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
-const AdminProjects = lazy(() => import("./pages/admin/AdminProjects"));
-const AdminEvents = lazy(() => import("./pages/admin/AdminEvents"));
-const AdminRentals = lazy(() => import("./pages/admin/AdminRentals"));
-const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
-const AdminTeam = lazy(() => import("./pages/admin/AdminTeam"));
-const AdminMessages = lazy(() => import("./pages/admin/AdminMessages"));
-const AdminHelp = lazy(() => import("./pages/admin/AdminHelp"));
+const AdminLayout = lazyRetry(() => import("./pages/admin/AdminLayout"));
+const AdminDashboard = lazyRetry(() => import("./pages/admin/AdminDashboard"));
+const AdminProjects = lazyRetry(() => import("./pages/admin/AdminProjects"));
+const AdminEvents = lazyRetry(() => import("./pages/admin/AdminEvents"));
+const AdminRentals = lazyRetry(() => import("./pages/admin/AdminRentals"));
+const AdminSettings = lazyRetry(() => import("./pages/admin/AdminSettings"));
+const AdminTeam = lazyRetry(() => import("./pages/admin/AdminTeam"));
+const AdminMessages = lazyRetry(() => import("./pages/admin/AdminMessages"));
+const AdminHelp = lazyRetry(() => import("./pages/admin/AdminHelp"));
 
 const withSuspense = (Component: React.ComponentType) => (
   <Suspense fallback={<PageLoader />}>
