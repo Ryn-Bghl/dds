@@ -296,7 +296,8 @@
       "defaultDeposit": "0"
     },
     "advanced": {
-      "maintenanceMode": false
+      "maintenanceMode": false,
+      "showNewsletter": false
     }
   },
   "inventory": [

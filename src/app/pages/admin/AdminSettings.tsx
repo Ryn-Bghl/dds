@@ -328,6 +328,31 @@ export default function AdminSettings() {
                 />
               </div>
 
+              <div className="flex flex-col gap-4 p-4 rounded-lg bg-[#262626] border border-gray-700">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-white">Afficher la Newsletter</Label>
+                    <p className="text-xs text-gray-500">
+                      Activer/Désactiver la section Newsletter sur le site.
+                    </p>
+                  </div>
+                  <Switch
+                    checked={content.settings.advanced.showNewsletter}
+                    onCheckedChange={(checked) =>
+                      handleUpdate("advanced", "showNewsletter", checked)
+                    }
+                  />
+                </div>
+                {content.settings.advanced.showNewsletter && (
+                  <div className="flex items-start gap-2 p-3 bg-blue-500/10 border border-blue-500/20 rounded text-[10px] text-blue-400">
+                    <ShieldAlert className="w-3 h-3 flex-shrink-0 mt-0.5" />
+                    <p>
+                      <strong>Note technique :</strong> Le formulaire est visible sur le site, mais le système d'envoi et de stockage des emails n'est pas encore configuré (API Brevo/Mailchimp manquante). Les inscriptions ne seront pas enregistrées pour le moment.
+                    </p>
+                  </div>
+                )}
+              </div>
+
               <div className="grid grid-cols-1 gap-3">
                 <Button
                   variant="outline"

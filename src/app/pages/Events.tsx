@@ -267,27 +267,29 @@ export default function Events() {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="py-16 bg-card border-t border-border">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl mb-4 text-foreground font-bold">
-            Ne manquez aucun événement
-          </h2>
-          <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Inscrivez-vous à notre newsletter pour recevoir les annonces de nos
-            prochains concerts, formations et ateliers
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Votre email"
-              className="flex-1 px-4 py-3 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C0343]"
-            />
-            <Button className="bg-[#8C0343] hover:bg-[#771236] px-8 text-white font-bold">
-              S'inscrire
-            </Button>
+      {content.settings.advanced.showNewsletter && (
+        <section className="py-16 bg-card border-t border-border">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl mb-4 text-foreground font-bold">
+              Ne manquez aucun événement
+            </h2>
+            <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+              Inscrivez-vous à notre newsletter pour recevoir les annonces de nos
+              prochains concerts, formations et ateliers
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Votre email"
+                className="flex-1 px-4 py-3 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C0343]"
+              />
+              <Button className="bg-[#8C0343] hover:bg-[#771236] px-8 text-white font-bold">
+                S'inscrire
+              </Button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

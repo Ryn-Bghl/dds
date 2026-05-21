@@ -186,6 +186,7 @@ export interface GlobalSettings {
   };
   advanced: {
     maintenanceMode: boolean;
+    showNewsletter: boolean;
   };
 }
 
@@ -510,6 +511,7 @@ export const initialContent: SiteContent = {
     },
     advanced: {
       maintenanceMode: false,
+      showNewsletter: false,
     },
   },
   inventory: [
