@@ -64,10 +64,7 @@ export default function Home() {
               className="bg-[#F29F05] text-black hover:bg-[#D96704]"
             >
               <Link to="/association">
-                <Editable path="home.hero.ctaPrimary">
-                  {home.hero.ctaPrimary}
-                </Editable>{" "}
-                <ArrowRight className="ml-2 w-5 h-5" />
+                {home.hero.ctaPrimary} <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
             <Button
@@ -76,11 +73,7 @@ export default function Home() {
               variant="outline"
               className="border-white text-white hover:bg-white/10"
             >
-              <Link to="/location">
-                <Editable path="home.hero.ctaSecondary">
-                  {home.hero.ctaSecondary}
-                </Editable>
-              </Link>
+              <Link to="/location">{home.hero.ctaSecondary}</Link>
             </Button>
           </div>
 
@@ -224,12 +217,7 @@ export default function Home() {
               className="bg-[#8C0343] hover:bg-[#771236]"
             >
               <Link to="/location">
-                <Editable
-                  path="home.services.ctaCatalog"
-                  label="Texte CTA Catalogue Services"
-                >
-                  Voir tout le catalogue
-                </Editable>{" "}
+                {home.services?.ctaCatalog || "Voir tout le catalogue"}{" "}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
@@ -290,12 +278,7 @@ export default function Home() {
               className="border-gray-600 text-gray-300 hover:bg-gray-800"
             >
               <Link to="/projets">
-                <Editable
-                  path="home.latestProjects.ctaAllProjects"
-                  label="Texte CTA Tous les Projets"
-                >
-                  Tous nos projets
-                </Editable>{" "}
+                {home.latestProjects?.ctaAllProjects || "Tous nos projets"}{" "}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
@@ -327,12 +310,7 @@ export default function Home() {
               className="bg-[#F29F05] text-black hover:bg-[#D96704]"
             >
               <Link to="/rejoindre">
-                <Editable
-                  path="home.ctaSection.volunteerCta"
-                  label="Texte CTA Bénévolat"
-                >
-                  Devenez bénévole
-                </Editable>
+                {home.ctaSection?.volunteerCta || "Devenez bénévole"}
               </Link>
             </Button>
             <Button
@@ -342,12 +320,7 @@ export default function Home() {
               className="border-white text-white hover:bg-white/10"
             >
               <Link to="/soutenir">
-                <Editable
-                  path="home.ctaSection.donateCta"
-                  label="Texte CTA Faire un don"
-                >
-                  Faire un don
-                </Editable>
+                {home.ctaSection?.donateCta || "Faire un don"}
               </Link>
             </Button>
           </div>
