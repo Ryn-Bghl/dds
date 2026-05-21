@@ -38,6 +38,7 @@ import { useEditor } from "../context/EditorContext";
 import { useCart } from "../context/CartContext";
 import { InventoryItem, RentalPack } from "../../lib/content-store";
 import { Link } from "react-router";
+import { Editable } from "../components/Editable";
 
 const categoryIcons = {
   Son: Music,
@@ -48,6 +49,7 @@ const categoryIcons = {
 
 export default function EquipmentRental() {
   const { content } = useEditor();
+  const { rental } = content;
   const {
     cart,
     addToCart,
@@ -103,13 +105,21 @@ export default function EquipmentRental() {
       {/* Header */}
       <section className="py-20 bg-gradient-to-br from-[#8C0343] via-[#771236] to-[#D96704] text-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl mb-6 font-bold">
-            Location de Matériel
-          </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-100">
-            Matériel professionnel pour vos événements : son, lumière, DJ et
-            backline
-          </p>
+          <Editable path="rental.header.title" label="Titre Page">
+            <h1 className="text-5xl md:text-6xl mb-6 font-bold">
+              {rental?.header?.title || "Location de Matériel"}
+            </h1>
+          </Editable>
+          <Editable
+            path="rental.header.description"
+            type="textarea"
+            label="Description Page"
+          >
+            <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-100">
+              {rental?.header?.description ||
+                "Matériel professionnel pour vos événements : son, lumière, DJ et backline"}
+            </p>
+          </Editable>
         </div>
       </section>
 
@@ -575,55 +585,59 @@ export default function EquipmentRental() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               <div className="space-y-4">
-                <h3 className="text-xl mb-4 text-[#F29F05] font-bold flex items-center gap-2">
-                  Tarifs
-                </h3>
+                <Editable path="rental.conditions.title" label="Titre Tarifs">
+                  <h3 className="text-xl mb-4 text-[#F29F05] font-bold flex items-center gap-2">
+                    {rental?.conditions?.title || "Tarifs"}
+                  </h3>
+                </Editable>
                 <ul className="space-y-3 text-muted-foreground font-medium">
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
-                    Tarifs à la journée
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
-                    Dégressif dès 3 jours (-10%)
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
-                    Dégressif dès 7 jours (-20%)
-                  </li>
+                  {(rental?.conditions?.items || [
+                    "Tarifs à la journée",
+                    "Dégressif dès 3 jours (-10%)",
+                    "Dégressif dès 7 jours (-20%)",
+                    "Caution remboursable selon matériel",
+                  ]).map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />
+                      <Editable
+                        path={`rental.conditions.items.${idx}`}
+                        label={`Tarif ${idx + 1}`}
+                      >
+                        <span>{item}</span>
+                      </Editable>
+                    </li>
+                  ))}
                   {parseFloat(content.settings.rental.defaultDeposit) > 0 && (
                     <li className="flex items-start gap-2">
                       <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
                       Acompte de {content.settings.rental.defaultDeposit} à la réservation
                     </li>
                   )}
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
-                    Caution remboursable selon matériel
-                  </li>
                 </ul>
               </div>
               <div className="space-y-4">
-                <h3 className="text-xl mb-4 text-[#F29F05] font-bold flex items-center gap-2">
-                  Services
-                </h3>
+                <Editable path="rental.services.title" label="Titre Services">
+                  <h3 className="text-xl mb-4 text-[#F29F05] font-bold flex items-center gap-2">
+                    {rental?.services?.title || "Services"}
+                  </h3>
+                </Editable>
                 <ul className="space-y-3 text-muted-foreground font-medium">
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
-                    Livraison en Île-de-France (sur devis)
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
-                    Installation et réglages possibles
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
-                    Assistance technique incluse
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />{" "}
-                    Matériel testé et entretenu
-                  </li>
+                  {(rental?.services?.items || [
+                    "Livraison en Île-de-France (sur devis)",
+                    "Installation et réglages possibles",
+                    "Assistance technique incluse",
+                    "Matériel testé et entretenu",
+                  ]).map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-[#8C0343] rounded-full mt-2 flex-shrink-0" />
+                      <Editable
+                        path={`rental.services.items.${idx}`}
+                        label={`Service ${idx + 1}`}
+                      >
+                        <span>{item}</span>
+                      </Editable>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>

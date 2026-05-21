@@ -215,6 +215,21 @@ export interface RentalPack {
   content: ContentBlock[];
 }
 
+export interface RentalContent {
+  header: {
+    title: string;
+    description: string;
+  };
+  conditions: {
+    title: string;
+    items: string[];
+  };
+  services: {
+    title: string;
+    items: string[];
+  };
+}
+
 export interface Partner {
   id: string;
   name: string;
@@ -228,6 +243,7 @@ export interface SiteContent {
   contact: ContactPageContent;
   join: JoinPageContent;
   support: SupportPageContent;
+  rental: RentalContent;
   projects: Project[];
   events: Event[];
   rentalRequests: RentalRequest[];
@@ -380,6 +396,31 @@ export const initialContent: SiteContent = {
       title: "Partenariats",
       content:
         "Vous êtes une entreprise ou une institution culturelle ? Devenons partenaires pour créer des événements uniques et soutenir la scène émergente ensemble.",
+    },
+  },
+  rental: {
+    header: {
+      title: "Location de Matériel",
+      description:
+        "Matériel professionnel pour vos événements : son, lumière, DJ et backline",
+    },
+    conditions: {
+      title: "Tarifs",
+      items: [
+        "Tarifs à la journée",
+        "Dégressif dès 3 jours (-10%)",
+        "Dégressif dès 7 jours (-20%)",
+        "Caution remboursable selon matériel",
+      ],
+    },
+    services: {
+      title: "Services",
+      items: [
+        "Livraison en Île-de-France (sur devis)",
+        "Installation et réglages possibles",
+        "Assistance technique incluse",
+        "Matériel testé et entretenu",
+      ],
     },
   },
   projects: [
