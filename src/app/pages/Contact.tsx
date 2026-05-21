@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, MapPin, Facebook, Instagram, Youtube, Send } from "lucide-react";
+import { Mail, MapPin, Facebook, Instagram, Youtube, Send, Loader2, CheckCircle2 } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -8,6 +8,7 @@ import { Textarea } from "../components/ui/textarea";
 import { toast } from "sonner";
 import { useEditor } from "../context/EditorContext";
 import { Editable } from "../components/Editable";
+import { ContactMessage } from "../../lib/content-store";
 // Import Accordion components
 import {
   Accordion,
@@ -17,7 +18,7 @@ import {
 } from "../components/ui/accordion";
 
 export default function Contact() {
-  const { content } = useEditor();
+  const { content, updateContent, saveChanges } = useEditor();
   const { contact } = content;
 
   const [formData, setFormData] = useState({
@@ -26,13 +27,78 @@ export default function Contact() {
     subject: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [lastMessageId, setLastMessageId] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(
-      "Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.",
-    );
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setIsSubmitting(true);
+
+    try {
+      const newMessage: ContactMessage = {
+        id: `msg-${Date.now()}`,
+        ...formData,
+        createdAt: new Date().toISOString().split('T')[0],
+        status: "Nouveau",
+      };
+
+      const currentMessages = Array.isArray(content.contactMessages) 
+        ? content.contactMessages 
+        : [];
+      
+      const newContent = updateContent("contactMessages", [newMessage, ...currentMessages]);
+      
+      // Save changes to the backend
+      await saveChanges(newContent);
+      
+      setLastMessageId(newMessage.id);
+      setIsSubmitted(true);
+      
+      // Also trigger a mailto as a notification/fallback
+      const contactEmail = content.settings.contact.email;
+      const mailtoSubject = encodeURIComponent(`Nouveau message de contact : ${formData.subject}`);
+      const mailtoBody = encodeURIComponent(
+        `Nom : ${formData.name}\n` +
+        `Email : ${formData.email}\n` +
+        `Sujet : ${formData.subject}\n\n` +
+        `Message :\n${formData.message}\n\n` +
+        `--- Message enregistré dans le panneau d'administration ---`
+      );
+      
+      window.open(`mailto:${contactEmail}?subject=${mailtoSubject}&body=${mailtoBody}`, '_blank');
+      
+      toast.success(
+        "Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.",
+      );
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Une erreur est survenue lors de l'envoi du message. Veuillez réessayer.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleUndo = async () => {
+    if (!lastMessageId) return;
+
+    if (window.confirm("Voulez-vous vraiment annuler l'envoi de ce message ?")) {
+      const currentMessages = Array.isArray(content.contactMessages) 
+        ? content.contactMessages 
+        : [];
+      const updatedMessages = currentMessages.filter(m => m.id !== lastMessageId);
+      const updatedContent = updateContent("contactMessages", updatedMessages);
+      
+      try {
+        await saveChanges(updatedContent);
+        setLastMessageId(null);
+        setIsSubmitted(false);
+        toast.info("Message annulé avec succès");
+      } catch (e) {
+        toast.error("Erreur lors de l'annulation");
+      }
+    }
   };
 
   return (
@@ -180,78 +246,123 @@ export default function Contact() {
             <div className="lg:col-span-2">
               <Card className="border-border bg-card shadow-xl">
                 <CardContent className="p-8">
-                  <h2 className="text-3xl mb-2 text-foreground font-bold">
-                    Formulaire de contact
-                  </h2>
-                  <p className="text-muted-foreground mb-8">
-                    Remplissez ce formulaire et nous vous répondrons rapidement
-                  </p>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Nom complet *</Label>
-                        <Input
-                          id="name"
-                          required
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          placeholder="Jean Dupont"
-                          className="bg-background border-border"
-                        />
+                  {isSubmitted ? (
+                    <div className="py-12 flex flex-col items-center text-center space-y-6">
+                      <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center text-green-500">
+                        <CheckCircle2 className="w-12 h-12" />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email *</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          required
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                          placeholder="jean.dupont@example.com"
-                          className="bg-background border-border"
-                        />
+                        <h2 className="text-3xl font-bold text-white">Message envoyé !</h2>
+                        <p className="text-muted-foreground max-w-md mx-auto">
+                          Merci pour votre message. Nous vous répondrons dans les plus brefs délais (généralement sous 48h).
+                        </p>
+                      </div>
+                      <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+                        <Button
+                          onClick={() => setIsSubmitted(false)}
+                          className="bg-[#8C0343] hover:bg-[#771236]"
+                        >
+                          Envoyer un autre message
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={handleUndo}
+                          className="border-border text-muted-foreground hover:text-red-500 hover:border-red-500/50"
+                        >
+                          Annuler l'envoi (Erreur ?)
+                        </Button>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="subject">Sujet *</Label>
-                      <Input
-                        id="subject"
-                        required
-                        value={formData.subject}
-                        onChange={(e) =>
-                          setFormData({ ...formData, subject: e.target.value })
-                        }
-                        placeholder="Location de matériel, adhésion, etc."
-                        className="bg-background border-border"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="message">Message *</Label>
-                      <Textarea
-                        id="message"
-                        required
-                        value={formData.message}
-                        onChange={(e) =>
-                          setFormData({ ...formData, message: e.target.value })
-                        }
-                        placeholder="Votre message..."
-                        rows={8}
-                        className="bg-background border-border"
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full bg-[#8C0343] hover:bg-[#771236] text-white font-bold"
-                      size="lg"
-                    >
-                      <Send className="mr-2 w-5 h-5" />
-                      Envoyer le message
-                    </Button>
-                  </form>
+                  ) : (
+                    <>
+                      <h2 className="text-3xl mb-2 text-foreground font-bold">
+                        Formulaire de contact
+                      </h2>
+                      <p className="text-muted-foreground mb-8">
+                        Remplissez ce formulaire et nous vous répondrons rapidement
+                      </p>
+                      <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <Label htmlFor="name">Nom complet *</Label>
+                            <Input
+                              id="name"
+                              required
+                              disabled={isSubmitting}
+                              value={formData.name}
+                              onChange={(e) =>
+                                setFormData({ ...formData, name: e.target.value })
+                              }
+                              placeholder="Jean Dupont"
+                              className="bg-background border-border"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="email">Email *</Label>
+                            <Input
+                              id="email"
+                              type="email"
+                              required
+                              disabled={isSubmitting}
+                              value={formData.email}
+                              onChange={(e) =>
+                                setFormData({ ...formData, email: e.target.value })
+                              }
+                              placeholder="jean.dupont@example.com"
+                              className="bg-background border-border"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="subject">Sujet *</Label>
+                          <Input
+                            id="subject"
+                            required
+                            disabled={isSubmitting}
+                            value={formData.subject}
+                            onChange={(e) =>
+                              setFormData({ ...formData, subject: e.target.value })
+                            }
+                            placeholder="Location de matériel, adhésion, etc."
+                            className="bg-background border-border"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="message">Message *</Label>
+                          <Textarea
+                            id="message"
+                            required
+                            disabled={isSubmitting}
+                            value={formData.message}
+                            onChange={(e) =>
+                              setFormData({ ...formData, message: e.target.value })
+                            }
+                            placeholder="Votre message..."
+                            rows={8}
+                            className="bg-background border-border"
+                          />
+                        </div>
+                        <Button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full bg-[#8C0343] hover:bg-[#771236] text-white font-bold"
+                          size="lg"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <Loader2 className="mr-2 w-5 h-5 animate-spin" />
+                              Envoi en cours...
+                            </>
+                          ) : (
+                            <>
+                              <Send className="mr-2 w-5 h-5" />
+                              Envoyer le message
+                            </>
+                          )}
+                        </Button>
+                      </form>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -271,34 +382,6 @@ export default function Contact() {
 
           {/* Map Placeholder */}
           <div className="max-w-5xl mx-auto">
-            {/* <div
-              className="relative w-full aspect-[16/9] rounded-xl overflow-hidden shadow-2xl"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1580422500257-ab85fb8e20ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMGZyYW5jZSUyMGNpdHlzY2FwZXxlbnwxfHx8fDE3NzQ2MjAxNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              <div className="absolute inset-0 bg-[#8C0343]/30 flex items-center justify-center">
-                <div className="bg-card/90 backdrop-blur-sm border border-border p-8 rounded-2xl shadow-2xl text-center max-w-sm">
-                  <MapPin className="w-12 h-12 text-[#F29F05] mx-auto mb-4" />
-                  <h3 className="text-2xl mb-2 text-foreground font-bold font-bold">
-                    France
-                  </h3>
-                  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                    Nous nous déplaçons dans toute la France metropolitaine pour
-                    sonoriser vos événements et accompagner vos projets.
-                  </p>
-                  <Button
-                    size="lg"
-                    className="bg-[#8C0343] hover:bg-[#771236] text-white font-semibold"
-                  >
-                    Voir sur Google Maps
-                  </Button>
-                </div>
-              </div>
-            </div> */}
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4742943.902230488!2d2.5003734339051586!3d46.75246807722547!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sfr!2sfr!4v1777389890964!5m2!1sfr!2sfr"
               width="100%"

@@ -22,6 +22,7 @@ import {
   Clock,
   ExternalLink,
   ShieldAlert,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { useEditor } from "../../context/EditorContext";
@@ -39,6 +40,7 @@ export default function AdminDashboard() {
   } = useEditor();
 
   const pendingRequests = content.rentalRequests?.filter(r => r.status === "En attente") || [];
+  const newMessages = content.contactMessages?.filter(m => m.status === "Nouveau") || [];
   const upcomingEvents = content.events?.filter(e => !e.isPast) || [];
   const totalItems = content.inventory?.length || 0;
   const teamSize = content.teamMembers?.length || 0;
@@ -98,25 +100,26 @@ export default function AdminDashboard() {
           subValue={pendingRequests.length > 0 ? "Action requise" : "Tout est à jour"}
         />
         <StatCard 
+          icon={MessageSquare} 
+          label="Nouveaux Messages" 
+          value={newMessages.length} 
+          color="text-blue-500" 
+          link="/admin/messages"
+          subValue={newMessages.length > 0 ? "Non lus" : "Boîte de réception vide"}
+        />
+        <StatCard 
           icon={Calendar} 
           label="Événements à venir" 
           value={upcomingEvents.length} 
-          color="text-blue-500" 
+          color="text-green-500" 
           link="/admin/events"
           subValue={`Sur ${content.events?.length || 0} au total`}
-        />
-        <StatCard 
-          icon={Package} 
-          label="Articles Inventaire" 
-          value={totalItems} 
-          color="text-purple-500" 
-          link="/admin/rental"
         />
         <StatCard 
           icon={Users} 
           label="Membres Équipe" 
           value={teamSize} 
-          color="text-green-500" 
+          color="text-purple-500" 
           link="/admin/team"
         />
       </div>
@@ -124,6 +127,47 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content Area */}
         <div className="lg:col-span-2 space-y-8">
+          {/* Recent Messages Section */}
+          <Card className="bg-[#1a1a1a] border-gray-800 overflow-hidden">
+            <CardHeader className="border-b border-gray-800 pb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-blue-500" />
+                  <CardTitle className="text-white text-xl">Derniers Messages</CardTitle>
+                </div>
+                <Link to="/admin/messages" className="text-xs text-blue-400 hover:underline flex items-center gap-1">
+                  Voir tout <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              {content.contactMessages && content.contactMessages.length > 0 ? (
+                <div className="divide-y divide-gray-800">
+                  {content.contactMessages.slice(0, 3).map((msg) => (
+                    <div key={msg.id} className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors group">
+                      <div className="flex flex-col">
+                        <span className="text-white font-medium group-hover:text-blue-400 transition-colors">{msg.name}</span>
+                        <span className="text-xs text-[#F29F05] font-medium">{msg.subject}</span>
+                        <span className="text-[10px] text-gray-500">{msg.createdAt}</span>
+                      </div>
+                      <Badge variant="outline" className={
+                        msg.status === "Nouveau" ? "border-blue-500/50 text-blue-500 bg-blue-500/10" :
+                        msg.status === "Répondu" ? "border-green-500/50 text-green-500 bg-green-500/10" :
+                        "border-gray-500/50 text-gray-400 bg-gray-500/10"
+                      }>
+                        {msg.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-12 text-center text-gray-500">
+                  Aucun message reçu.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           {/* Recent Requests Section */}
           <Card className="bg-[#1a1a1a] border-gray-800 overflow-hidden">
             <CardHeader className="border-b border-gray-800 pb-4">
@@ -140,7 +184,7 @@ export default function AdminDashboard() {
             <CardContent className="p-0">
               {content.rentalRequests && content.rentalRequests.length > 0 ? (
                 <div className="divide-y divide-gray-800">
-                  {content.rentalRequests.slice(0, 5).map((req) => (
+                  {content.rentalRequests.slice(0, 3).map((req) => (
                     <div key={req.id} className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors group">
                       <div className="flex flex-col">
                         <span className="text-white font-medium group-hover:text-[#F29F05] transition-colors">{req.customerName}</span>

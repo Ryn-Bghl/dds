@@ -271,26 +271,7 @@
       "content": []
     }
   ],
-  "rentalRequests": [
-    {
-      "id": "req-1778686966313",
-      "customerName": "Rayan BOUGHALIA",
-      "email": "rayan.boughalia.pro@gmail.com",
-      "phone": "0678540692",
-      "eventDate": "2026-05-13",
-      "message": "test site web ",
-      "status": "En attente",
-      "totalPrice": 150,
-      "items": [
-        {
-          "name": "Pack Sonorisation Standard",
-          "quantity": 1,
-          "price": 150
-        }
-      ],
-      "createdAt": "13/05/2026"
-    }
-  ],
+  "rentalRequests": [],
   "settings": {
     "siteIdentity": {
       "title": "Dons Du Son",
@@ -471,6 +452,17 @@
       "name": "KAIROS",
       "logoUrl": "https://picsum.photos/500",
       "websiteUrl": ""
+    }
+  ],
+  "contactMessages": [
+    {
+      "id": "msg-1779091523515",
+      "name": "NomTest",
+      "email": "email.test@gmail.com",
+      "subject": "Sujet Test",
+      "message": "Message Test\n",
+      "createdAt": "2026-05-18",
+      "status": "Lu"
     }
   ]
 }

@@ -17,6 +17,7 @@ import {
   Settings,
   ShieldCheck,
   Zap,
+  MessageSquare,
 } from "lucide-react";
 import { Badge } from "../../components/ui/badge";
 
@@ -64,6 +65,17 @@ export default function AdminHelp() {
         "Mettez à jour les coordonnées de contact (Email, Réseaux Sociaux, Adresse).",
         "Activez le 'Mode Maintenance' si vous devez effectuer de gros changements en privé.",
         "Gérez la liste des partenaires affichés en bas de page.",
+      ]
+    },
+    {
+      title: "Messages de Contact",
+      icon: MessageSquare,
+      color: "text-blue-400",
+      content: [
+        "Consultez les messages envoyés via le formulaire de contact du site.",
+        "Un badge bleu indique le nombre de nouveaux messages non lus.",
+        "Marquez les messages comme 'Répondu' ou 'Archivé' pour garder votre boîte propre.",
+        "Vous pouvez répondre directement par email en cliquant sur le bouton dédié.",
       ]
     }
   ];

@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Users,
   HelpCircle,
+  MessageSquare,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import AdminBar from "../../components/admin/AdminBar";
@@ -22,6 +23,7 @@ export default function AdminLayout() {
   const { content } = useEditor();
 
   const pendingRequests = content.rentalRequests?.filter(r => r.status === "En attente").length || 0;
+  const newMessages = content.contactMessages?.filter(m => m.status === "Nouveau").length || 0;
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
@@ -32,6 +34,12 @@ export default function AdminLayout() {
       label: "Location", 
       path: "/admin/rental",
       badge: pendingRequests > 0 ? pendingRequests : null
+    },
+    { 
+      icon: MessageSquare, 
+      label: "Messages", 
+      path: "/admin/messages",
+      badge: newMessages > 0 ? newMessages : null
     },
     { icon: Users, label: "Équipe", path: "/admin/team" },
     { icon: Settings, label: "Paramètres", path: "/admin/settings" },

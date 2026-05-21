@@ -34,6 +34,7 @@ const AdminEvents = lazy(() => import("./pages/admin/AdminEvents"));
 const AdminRentals = lazy(() => import("./pages/admin/AdminRentals"));
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const AdminTeam = lazy(() => import("./pages/admin/AdminTeam"));
+const AdminMessages = lazy(() => import("./pages/admin/AdminMessages"));
 const AdminHelp = lazy(() => import("./pages/admin/AdminHelp"));
 
 const withSuspense = (Component: React.ComponentType) => (
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
       {
         path: "rental",
         element: withSuspense(AdminRentals),
+      },
+      {
+        path: "messages",
+        element: withSuspense(AdminMessages),
       },
       {
         path: "team",

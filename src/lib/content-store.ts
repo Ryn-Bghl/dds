@@ -149,6 +149,16 @@ export interface RentalRequest {
   createdAt: string;
 }
 
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  createdAt: string;
+  status: "Nouveau" | "Lu" | "Répondu" | "Archivé";
+}
+
 export interface GlobalSettings {
   siteIdentity: {
     title: string;
@@ -220,6 +230,7 @@ export interface SiteContent {
   projects: Project[];
   events: Event[];
   rentalRequests: RentalRequest[];
+  contactMessages: ContactMessage[];
   settings: GlobalSettings;
   inventory: InventoryItem[];
   rentalPacks: RentalPack[];
@@ -466,6 +477,7 @@ export const initialContent: SiteContent = {
       createdAt: "2026-04-01",
     },
   ],
+  contactMessages: [],
   settings: {
     siteIdentity: {
       title: "Dons Du Son",
@@ -677,6 +689,11 @@ function validateAndRepairContent(content: SiteContent): SiteContent {
   if (!Array.isArray(repaired.rentalRequests)) {
     console.warn("Repairing corrupted rentalRequests array");
     repaired.rentalRequests = initialContent.rentalRequests;
+  }
+
+  if (!Array.isArray(repaired.contactMessages)) {
+    console.warn("Repairing corrupted contactMessages array");
+    repaired.contactMessages = [];
   }
 
   if (!Array.isArray(repaired.inventory)) {
