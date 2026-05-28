@@ -116,49 +116,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       status: "En attente",
       totalPrice: getTotalPrice(),
       items: cart.map((item) => ({
+        id: item.id,
         name: item.name,
         quantity: item.quantity,
         price: item.price,
+        isPack: item.isPack
       })),
       createdAt: new Date().toLocaleDateString("fr-FR"),
     };
 
-    // Update inventory stock
-    let updatedInventory = [...(content.inventory || [])];
-    
-    cart.forEach(cartItem => {
-      if (cartItem.isPack) {
-        const pack = cartItem as RentalPack;
-        pack.items.forEach(packItem => {
-          const invItemIndex = updatedInventory.findIndex(i => i.id === packItem.equipmentId);
-          if (invItemIndex !== -1) {
-            const invItem = { ...updatedInventory[invItemIndex] };
-            invItem.stock = Math.max(0, invItem.stock - (packItem.quantity * cartItem.quantity));
-            if (invItem.stock === 0) {
-              invItem.status = "Indisponible";
-            }
-            updatedInventory[invItemIndex] = invItem;
-          }
-        });
-      } else {
-        const invItemIndex = updatedInventory.findIndex(i => i.id === cartItem.id);
-        if (invItemIndex !== -1) {
-          const invItem = { ...updatedInventory[invItemIndex] };
-          invItem.stock = Math.max(0, invItem.stock - cartItem.quantity);
-          if (invItem.stock === 0) {
-            invItem.status = "Indisponible";
-          }
-          updatedInventory[invItemIndex] = invItem;
-        }
-      }
-    });
-
     const currentRequests = content.rentalRequests || [];
-    const updatedContent = {
-      ...content,
-      inventory: updatedInventory,
-      rentalRequests: [newRequest, ...currentRequests]
-    };
+    const updatedContent = updateContent("rentalRequests", [newRequest, ...currentRequests]);
     
     // 1. On attend impérativement que la sauvegarde soit confirmée
     await saveChanges(updatedContent);

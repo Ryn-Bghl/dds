@@ -140,10 +140,79 @@ export default function AdminRentals() {
   };
 
   const handleUpdateRequestStatus = async (id: string, status: RentalRequest["status"]) => {
+    const requestIndex = rentalRequests.findIndex(r => r.id === id);
+    if (requestIndex === -1) return;
+
+    const request = rentalRequests[requestIndex];
+    const oldStatus = request.status;
+    
+    // Only proceed if status actually changed
+    if (oldStatus === status) return;
+
+    let updatedInventory = [...inventory];
+    
+    // 1. If moving TO 'Validé', reduce stock
+    if (status === "Validé") {
+      request.items.forEach(item => {
+        if (item.isPack) {
+          const pack = content.rentalPacks?.find(p => p.id === item.id);
+          pack?.items.forEach(packItem => {
+            const invIndex = updatedInventory.findIndex(i => i.id === packItem.equipmentId);
+            if (invIndex !== -1) {
+              const invItem = { ...updatedInventory[invIndex] };
+              invItem.stock = Math.max(0, invItem.stock - (packItem.quantity * item.quantity));
+              if (invItem.stock === 0) invItem.status = "Indisponible";
+              updatedInventory[invIndex] = invItem;
+            }
+          });
+        } else {
+          const invIndex = updatedInventory.findIndex(i => i.id === item.id);
+          if (invIndex !== -1) {
+            const invItem = { ...updatedInventory[invIndex] };
+            invItem.stock = Math.max(0, invItem.stock - item.quantity);
+            if (invItem.stock === 0) invItem.status = "Indisponible";
+            updatedInventory[invIndex] = invItem;
+          }
+        }
+      });
+    }
+    
+    // 2. If moving FROM 'Validé' to something else, restore stock
+    if (oldStatus === "Validé" && (status === "Annulé" || status === "Refusé" || status === "En attente")) {
+      request.items.forEach(item => {
+        if (item.isPack) {
+          const pack = content.rentalPacks?.find(p => p.id === item.id);
+          pack?.items.forEach(packItem => {
+            const invIndex = updatedInventory.findIndex(i => i.id === packItem.equipmentId);
+            if (invIndex !== -1) {
+              const invItem = { ...updatedInventory[invIndex] };
+              invItem.stock = invItem.stock + (packItem.quantity * item.quantity);
+              if (invItem.stock > 0 && invItem.status === "Indisponible") invItem.status = "Disponible";
+              updatedInventory[invIndex] = invItem;
+            }
+          });
+        } else {
+          const invIndex = updatedInventory.findIndex(i => i.id === item.id);
+          if (invIndex !== -1) {
+            const invItem = { ...updatedInventory[invIndex] };
+            invItem.stock = invItem.stock + item.quantity;
+            if (invItem.stock > 0 && invItem.status === "Indisponible") invItem.status = "Disponible";
+            updatedInventory[invIndex] = invItem;
+          }
+        }
+      });
+    }
+
     const newRequests = rentalRequests.map((req) =>
       req.id === id ? { ...req, status } : req
     );
-    const newContent = updateContent("rentalRequests", newRequests);
+    
+    const newContent = {
+      ...content,
+      inventory: updatedInventory,
+      rentalRequests: newRequests
+    };
+
     await saveChanges(newContent);
     toast.success(`Statut de la demande mis à jour: ${status}`);
     if (selectedRequest?.id === id) {

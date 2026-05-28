@@ -152,7 +152,7 @@ export interface RentalRequest {
   message?: string;
   status: "En attente" | "Validé" | "Refusé" | "Annulé";
   totalPrice: number;
-  items: { name: string; quantity: number; price: number }[];
+  items: { id: string; name: string; quantity: number; price: number; isPack?: boolean }[];
   createdAt: string;
 }
 
