@@ -27,14 +27,45 @@ export default function Contact() {
     subject: "",
     message: "",
   });
+  const [honeypot, setHoneypot] = useState(""); // Honeypot field
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [lastMessageId, setLastMessageId] = useState<string | null>(null);
 
+  const checkRateLimit = () => {
+    const limit = 3; // Max 3 messages
+    const windowMs = 60 * 60 * 1000; // 1 hour
+    const now = Date.now();
+    
+    const submissions = JSON.parse(localStorage.getItem("dds_contact_limit") || "[]");
+    const recentSubmissions = submissions.filter((t: number) => now - t < windowMs);
+    
+    if (recentSubmissions.length >= limit) {
+      return false;
+    }
+    
+    recentSubmissions.push(now);
+    localStorage.setItem("dds_contact_limit", JSON.stringify(recentSubmissions));
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    
+    // 1. Honeypot check: If bot filled the invisible field, ignore
+    if (honeypot) {
+      console.warn("Spam detected via honeypot");
+      setIsSubmitted(true); // Pretend success to the bot
+      return;
+    }
 
+    // 2. Rate limiting check
+    if (!checkRateLimit()) {
+      toast.error("Trop de messages envoyés. Veuillez réessayer dans une heure.");
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const newMessage: ContactMessage = {
         id: `msg-${Date.now()}`,
@@ -66,7 +97,7 @@ export default function Contact() {
         `--- Message enregistré dans le panneau d'administration ---`
       );
       
-      window.open(`mailto:${contactEmail}?subject=${mailtoSubject}&body=${mailtoBody}`, '_blank');
+      window.open(`mailto:${contactEmail}?subject=${mailtoSubject}&body=${body}`, '_blank');
       
       toast.success(
         "Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.",
@@ -282,6 +313,17 @@ export default function Contact() {
                         Remplissez ce formulaire et nous vous répondrons rapidement
                       </p>
                       <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Honeypot field - Invisible to humans */}
+                        <div className="hidden" aria-hidden="true">
+                          <Input
+                            type="text"
+                            name="website_url"
+                            value={honeypot}
+                            onChange={(e) => setHoneypot(e.target.value)}
+                            tabIndex={-1}
+                            autoComplete="off"
+                          />
+                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-2">
                             <Label htmlFor="name">Nom complet *</Label>

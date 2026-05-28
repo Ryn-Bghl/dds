@@ -70,9 +70,27 @@ export default function EquipmentRental() {
     eventDate: "",
     message: "",
   });
+  const [honeypot, setHoneypot] = useState("");
 
   const inventory = content.inventory || [];
   const rentalPacks = content.rentalPacks || [];
+
+  const checkRateLimit = () => {
+    const limit = 2; // Max 2 messages
+    const windowMs = 60 * 60 * 1000; // 1 hour
+    const now = Date.now();
+    
+    const submissions = JSON.parse(localStorage.getItem("dds_rental_limit") || "[]");
+    const recentSubmissions = submissions.filter((t: number) => now - t < windowMs);
+    
+    if (recentSubmissions.length >= limit) {
+      return false;
+    }
+    
+    recentSubmissions.push(now);
+    localStorage.setItem("dds_rental_limit", JSON.stringify(recentSubmissions));
+    return true;
+  };
 
   const existingCategories = [
     "Tous",
@@ -87,6 +105,17 @@ export default function EquipmentRental() {
 
   const handleSubmitQuote = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (honeypot) {
+      setIsSubmitted(true);
+      return;
+    }
+
+    if (!checkRateLimit()) {
+      toast.error("Trop de demandes envoyées. Veuillez réessayer dans une heure.");
+      return;
+    }
+
     submitQuote(quoteForm);
     if (cart.length > 0) {
       setQuoteForm({
@@ -305,6 +334,17 @@ export default function EquipmentRental() {
                               onSubmit={handleSubmitQuote}
                               className="space-y-4"
                             >
+                              {/* Honeypot field - Invisible to humans */}
+                              <div className="hidden" aria-hidden="true">
+                                <Input
+                                  type="text"
+                                  name="website_url"
+                                  value={honeypot}
+                                  onChange={(e) => setHoneypot(e.target.value)}
+                                  tabIndex={-1}
+                                  autoComplete="off"
+                                />
+                              </div>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                   <Label htmlFor="quote-name">Nom complet *</Label>
