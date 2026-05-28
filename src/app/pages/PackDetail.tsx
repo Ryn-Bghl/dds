@@ -34,6 +34,11 @@ export default function PackDetail() {
 
   const basePath = `rentalPacks.${packIndex}`;
 
+  const isPackAvailable = pack.items.every(packItem => {
+    const equipment = inventory.find(e => e.id === packItem.equipmentId);
+    return equipment && equipment.stock >= packItem.quantity && equipment.status === "Disponible";
+  });
+
   return (
     <div className="flex flex-col">
       <section className="py-12 bg-background border-b border-border">
@@ -61,7 +66,9 @@ export default function PackDetail() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <Badge className="bg-[#8C0343] text-white border-none">PACK COMBINÉ</Badge>
-                <Badge variant="outline" className="text-green-500 border-green-500/30">✓ {pack.status}</Badge>
+                <Badge variant="outline" className={`${isPackAvailable && pack.status === "Disponible" ? 'text-green-500 border-green-500/30' : 'text-red-500 border-red-500/30'}`}>
+                  {isPackAvailable && pack.status === "Disponible" ? `✓ ${pack.status}` : '✕ Indisponible'}
+                </Badge>
               </div>
 
               <Editable path={`${basePath}.name`} label="Nom du pack">
@@ -85,10 +92,11 @@ export default function PackDetail() {
                 <Button 
                   size="lg" 
                   onClick={() => pack && addToCart(pack, true)}
-                  className="w-full md:w-auto bg-[#8C0343] hover:bg-[#771236] text-white px-12 h-14 text-lg font-bold"
+                  disabled={!isPackAvailable || pack.status !== "Disponible"}
+                  className="w-full md:w-auto bg-[#8C0343] hover:bg-[#771236] text-white px-12 h-14 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ShoppingCart className="mr-2 w-5 h-5" />
-                  Ajouter le pack au devis
+                  {!isPackAvailable || pack.status !== "Disponible" ? "Indisponible" : "Ajouter le pack au devis"}
                 </Button>
               </div>
 

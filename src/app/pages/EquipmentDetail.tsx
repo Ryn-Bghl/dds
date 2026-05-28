@@ -128,10 +128,11 @@ export default function EquipmentDetail() {
                 <Button
                   size="lg"
                   onClick={() => item && addToCart(item)}
-                  className="bg-[#8C0343] hover:bg-[#771236] text-white px-8 h-14 text-lg font-bold"
+                  disabled={item.status !== "Disponible" || item.stock <= 0}
+                  className="bg-[#8C0343] hover:bg-[#771236] text-white px-8 h-14 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ShoppingCart className="mr-2 w-5 h-5" />
-                  Ajouter au devis
+                  {item.status !== "Disponible" || item.stock <= 0 ? "Indisponible" : "Ajouter au devis"}
                 </Button>
                 <div className="flex items-center gap-3 px-6 bg-card border border-border rounded-xl">
                   <Package className="w-5 h-5 text-muted-foreground" />

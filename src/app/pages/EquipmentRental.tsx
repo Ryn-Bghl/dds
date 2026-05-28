@@ -82,8 +82,7 @@ export default function EquipmentRental() {
   const filteredEquipment = inventory.filter((item) => {
     const matchesCategory =
       selectedCategory === "Tous" || item.category === selectedCategory;
-    const isAvailable = item.status === "Disponible";
-    return matchesCategory && isAvailable;
+    return matchesCategory;
   });
 
   const handleSubmitQuote = (e: React.FormEvent) => {
@@ -423,74 +422,86 @@ export default function EquipmentRental() {
               <h2 className="text-3xl font-bold text-white">Nos Packs Tout-en-un</h2>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {rentalPacks.filter(p => p.status === "Disponible").map((pack) => (
-                <Card key={pack.id} className="bg-card border-border overflow-hidden hover:border-[#8C0343] transition-colors group">
-                  <div className="flex flex-col md:flex-row h-full">
-                    <div className="md:w-1/3 relative overflow-hidden">
-                      <img
-                        src={pack.image}
-                        alt={pack.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute top-2 left-2">
-                        <Badge className="bg-[#8C0343] text-white border-none">BEST-SELLER</Badge>
-                      </div>
-                    </div>
-                    <div className="md:w-2/3 p-6 flex flex-col">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-xl font-bold text-white mb-1">{pack.name}</h3>
-                          <p className="text-sm text-gray-400">{pack.description}</p>
+              {rentalPacks.map((pack) => {
+                const isPackAvailable = pack.items.every(packItem => {
+                   const equipment = inventory.find(e => e.id === packItem.equipmentId);
+                   return equipment && equipment.stock >= packItem.quantity && equipment.status === "Disponible";
+                });
+                const availableStatus = isPackAvailable && pack.status === "Disponible";
+
+                return (
+                  <Card key={pack.id} className={`bg-card border-border overflow-hidden transition-colors group ${!availableStatus ? 'opacity-75' : 'hover:border-[#8C0343]'}`}>
+                    <div className="flex flex-col md:flex-row h-full">
+                      <div className="md:w-1/3 relative overflow-hidden">
+                        <img
+                          src={pack.image}
+                          alt={pack.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute top-2 left-2 flex flex-col gap-2">
+                          <Badge className="bg-[#8C0343] text-white border-none">BEST-SELLER</Badge>
+                          {!availableStatus && (
+                            <Badge variant="destructive" className="bg-red-500 text-white border-none">INDISPONIBLE</Badge>
+                          )}
                         </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-[#F29F05]">{pack.price}€</p>
-                          <p className="text-xs text-gray-500">/jour</p>
-                        </div>
                       </div>
-                      
-                      <div className="space-y-4 mb-6 flex-1">
-                        <div>
-                          <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Matériel inclus</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {pack.items.map((item) => {
-                              const equipment = inventory.find(e => e.id === item.equipmentId);
-                              return (
-                                <Badge key={item.equipmentId} variant="outline" className="bg-background/50 border-border text-gray-300">
-                                  {item.quantity}x {equipment?.name || "Matériel"}
-                                </Badge>
-                              );
-                            })}
+                      <div className="md:w-2/3 p-6 flex flex-col">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="text-xl font-bold text-white mb-1">{pack.name}</h3>
+                            <p className="text-sm text-gray-400">{pack.description}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl font-bold text-[#F29F05]">{pack.price}€</p>
+                            <p className="text-xs text-gray-500">/jour</p>
                           </div>
                         </div>
-                        <div>
-                          <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Services inclus</h4>
-                          <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
-                            {pack.services.map((service) => (
-                              <li key={service} className="text-sm text-gray-300 flex items-center gap-2">
-                                <CheckCircle2 className="w-3 h-3 text-green-500" />
-                                {service}
-                              </li>
-                            ))}
-                          </ul>
+                        
+                        <div className="space-y-4 mb-6 flex-1">
+                          <div>
+                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Matériel inclus</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {pack.items.map((item) => {
+                                const equipment = inventory.find(e => e.id === item.equipmentId);
+                                return (
+                                  <Badge key={item.equipmentId} variant="outline" className="bg-background/50 border-border text-gray-300">
+                                    {item.quantity}x {equipment?.name || "Matériel"}
+                                  </Badge>
+                                );
+                              })}
+                            </div>
+                          </div>
+                          <div>
+                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Services inclus</h4>
+                            <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
+                              {pack.services.map((service) => (
+                                <li key={service} className="text-sm text-gray-300 flex items-center gap-2">
+                                  <CheckCircle2 className="w-3 h-3 text-green-500" />
+                                  {service}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-4">
+                          <Button 
+                            className="flex-1 bg-[#8C0343] hover:bg-[#771236] disabled:opacity-50"
+                            onClick={() => addToCart(pack, true)}
+                            disabled={!availableStatus}
+                          >
+                            <Plus className="w-4 h-4 mr-2" />
+                            {availableStatus ? "Ajouter au devis" : "Indisponible"}
+                          </Button>
+                          <Button variant="outline" className="border-border" asChild>
+                            <Link to={`/location/pack/${pack.id}`}>Détails</Link>
+                          </Button>
                         </div>
                       </div>
-
-                      <div className="flex gap-4">
-                        <Button 
-                          className="flex-1 bg-[#8C0343] hover:bg-[#771236]"
-                          onClick={() => addToCart(pack, true)}
-                        >
-                          <Plus className="w-4 h-4 mr-2" />
-                          Ajouter au devis
-                        </Button>
-                        <Button variant="outline" className="border-border" asChild>
-                          <Link to={`/location/pack/${pack.id}`}>Détails</Link>
-                        </Button>
-                      </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -507,10 +518,12 @@ export default function EquipmentRental() {
             {filteredEquipment.map((equipment) => {
               const Icon =
                 categoryIcons[equipment.category as keyof typeof categoryIcons];
+              const isAvailable = equipment.status === "Disponible" && equipment.stock > 0;
+
               return (
                 <Card
                   key={equipment.id}
-                  className="overflow-hidden hover:shadow-xl hover:shadow-[#8C0343]/20 transition-all border-border bg-card group"
+                  className={`overflow-hidden transition-all border-border bg-card group ${!isAvailable ? 'opacity-75' : 'hover:shadow-xl hover:shadow-[#8C0343]/20'}`}
                 >
                   <CardContent className="p-0">
                     <Link
@@ -527,6 +540,11 @@ export default function EquipmentRental() {
                           Voir les détails
                         </span>
                       </div>
+                      {!isAvailable && (
+                        <div className="absolute top-2 right-2">
+                           <Badge variant="destructive" className="bg-red-500 text-white border-none">INDISPONIBLE</Badge>
+                        </div>
+                      )}
                     </Link>
                     <div className="p-4">
                       <Badge
@@ -561,10 +579,11 @@ export default function EquipmentRental() {
                         <Button
                           size="sm"
                           onClick={() => addToCart(equipment)}
-                          className="bg-[#8C0343] hover:bg-[#771236] text-white font-semibold"
+                          disabled={!isAvailable}
+                          className="bg-[#8C0343] hover:bg-[#771236] text-white font-semibold disabled:opacity-50"
                         >
                           <Plus className="w-4 h-4 mr-1" />
-                          Ajouter
+                          {isAvailable ? "Ajouter" : "Indisponible"}
                         </Button>
                       </div>
                     </div>

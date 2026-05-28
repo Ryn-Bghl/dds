@@ -46,6 +46,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (item: InventoryItem | RentalPack, isPack = false) => {
     const existingItem = cart.find((i) => i.id === item.id);
+    
+    // Check stock for individual items
+    if (!isPack) {
+      const invItem = item as InventoryItem;
+      const currentInCart = existingItem?.quantity || 0;
+      if (currentInCart >= invItem.stock) {
+        toast.error(`Stock insuffisant pour ${item.name} (${invItem.stock} max)`);
+        return;
+      }
+    }
+
     if (existingItem) {
       setCart(
         cart.map((i) =>
@@ -61,9 +72,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateQuantity = (id: string, delta: number) => {
     setCart(
       cart
-        .map((item) =>
-          item.id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item
-        )
+        .map((item) => {
+          if (item.id === id && delta > 0 && !item.isPack) {
+            const invItem = content.inventory?.find(i => i.id === id);
+            if (invItem && item.quantity + delta > invItem.stock) {
+              toast.error(`Stock insuffisant (${invItem.stock} max)`);
+              return item;
+            }
+          }
+          return item.id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item;
+        })
         .filter((item) => item.quantity > 0)
     );
   };
@@ -105,8 +123,42 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       createdAt: new Date().toLocaleDateString("fr-FR"),
     };
 
+    // Update inventory stock
+    let updatedInventory = [...(content.inventory || [])];
+    
+    cart.forEach(cartItem => {
+      if (cartItem.isPack) {
+        const pack = cartItem as RentalPack;
+        pack.items.forEach(packItem => {
+          const invItemIndex = updatedInventory.findIndex(i => i.id === packItem.equipmentId);
+          if (invItemIndex !== -1) {
+            const invItem = { ...updatedInventory[invItemIndex] };
+            invItem.stock = Math.max(0, invItem.stock - (packItem.quantity * cartItem.quantity));
+            if (invItem.stock === 0) {
+              invItem.status = "Indisponible";
+            }
+            updatedInventory[invItemIndex] = invItem;
+          }
+        });
+      } else {
+        const invItemIndex = updatedInventory.findIndex(i => i.id === cartItem.id);
+        if (invItemIndex !== -1) {
+          const invItem = { ...updatedInventory[invItemIndex] };
+          invItem.stock = Math.max(0, invItem.stock - cartItem.quantity);
+          if (invItem.stock === 0) {
+            invItem.status = "Indisponible";
+          }
+          updatedInventory[invItemIndex] = invItem;
+        }
+      }
+    });
+
     const currentRequests = content.rentalRequests || [];
-    const updatedContent = updateContent("rentalRequests", [newRequest, ...currentRequests]);
+    const updatedContent = {
+      ...content,
+      inventory: updatedInventory,
+      rentalRequests: [newRequest, ...currentRequests]
+    };
     
     // 1. On attend impérativement que la sauvegarde soit confirmée
     await saveChanges(updatedContent);
