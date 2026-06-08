@@ -275,7 +275,26 @@
       "content": []
     }
   ],
-  "rentalRequests": [],
+  "rentalRequests": [
+    {
+      "id": "req-1780750751750",
+      "customerName": "qqsd",
+      "email": "qsd@qsd",
+      "phone": "02",
+      "eventDate": "0001-01-01",
+      "message": "qsd",
+      "status": "En attente",
+      "totalPrice": 150,
+      "items": [
+        {
+          "name": "Pack Sonorisation Standard",
+          "quantity": 1,
+          "price": 150
+        }
+      ],
+      "createdAt": "06/06/2026"
+    }
+  ],
   "settings": {
     "siteIdentity": {
       "title": "Dons Du Son",
