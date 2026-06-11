@@ -834,29 +834,29 @@ export async function loadContent(): Promise<SiteContent> {
 }
 
 export async function saveContent(content: SiteContent) {
-  // 1. Si on est en local (dev) et que le serveur local tourne
-  if (import.meta.env.DEV) {
-    try {
-      const response = await fetch("/api/save-content", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(content),
-      });
-      if (response.ok) {
-        console.log("✅ Sauvegardé localement");
-        return;
-      }
-    } catch (e) {
-      console.warn("Serveur local non disponible, tentative via GitHub...");
+  // On essaie d'abord de sauvegarder via l'API locale (server.js)
+  // Cela fonctionne sur Infomaniak car notre serveur gère l'API
+  try {
+    const response = await fetch("/api/save-content", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(content),
+    });
+    
+    if (response.ok) {
+      console.log("✅ Sauvegardé sur le serveur Infomaniak");
+      return;
     }
+  } catch (e) {
+    console.warn("Serveur local non disponible ou erreur, tentative via GitHub...");
   }
 
-  // 2. Sinon (Production ou fallback), on utilise l'API GitHub
+  // 2. Fallback : Si le serveur local ne répond pas (ex: sur Vercel), on utilise GitHub
   try {
     await saveToGitHub(content);
     console.log("✅ Sauvegardé via GitHub");
   } catch (e) {
-    console.error("Erreur sauvegarde GitHub:", e);
+    console.error("Erreur sauvegarde (Serveur + GitHub):", e);
     throw e;
   }
 }
