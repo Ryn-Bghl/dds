@@ -813,12 +813,13 @@ import { saveToGitHub } from "./github-cms";
 
 export async function loadContent(): Promise<SiteContent> {
   try {
-    // On charge le fichier data.json relativement à l'emplacement du script
-    // Cela permet au site de fonctionner dans n'importe quel sous-dossier
-    const dataUrl = new URL('../../data.json', import.meta.url).href;
-    const response = await fetch(dataUrl);
+    // Utilisation du BASE_URL configuré dans vite.config.ts (./)
+    // Cela garantit que le chemin est relatif à la racine du site, même en sous-dossier
+    const baseUrl = import.meta.env.BASE_URL || "./";
+    const response = await fetch(`${baseUrl}data.json`);
+    
     if (!response.ok) {
-      // Fallback au path racine si le premier échoue
+      // Fallback si le premier échoue
       const fallbackResponse = await fetch("./data.json");
       if (!fallbackResponse.ok) return initialContent;
       const data = await fallbackResponse.json();
