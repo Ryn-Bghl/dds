@@ -813,10 +813,16 @@ import { saveToGitHub } from "./github-cms";
 
 export async function loadContent(): Promise<SiteContent> {
   try {
-    // On charge toujours le fichier statique (il est mis à jour par GitHub + Vercel redeploy)
-    const response = await fetch("/data.json");
+    // On charge le fichier data.json relativement à l'emplacement du script
+    // Cela permet au site de fonctionner dans n'importe quel sous-dossier
+    const dataUrl = new URL('../../data.json', import.meta.url).href;
+    const response = await fetch(dataUrl);
     if (!response.ok) {
-      return initialContent;
+      // Fallback au path racine si le premier échoue
+      const fallbackResponse = await fetch("./data.json");
+      if (!fallbackResponse.ok) return initialContent;
+      const data = await fallbackResponse.json();
+      return validateAndRepairContent(data);
     }
     const data = await response.json();
     return validateAndRepairContent(data);
