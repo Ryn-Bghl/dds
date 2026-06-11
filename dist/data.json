@@ -85,6 +85,11 @@
         "description": "S'investir pour le développement culturel local"
       }
     ],
+    "team": {
+      "title": "Notre Équipe",
+      "description": "Les membres du bureau qui portent l'association au quotidien",
+      "volunteersMention": "+ 15 bénévoles actifs qui contribuent régulièrement aux actions de l'association"
+    },
     "valuesSectionTitle": "Nos Valeurs",
     "interventionSection": {
       "title": "Nos Axes d'Intervention",
@@ -92,6 +97,7 @@
     },
     "interventionAreas": [
       {
+        "iconName": "GraduationCap",
         "title": "Éducation & Formation",
         "description": "Ateliers pédagogiques, formations techniques et accompagnement des jeunes talents dans leur apprentissage des métiers du son et de la musique.",
         "features": [
@@ -102,6 +108,7 @@
         ]
       },
       {
+        "iconName": "Wrench",
         "title": "Accompagnement Technique",
         "description": "Mise à disposition de studios, conseil en ingénierie sonore et suivi technique des projets artistiques de A à Z.",
         "features": [
@@ -112,6 +119,7 @@
         ]
       },
       {
+        "iconName": "Radio",
         "title": "Diffusion Culturelle",
         "description": "Organisation d'événements, concerts et festivals pour promouvoir les artistes émergents et la diversité musicale.",
         "features": [
@@ -215,11 +223,7 @@
           "title": "Organisation",
           "text": "L'événement s'est déroulé sur 3 jours avec 2 scènes principales."
         }
-      ],
-      "testimonial": {
-        "text": "Une expérience inoubliable.",
-        "author": "Léa"
-      }
+      ]
     },
     {
       "id": "atelier-prod",
@@ -268,27 +272,27 @@
       "description": "Édition passée du festival",
       "image": "https://images.unsplash.com/photo-1669459881627-06c2a4948e33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25jZXJ0JTIwc3RhZ2UlMjBsaWdodHMlMjBwZXJmb3JtYW5jZXxlbnwxfHx8fDE3NzQ1MDc2OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "isPast": true,
-      "attendees": 3500,
       "content": []
     }
   ],
   "rentalRequests": [
     {
-      "id": "req-1",
-      "customerName": "Jean Dupont",
-      "email": "jean@example.com",
-      "phone": "06 12 34 56 78",
-      "eventDate": "2026-05-20",
+      "id": "req-1780750751750",
+      "customerName": "qqsd",
+      "email": "qsd@qsd",
+      "phone": "02",
+      "eventDate": "0001-01-01",
+      "message": "qsd",
       "status": "En attente",
-      "totalPrice": 155,
+      "totalPrice": 150,
       "items": [
         {
-          "name": "Enceinte JBL PRX815",
-          "quantity": 2,
-          "price": 80
+          "name": "Pack Sonorisation Standard",
+          "quantity": 1,
+          "price": 150
         }
       ],
-      "createdAt": "2026-04-01"
+      "createdAt": "06/06/2026"
     }
   ],
   "settings": {
@@ -313,10 +317,11 @@
     },
     "rental": {
       "replyDelay": "Vous recevrez un devis sous 72 heures",
-      "defaultDeposit": "30%"
+      "defaultDeposit": "0"
     },
     "advanced": {
-      "maintenanceMode": false
+      "maintenanceMode": false,
+      "showNewsletter": false
     }
   },
   "inventory": [
@@ -445,6 +450,43 @@
       "role": "Responsable Technique",
       "bio": "Ingénieur du son expérimenté veillant sur notre parc matériel.",
       "imageUrl": ""
+    }
+  ],
+  "partners": [
+    {
+      "id": "1778142350707",
+      "name": "KAIROS",
+      "logoUrl": "https://picsum.photos/500",
+      "websiteUrl": "https://www.instagram.com/kairoslevrai/"
+    },
+    {
+      "id": "1778160714828",
+      "name": "KAIROS",
+      "logoUrl": "https://picsum.photos/500",
+      "websiteUrl": ""
+    },
+    {
+      "id": "1778160736709",
+      "name": "KAIROS",
+      "logoUrl": "https://picsum.photos/500",
+      "websiteUrl": ""
+    },
+    {
+      "id": "1778160741900",
+      "name": "KAIROS",
+      "logoUrl": "https://picsum.photos/500",
+      "websiteUrl": ""
+    }
+  ],
+  "contactMessages": [
+    {
+      "id": "msg-1779091523515",
+      "name": "NomTest",
+      "email": "email.test@gmail.com",
+      "subject": "Sujet Test",
+      "message": "Message Test\n",
+      "createdAt": "2026-05-18",
+      "status": "Lu"
     }
   ]
 }
